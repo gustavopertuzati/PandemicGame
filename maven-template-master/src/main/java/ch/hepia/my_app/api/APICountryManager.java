@@ -45,10 +45,12 @@ public class APICountryManager {
             URL url = new URL(this.apiLink+"/"+ request);
             HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
             connexion.setRequestMethod("GET");
+            
             int response = connexion.getResponseCode();
             if(response != 200){
                 throw new RuntimeException("HTTP Request failed with response code: " + response);
             }
+            
             String content = "";
             Scanner sc = new Scanner(url.openStream());
             while(sc.hasNext()){
@@ -61,34 +63,31 @@ public class APICountryManager {
             JSONArray countries = (JSONArray) data_obj.get("Countries");
             
             for (int crt = 0; crt < countries.size(); crt+=1){
+
                 JSONObject i =  (JSONObject)countries.get(crt);
+
                 //On peut changer Country à Slug si jamais c'est chiant de gérer les espaces et maj
-               /* String countryName = i.get("Country");
-                Double latitude = i.get("kek");
-                Double longitude = i.get("kek");
-                int totalCases = i.get("TotalConfirmed");
-                int dailyCases = i.get("NewConfirmed");
-                int totalDeaths = i.get("TotalDeaths");
-                int dailyDeaths = i.get("NewDeaths");
-                int totalRecovered = i.get("TotalRecovered");
-                int dailyRecovered = i.get("NewRecovered");
+                String countryName = i.get("Slug").toString();
+                Double latitude = 0.0;//Double.parseDouble(s).get("kek");
+                Double longitude = 0.0;//i.get("kek");
+                int totalCases = Integer.parseInt(i.get("TotalConfirmed").toString());
+                int dailyCases = Integer.parseInt(i.get("NewConfirmed").toString());
+                int totalDeaths = Integer.parseInt(i.get("TotalDeaths").toString());
+                int dailyDeaths = Integer.parseInt(i.get("NewDeaths").toString());
+                int totalRecovered = Integer.parseInt(i.get("TotalRecovered").toString());
+                int dailyRecovered = Integer.parseInt(i.get("NewRecovered").toString());
 
                 Country currentCountry = new Country(countryName, latitude, longitude, totalCases, dailyCases, totalDeaths, dailyDeaths, totalRecovered, dailyRecovered);
                 
-                 map.put(countryName, currentCountry);
-            */
+                map.put(countryName, currentCountry);
             }
         }catch(Exception e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return map;
     }
     
     public Country getSpecificCountryTime(){
         throw new RuntimeException("Not implemented");
-    }
-
-    public static void main( String[] args ) {
-        
     }
 }

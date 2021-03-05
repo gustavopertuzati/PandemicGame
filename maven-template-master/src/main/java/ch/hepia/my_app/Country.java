@@ -23,4 +23,9 @@ public class Country {
         this.totalRecovered = totalRecovered;
         this.dailyRecovered = dailyRecovered;
     }
+
+    @Override
+    public String toString(){
+        return this.countryName + ": " + this.totalCases + "\n";
+    }
 }
