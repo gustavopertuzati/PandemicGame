@@ -58,3 +58,11 @@ Vous pouvez par exemple ajouter la librairie JavaFX pour réaliser des interface
     <type>pom</type>
 </dependency> 
 ```
+
+Membres: Gustavo Pertuzati, Thomas Dagier, Antoine Blancy
+
+Projet: Covid Manager
+Un jeu avec le même concept que Plague Inc.
+Deux modes:
+-On reprend le covid pour le faire évoluer pour essayer de "battre" le score du vrai covid à un jour donné.
+-On prend le rôle des gouvernements/de l'OMS pour essayer de battre le covid plus rapidement que dans la vraie vie.
