@@ -44,7 +44,7 @@ public class APICountryManager {
     
         //Faire la requete
         try{
-            Map<String, Double[]> coords = readCoordinates(".\\ressources\\countrycoords.txt");
+            Map<String, Double[]> coords = readCoordinates("countrycoords.txt");
             URL url = new URL(this.apiLink+"/"+ request);
             HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
             connexion.setRequestMethod("GET");
@@ -95,15 +95,14 @@ public class APICountryManager {
     private Map<String, Double[]> readCoordinates(String path){
         Map<String, Double[]> myMap = new HashMap<>();
         try{
-            File fichier = new File(path);
-            Scanner sc = new Scanner(fichier); 
+            Scanner sc = new Scanner(this.getClass().getClassLoader().getResourceAsStream(path)); 
             while (sc.hasNextLine()) {
              String[] tmpStr = sc.nextLine().split("/"); 
               Double[] tmpDbl = {Double.parseDouble(tmpStr[1]), Double.parseDouble(tmpStr[2])};
               myMap.put(tmpStr[0], tmpDbl);
             } 
         }catch(Exception e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return myMap;
     }

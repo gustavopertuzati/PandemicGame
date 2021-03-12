@@ -12,9 +12,11 @@ public class App extends Application{
     public static void main(String[] args) {
         launch(args);
         
-        /*for(Country c : lol.listOfCountries()){
+        APICountryManager test = new APICountryManager("https://api.covid19api.com");
+        Countries lol = test.getCountries("summary");
+        for(Country c : lol.listOfCountries()){
             System.out.println(c.toString());
-        }*/
+        }
     }
     
     @Override
@@ -23,7 +25,7 @@ public class App extends Application{
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries lol = test.getCountries("summary");
 
-        Image worldImage = new Image(getClass().getResourceAsStream("ressources/images/world.jpg"));
+        Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/world.jpg"));
         double width = worldImage.getWidth();
         double height = worldImage.getHeight();
         

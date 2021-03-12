@@ -21,6 +21,9 @@ public class Countries {
     public Country getCountryByCoordinates(double x, double y){
         for (Country c : this.countries){
             double[] coords = c.Coordinates();
+            System.out.println("lattitude=" + x + "\nlongitude=" + y);
+            System.out.println("lattitude=" + coords[0] + "\nlongitude=" + coords[1]);
+            System.exit(0);
             if ( (Math.abs(coords[0] - x) <= 0.1) && (Math.abs(coords[1] - y) <= 0.1)){
                 return c;
             }
