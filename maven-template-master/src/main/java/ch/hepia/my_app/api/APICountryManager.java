@@ -3,9 +3,10 @@ package ch.hepia.my_app;
 import java.net.URL; 
 import java.net.URLConnection;
 import java.net.HttpURLConnection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
+import java.util.Map;
+import java.util.HashMap;
+
 
 import javax.management.RuntimeErrorException;
 
@@ -22,11 +23,10 @@ import java.net.ProtocolException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-//import org.json.parser.JSONParser;
 
 public class APICountryManager {
     
@@ -37,9 +37,11 @@ public class APICountryManager {
         this.apiLink = apiLink;
     }
     
-    public Map<String, Country> getCountryMap(String request){ //"countries"
+    public Countries getCountries(String request){ //"countries"
         //Si il y a un slash au début du string, il faut l'enlever
         Map<String, Country> map = new HashMap<>();
+        Countries countries = new Countries();
+    
         //Faire la requete
         try{
             Map<String, Double[]> coords = readCoordinates(".\\ressources\\countrycoords.txt");
@@ -61,12 +63,12 @@ public class APICountryManager {
             
             JSONParser parser = new JSONParser();
             JSONObject data_obj = (JSONObject) parser.parse(content);
-            JSONArray countries = (JSONArray) data_obj.get("Countries");
+            JSONArray jsonArrayCountries = (JSONArray) data_obj.get("Countries");
             
+            for (int crt = 0; crt < jsonArrayCountries.size(); crt+=1){
 
-            for (int crt = 0; crt < countries.size(); crt+=1){
+                JSONObject i =  (JSONObject)jsonArrayCountries.get(crt);
 
-                JSONObject i =  (JSONObject)countries.get(crt);
                 //On peut changer Country à Slug si jamais c'est chiant de gérer les espaces et maj
                 String countryName = i.get("Slug").toString();
                 int totalCases = Integer.parseInt(i.get("TotalConfirmed").toString());
@@ -81,12 +83,12 @@ public class APICountryManager {
 
                 Country currentCountry = new Country(countryName, latitude, longitude, totalCases, dailyCases, totalDeaths, dailyDeaths, totalRecovered, dailyRecovered);
                 
-                map.put(countryName, currentCountry);
+                countries.addCountry(currentCountry);
             }
         }catch(Exception e){
             e.printStackTrace();
         }
-        return map;
+        return countries;
     }
 
 
