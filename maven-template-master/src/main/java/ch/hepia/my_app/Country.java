@@ -24,8 +24,47 @@ public class Country {
         this.dailyRecovered = dailyRecovered;
     }
 
+    public String CountryName(){
+        return this.countryName;
+    }
+
+    public double[] Coordinates(){
+        double[] coordinates = new double[2];
+
+        coordinates[0] = this.latitude;
+        coordinates[1] = this.longitude;
+
+        return coordinates;
+    }
+
+    public int totalCases(){
+        return this.totalCases;
+    }
+
+    public int dailyCases(){
+        return this.dailyCases;
+    }
+
+    public int totalDeaths(){
+        return this.totalDeaths;
+    }
+
+    public int dailyDeaths(){
+        return this.dailyDeaths;
+    }
+
+    public int totalRecovered(){
+        return this.totalRecovered;
+    }
+
+    public int dailyRecovered(){
+        return this.dailyRecovered;
+    }
+
     @Override
     public String toString(){
-        return this.countryName + ": " + this.totalCases + "\n";
+        return this.countryName + ": \n\tcases: " + this.totalCases + " (+" + this.dailyCases + ")" + 
+                                  "\n\tdeaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" + 
+                                  "\n\trecovered: " + this.totalRecovered + " (+" + this.dailyRecovered + ")\n"; 
     }
 }

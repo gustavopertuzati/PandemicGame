@@ -3,8 +3,6 @@ package ch.hepia.my_app;
 import java.net.URL; 
 import java.net.URLConnection;
 import java.net.HttpURLConnection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 import javax.management.RuntimeErrorException;
@@ -25,6 +23,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import ch.hepia.my_app.Countries;
+
 //import org.json.parser.JSONParser;
 
 public class APICountryManager {
@@ -36,9 +36,9 @@ public class APICountryManager {
         this.apiLink = apiLink;
     }
     
-    public Map<String, Country> getCountryMap(String request){ //"countries"
+    public Countries getCountries(String request){ //"countries"
         //Si il y a un slash au début du string, il faut l'enlever
-        Map<String, Country> map = new HashMap<>();
+        Countries countries = new Countries();
     
         //Faire la requete
         try{
@@ -79,12 +79,12 @@ public class APICountryManager {
 
                 Country currentCountry = new Country(countryName, latitude, longitude, totalCases, dailyCases, totalDeaths, dailyDeaths, totalRecovered, dailyRecovered);
                 
-                map.put(countryName, currentCountry);
+                countries.addCountry(currentCountry);
             }
         }catch(Exception e){
             e.printStackTrace();
         }
-        return map;
+        return countries;
     }
     
     public Country getSpecificCountryTime(){
