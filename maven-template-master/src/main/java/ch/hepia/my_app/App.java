@@ -1,6 +1,6 @@
 package ch.hepia.my_app;
-import java.util.Map;
 
+import java.util.Map;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,6 +11,12 @@ import javafx.stage.Stage;
 public class App extends Application{
     public static void main(String[] args) {
         launch(args);
+        APICountryManager test = new APICountryManager("https://api.covid19api.com");
+
+        Countries lol = test.getCountries("summary");
+        for(Country c : lol.listOfCountries()){
+            System.out.println(c.toString());
+        }
     }
     
     @Override
