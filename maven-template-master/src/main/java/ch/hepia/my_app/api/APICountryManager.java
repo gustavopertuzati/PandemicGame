@@ -42,7 +42,7 @@ public class APICountryManager {
         Map<String, Country> map = new HashMap<>();
         //Faire la requete
         try{
-            Map<String, Double[]> coords = readCoordinates("ressources/countrycoords.txt");
+            Map<String, Double[]> coords = readCoordinates(".\\ressources\\countrycoords.txt");
             URL url = new URL(this.apiLink+"/"+ request);
             HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
             connexion.setRequestMethod("GET");
