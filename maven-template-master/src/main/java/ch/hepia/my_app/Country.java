@@ -26,6 +26,6 @@ public class Country {
 
     @Override
     public String toString(){
-        return this.countryName + ": " + this.totalCases + "\n";
+        return this.countryName  + "-" + this.latitude + "-" + this.longitude + "\n";
     }
 }
