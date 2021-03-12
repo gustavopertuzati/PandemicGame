@@ -19,12 +19,23 @@ public class Countries {
     }
 
     public Country getCountryByCoordinates(double x, double y){
+        x-=153;
+        y-=314;
+        int mapWidth = 3821;
+        int mapHeight = 1650;
+        int a = 6378137;
         for (Country c : this.countries){
             double[] coords = c.Coordinates();
-            System.out.println("lattitude=" + x + "\nlongitude=" + y);
-            System.out.println("lattitude=" + coords[0] + "\nlongitude=" + coords[1]);
-            System.exit(0);
-            if ( (Math.abs(coords[0] - x) <= 0.1) && (Math.abs(coords[1] - y) <= 0.1)){
+            double calcX = (coords[1]+180)*(mapWidth/360);
+            double latRad = coords[0]*Math.PI/180;   
+            double mercN = Math.log(Math.tan((Math.PI/4)+(latRad/2)));
+            double calcY = (mapHeight/2)-(mapWidth*mercN/(2*Math.PI));
+            if(c.CountryName().equals("switzerland")){
+                System.out.println("vraies: " + coords[0] + ";" + coords[1]);
+                System.out.println("antwan: " + calcX + ";" + calcY);
+                System.out.println("pedped: " + x + ";" + y);
+            }
+            if ( (Math.abs(calcX - x) <=10) && (Math.abs(calcY - y) <= 10) && !c.CountryName().equals("malta")){
                 return c;
             }
         }

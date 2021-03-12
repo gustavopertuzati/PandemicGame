@@ -63,8 +63,9 @@ public class Country {
 
     @Override
     public String toString(){
-        return this.countryName + ": \n\tcases: " + this.totalCases + " (+" + this.dailyCases + ")" + 
-                                  "\n\tdeaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" + 
-                                  "\n\trecovered: " + this.totalRecovered + " (+" + this.dailyRecovered + ")\n"; 
+        return this.countryName + ": (" + this.latitude + ":" + this.longitude + ")" +   
+        "\n\tcases: " + this.totalCases + " (+" + this.dailyCases + ")" + 
+        "\n\tdeaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" + 
+        "\n\trecovered: " + this.totalRecovered + " (+" + this.dailyRecovered + ")\n"; 
     }
 }
