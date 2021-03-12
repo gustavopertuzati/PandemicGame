@@ -1,5 +1,4 @@
 package ch.hepia.my_app;
-import java.util.Map;
 
 import javafx.application.Application;
 import javafx.scene.image.Image;
@@ -8,33 +7,31 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 
-public class App extends Application{
-    public static void main(String[] args) {
-        launch(args);
-    }
-    
-    @Override
+/*
+public class Worldmap extends Application {
     public void start(Stage primaryStage) {
 
-        Image worldImage = new Image(getClass().getResourceAsStream("ressources/images/world.jpg"));
+        private static final String imagePath = "images/world.jpg";
+
+        Image worldImage = new Image(imagePath);
         double width = worldImage.getWidth();
         double height = worldImage.getHeight();
-        
+
         ImageView worldImageView = new ImageView(worldImage);
 
         ScrollPane scroller = new ScrollPane();
         scroller.setContent(worldImageView);
 
+        // the following line allows detection of clicks on transparent
+        // parts of the image:
         worldImageView.setPickOnBounds(true);
 
         worldImageView.setOnMouseClicked(e -> {
             System.out.println("["+e.getX()+", "+e.getY()+"]");
         });
-
-        Scene scene = new Scene(scroller, width, height);
-
+        Scene scene = new Scene(scroller, 600, 600);
         primaryStage.setScene(scene);
-
         primaryStage.show();
+
     }
-}
+}*/

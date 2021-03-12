@@ -42,7 +42,6 @@ mvn test
 
 Le plugin `maven-assembly-plugin` est configuré et permet d'embarquer les dépendances dans un seul `jar`.
 
-
 ### Nouvelles dépendances
 
 Pour ajouter une nouvelle dépendance, vous pouvez l'ajouter dans la section `<dependencies>`. Le site [mvnrepository](https://mvnrepository.com) est une référence pour la mise à disposition de librairies de l'écosystème de la JVM (Java, Scala, Kotlin...)
