@@ -23,10 +23,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import ch.hepia.my_app.Countries;
-
-//import org.json.parser.JSONParser;
-
 public class APICountryManager {
     
     private String apiLink; //https://api.covid19api.com
@@ -60,11 +56,11 @@ public class APICountryManager {
             
             JSONParser parser = new JSONParser();
             JSONObject data_obj = (JSONObject) parser.parse(content);
-            JSONArray countries = (JSONArray) data_obj.get("Countries");
+            JSONArray jsonArrayCountries = (JSONArray) data_obj.get("Countries");
             
-            for (int crt = 0; crt < countries.size(); crt+=1){
+            for (int crt = 0; crt < jsonArrayCountries.size(); crt+=1){
 
-                JSONObject i =  (JSONObject)countries.get(crt);
+                JSONObject i =  (JSONObject)jsonArrayCountries.get(crt);
 
                 //On peut changer Country à Slug si jamais c'est chiant de gérer les espaces et maj
                 String countryName = i.get("Slug").toString();
