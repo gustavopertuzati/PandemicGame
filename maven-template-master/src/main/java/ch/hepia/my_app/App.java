@@ -11,16 +11,17 @@ import javafx.stage.Stage;
 public class App extends Application{
     public static void main(String[] args) {
         launch(args);
-        APICountryManager test = new APICountryManager("https://api.covid19api.com");
-
-        Countries lol = test.getCountries("summary");
-        for(Country c : lol.listOfCountries()){
+        
+        /*for(Country c : lol.listOfCountries()){
             System.out.println(c.toString());
-        }
+        }*/
     }
     
     @Override
     public void start(Stage primaryStage) {
+        
+        APICountryManager test = new APICountryManager("https://api.covid19api.com");
+        Countries lol = test.getCountries("summary");
 
         Image worldImage = new Image(getClass().getResourceAsStream("ressources/images/world.jpg"));
         double width = worldImage.getWidth();
@@ -34,7 +35,9 @@ public class App extends Application{
         worldImageView.setPickOnBounds(true);
 
         worldImageView.setOnMouseClicked(e -> {
-            System.out.println("["+e.getX()+", "+e.getY()+"]");
+            Country crt = lol.getCountryByCoordinates(e.getX(), e.getY());
+            System.out.println(crt.toString());
+            //System.out.println("["+e.getX()+", "+e.getY()+"]");
         });
 
         Scene scene = new Scene(scroller, width, height);
