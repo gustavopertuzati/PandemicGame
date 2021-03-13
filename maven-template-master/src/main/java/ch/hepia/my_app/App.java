@@ -15,8 +15,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.canvas.Canvas;
-
 import javafx.scene.Group;
+
 
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Label;
@@ -100,11 +100,10 @@ public class App extends Application{
                 if(e.getX() >= (int)((v[1]+180+12.5)*10) - 7 && e.getX() <= (int)((v[1]+180+12.5)*10) + 7
                 &&  e.getY() >= (int) (height+3120) -(int)((v[0]+90+300)*10) - 7 && e.getY() <= (int) (height+3120) -(int)((v[0]+90+300)*10) + 7 ){
                     
-                    new NewStage( lol.getCountryDataByName(k) );
+                    new NewStage( lol.getCountryDataByName(k), primaryStage );
                     //System.out.println(k);
                   }
             }
-            //System.out.println("["+e.getX()+", "+e.getY()+"]");
         });
 
         Scene scene = new Scene(scroller, width, height);
