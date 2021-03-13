@@ -3,16 +3,17 @@ package ch.hepia.my_app;
 public class Country {
 
     private String countryName;
-    private Double latitude;
-    private Double longitude;
+    private int latitude;
+    private int longitude;
     private int totalCases;
     private int dailyCases;
     private int totalDeaths;
     private int dailyDeaths;
     private int totalRecovered;
     private int dailyRecovered;
+    private int size;
 
-    public Country(String countryName, Double latitude, Double longitude, int totalCases, int dailyCases, int totalDeaths, int dailyDeaths, int totalRecovered, int dailyRecovered){
+    public Country(String countryName, int latitude, int longitude, int totalCases, int dailyCases, int totalDeaths, int dailyDeaths, int totalRecovered, int dailyRecovered, int size){
         this.countryName = countryName;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -22,14 +23,15 @@ public class Country {
         this.dailyDeaths = dailyDeaths;
         this.totalRecovered = totalRecovered;
         this.dailyRecovered = dailyRecovered;
+        this.size = size;
     }
 
     public String CountryName(){
         return this.countryName;
     }
 
-    public double[] Coordinates(){
-        double[] coordinates = new double[2];
+    public int[] coordinates(){
+        int[] coordinates = new int[2];
 
         coordinates[0] = this.latitude;
         coordinates[1] = this.longitude;
@@ -59,6 +61,10 @@ public class Country {
 
     public int dailyRecovered(){
         return this.dailyRecovered;
+    }
+
+    public int size(){
+        return this.size;
     }
 
     @Override

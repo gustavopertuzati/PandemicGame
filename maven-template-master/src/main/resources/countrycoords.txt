@@ -133,7 +133,7 @@ swaziland/2256/1671/1
 sweden/2029/312/2
 switzerland/1952/526/1
 syria/2344/715/1
-taiwan/3456/889
+taiwan/3456/889/1
 tajikistan/2729/658/1
 tanzania/2291/1358/2
 thailand/3207/1013/1

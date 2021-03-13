@@ -44,7 +44,7 @@ public class APICountryManager {
     
         //Faire la requete
         try{
-            Map<String, Double[]> coords = readCoordinates("countrycoords.txt");
+            Map<String, Integer[]> coords = readCoordinates("countrycoords.txt");
             URL url = new URL(this.apiLink+"/"+ request);
             HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
             connexion.setRequestMethod("GET");
@@ -67,7 +67,12 @@ public class APICountryManager {
             
             for (int crt = 0; crt < jsonArrayCountries.size(); crt+=1){
 
+                
+                
                 JSONObject i =  (JSONObject)jsonArrayCountries.get(crt);
+                if(!coords.keySet().contains(i.get("Slug").toString())){
+                    continue;
+                }
 
                 //On peut changer Country à Slug si jamais c'est chiant de gérer les espaces et maj
                 String countryName = i.get("Slug").toString();
@@ -77,11 +82,11 @@ public class APICountryManager {
                 int dailyDeaths = Integer.parseInt(i.get("NewDeaths").toString());
                 int totalRecovered = Integer.parseInt(i.get("TotalRecovered").toString());
                 int dailyRecovered = Integer.parseInt(i.get("NewRecovered").toString());
-                Double[] tmp = coords.get(countryName);
-                Double latitude = tmp[0];
-                Double longitude = tmp[1];
-
-                Country currentCountry = new Country(countryName, latitude, longitude, totalCases, dailyCases, totalDeaths, dailyDeaths, totalRecovered, dailyRecovered);
+                Integer[] tmp = coords.get(countryName);
+                Integer latitude = tmp[0];
+                Integer longitude = tmp[1];
+                int size = tmp[2];
+                Country currentCountry = new Country(countryName, latitude, longitude, totalCases, dailyCases, totalDeaths, dailyDeaths, totalRecovered, dailyRecovered, size);
                 
                 countries.addCountry(currentCountry);
             }
@@ -92,14 +97,14 @@ public class APICountryManager {
     }
 
 
-    private Map<String, Double[]> readCoordinates(String path){
-        Map<String, Double[]> myMap = new HashMap<>();
+    private Map<String, Integer[]> readCoordinates(String path){
+        Map<String, Integer[]> myMap = new HashMap<>();
         try{
             Scanner sc = new Scanner(this.getClass().getClassLoader().getResourceAsStream(path)); 
             while (sc.hasNextLine()) {
              String[] tmpStr = sc.nextLine().split("/"); 
-              Double[] tmpDbl = {Double.parseDouble(tmpStr[1]), Double.parseDouble(tmpStr[2])};
-              myMap.put(tmpStr[0], tmpDbl);
+             Integer[] tmpInt = {Integer.parseInt(tmpStr[1]), Integer.parseInt(tmpStr[2]), Integer.parseInt(tmpStr[3])};
+            myMap.put(tmpStr[0], tmpInt);
             } 
         }catch(Exception e){
             e.printStackTrace();

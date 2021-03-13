@@ -52,12 +52,12 @@ public class App extends Application{
         
         ScrollPane scroller = new ScrollPane();
 
-        Map<String, Double[]> myMap = new HashMap<>();
+        Map<String, Integer[]> myMap = new HashMap<>();
         try{
             Scanner sc = new Scanner(this.getClass().getClassLoader().getResourceAsStream("countrycoords.txt")); 
             while (sc.hasNextLine()) {
              String[] tmpStr = sc.nextLine().split("/"); 
-              Double[] tmpDbl = {Double.parseDouble(tmpStr[1]), Double.parseDouble(tmpStr[2])};
+             Integer[] tmpDbl = {Integer.parseInt(tmpStr[1]), Integer.parseInt(tmpStr[2])};
               myMap.put(tmpStr[0], tmpDbl);
             } 
         }catch(Exception e){
@@ -71,25 +71,19 @@ public class App extends Application{
                 pixelWriter.setColor(i, j, pixelReader.getColor(i, j));
             }
         }
-        
-        /*myMap.forEach((k,v) -> pixelWriter.setColor((int)(v[1]+60), (int)(v[0]+180),  Color.rgb(255,0,0)));
+    
         for ( String k : myMap.keySet()){
             for(int i = 0; i < 7; i++){
                 for(int j = 0; j < 7; j++){
-                    Double[] coords = myMap.get(k);
-                    double calcX = (coords[1]+180)*(width/360);
-                    double latRad = coords[0]*Math.PI/180;   
-                    double mercN = Math.log(Math.tan((Math.PI/4)+(latRad/2)));
-                    double calcY = (height/2)-(width*mercN/(2*Math.PI));
-                    
-                    pixelWriter.setColor((int)calcX+i, (int)calcY+j, Color.rgb(255,0,0));
-                    pixelWriter.setColor((int)calcX+i, (int)calcY-j, Color.rgb(255,0,0));
-                    pixelWriter.setColor((int)calcX-i, (int)calcY+j, Color.rgb(255,0,0));
-                    pixelWriter.setColor((int)calcX-i, (int)calcY-j, Color.rgb(255,0,0));
+                    Integer[] coords = myMap.get(k);
+                    pixelWriter.setColor(coords[0]+i, coords[1]+j, Color.rgb(255,0,0));
+                    pixelWriter.setColor(coords[0]+i, coords[1]-j, Color.rgb(255,0,0));
+                    pixelWriter.setColor(coords[0]-i, coords[1]+j, Color.rgb(255,0,0));
+                    pixelWriter.setColor(coords[0]-i, coords[1]-j, Color.rgb(255,0,0));
                 }
             }
         }
-        */
+        
         
         //lol.listOfCountries().forEach( (Country i) -> pixelWriter.setColor((int)(i.Coordinates()[1]+60)*10+200, (int)(i.Coordinates()[0]+180)*10+100,  Color.rgb(255,0,0)));
         
@@ -100,11 +94,10 @@ public class App extends Application{
         worldImageView.setPickOnBounds(true);
 
         worldImageView.setOnMouseClicked(e -> {
-            //Country crt = lol.getCountryByCoordinates(e.getX(), e.getY());
-            //Country crt = new Country("gustavobg", 1.0, 2.0, 1000, 100, 2, 0, 80, 20);
-
-            System.out.println(e.getX() + "/" + e.getY());
-
+            try{
+                Country crt = lol.getCountryByCoordinates(e.getX(), e.getY());
+                new NewStage(crt, primaryStage);
+            }catch(Exception oops){}
         });
 
         Scene scene = new Scene(scroller, width, height);
