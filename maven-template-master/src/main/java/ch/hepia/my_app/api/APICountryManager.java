@@ -7,7 +7,6 @@ import java.util.Scanner;
 import java.util.Map;
 import java.util.HashMap;
 
-
 import javax.management.RuntimeErrorException;
 
 import java.io.BufferedReader;
@@ -51,9 +50,11 @@ public class APICountryManager {
             
             int response = connexion.getResponseCode();
             if(response != 200){
-                throw new RuntimeException("HTTP Request failed with response code: " + response);
+                System.out.println("HTTP Request failed with response code: " + response + "\n Data will be taken form contrycords.txt");
+                coords.forEach( (k,v) -> countries.addCountry(new Country(k, v[0], v[1], 0,0,0,0,0,0, v[2])));                
+                return countries;
             }
-            
+                        
             String content = "";
             Scanner sc = new Scanner(url.openStream());
             while(sc.hasNext()){
