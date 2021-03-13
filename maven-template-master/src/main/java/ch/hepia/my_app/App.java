@@ -3,7 +3,8 @@ package ch.hepia.my_app;
 import java.util.Scanner;
 import java.util.Map;
 import java.util.HashMap;
-
+import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,7 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.Group;
-
+import javafx.scene.shape.Circle;
 
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Label;
@@ -27,12 +28,6 @@ import javafx.scene.image.WritableImage;
 public class App extends Application{
     public static void main(String[] args) {
         launch(args);
-        
-        /*APICountryManager test = new APICountryManager("https://api.covid19api.com");
-        Countries lol = test.getCountries("summary");
-        for(Country c : lol.listOfCountries()){
-            System.out.println(c.toString());
-        }*/
     }
     
     @Override
@@ -40,70 +35,49 @@ public class App extends Application{
         
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries lol = test.getCountries("summary");
+        
+        //Va contenir le pays ainsi que les coordonnées de son cercle, ainsi que l'index du cercle dans circles
+        Map<Country, Integer[]> countryCircleCoords = new HashMap<>();
+
+        List<Circle> circles = new ArrayList<>();
+
+        //Il faut initialiser l'image à une taille "normale", et initialiser les cercles dessus aussi
+        //Nouvlles coordonnées initiales du cercle: 
+        //x=(int)X_coordonéePays*largeurImageResizée/largeurOriginale     
+        //y=(int)Y_coordonéePays*hauteurImageResizée/hauteurOriginale
+
+
 
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
-        double width = worldImage.getWidth();
-        double height = worldImage.getHeight();
-        
-        
-        WritableImage writableImage =  new WritableImage((int)width, (int)height);
-        PixelWriter pixelWriter = writableImage.getPixelWriter();
-        
-        
+        double originalWidth = worldImage.getWidth();  
+        double originalHeight = worldImage.getHeight();
+        Group box = new Group();
+        //Il faut essayer trouver la nouvelle taille de l'image en fonction de la résolution de l'écran du user.
+        int newWidth = 1600;
+        //Pour garder le ratio largeur hauteur originale
+        int newHeight = (int)(originalHeight*newWidth/originalWidth);
+
         ScrollPane scroller = new ScrollPane();
+        ImageView iV = new ImageView(worldImage);
 
-        Map<String, Integer[]> myMap = new HashMap<>();
-        try{
-            Scanner sc = new Scanner(this.getClass().getClassLoader().getResourceAsStream("countrycoords.txt")); 
-            while (sc.hasNextLine()) {
-             String[] tmpStr = sc.nextLine().split("/"); 
-             Integer[] tmpDbl = {Integer.parseInt(tmpStr[1]), Integer.parseInt(tmpStr[2])};
-              myMap.put(tmpStr[0], tmpDbl);
-            } 
-        }catch(Exception e){
-            e.printStackTrace();
-        }
 
-        PixelReader pixelReader = worldImage.getPixelReader();
-        for (int i = 0; i < (int)width; i++ ){
-            for (int j = 0; j < (int)height; j++){
-                pixelReader.getColor(i, j);
-                pixelWriter.setColor(i, j, pixelReader.getColor(i, j));
-            }
-        }
-    
-        for ( String k : myMap.keySet()){
-            for(int i = 0; i < 7; i++){
-                for(int j = 0; j < 7; j++){
-                    Integer[] coords = myMap.get(k);
-                    pixelWriter.setColor(coords[0]+i, coords[1]+j, Color.rgb(255,0,0));
-                    pixelWriter.setColor(coords[0]+i, coords[1]-j, Color.rgb(255,0,0));
-                    pixelWriter.setColor(coords[0]-i, coords[1]+j, Color.rgb(255,0,0));
-                    pixelWriter.setColor(coords[0]-i, coords[1]-j, Color.rgb(255,0,0));
-                }
-            }
-        }
+        scroller.setPrefSize(newWidth, newHeight);
+        scroller.setPannable(true);
+        scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         
-        
-        //lol.listOfCountries().forEach( (Country i) -> pixelWriter.setColor((int)(i.Coordinates()[1]+60)*10+200, (int)(i.Coordinates()[0]+180)*10+100,  Color.rgb(255,0,0)));
-        
-        ImageView worldImageView = new ImageView(writableImage);
- 
-        scroller.setContent(worldImageView);
-
-        worldImageView.setPickOnBounds(true);
-
-        worldImageView.setOnMouseClicked(e -> {
-            try{
-                Country crt = lol.getCountryByCoordinates(e.getX(), e.getY());
-                new NewStage(crt, primaryStage);
-            }catch(Exception oops){}
-        });
-
-        Scene scene = new Scene(scroller, width, height);
+        box.getChildren().add(iV);
+        lol.listOfCountries().forEach( c -> box.getChildren().add(getCountryCircle(c)));
+        scroller.setContent(box);
+        Scene scene = new Scene(scroller, newWidth, newHeight);
 
         primaryStage.setScene(scene);
 
         primaryStage.show();
     }
+
+    public Circle getCountryCircle(Country c){
+        return new Circle(c.coordinates()[0], c.coordinates()[1], c.size()*6.5 , Color.RED);
+    }
+
 }
