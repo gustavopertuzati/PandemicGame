@@ -19,11 +19,8 @@ public class Countries {
     }
 
     public Country getCountryByCoordinates(double x, double y){
-        x-=153;
-        y-=314;
-        int mapWidth = 3821;
-        int mapHeight = 1650;
-        int a = 6378137;
+        int mapWidth = 3840;
+        int mapHeight = 1958;
         for (Country c : this.countries){
             double[] coords = c.Coordinates();
             double calcX = (coords[1]+180)*(mapWidth/360);

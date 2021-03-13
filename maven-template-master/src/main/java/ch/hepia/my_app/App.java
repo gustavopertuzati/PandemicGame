@@ -41,7 +41,7 @@ public class App extends Application{
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries lol = test.getCountries("summary");
 
-        Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/world.jpg"));
+        Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
         double width = worldImage.getWidth();
         double height = worldImage.getHeight();
         
@@ -72,18 +72,25 @@ public class App extends Application{
             }
         }
         
-        //myMap.forEach((k,v) -> pixelWriter.setColor((int)(v[1]+60), (int)(v[0]+180),  Color.rgb(255,0,0)));
+        /*myMap.forEach((k,v) -> pixelWriter.setColor((int)(v[1]+60), (int)(v[0]+180),  Color.rgb(255,0,0)));
         for ( String k : myMap.keySet()){
             for(int i = 0; i < 7; i++){
                 for(int j = 0; j < 7; j++){
-                    Double[] v = myMap.get(k);
-                    pixelWriter.setColor((int)((v[1]+180+12.5)*10)+i, (int) (height+3120) - (int)((v[0]+90+300)*10)+j, Color.rgb(255,0,0));
-                    pixelWriter.setColor((int)((v[1]+180+12.5)*10)+i, (int) (height+3120) - (int)((v[0]+90+300)*10)-j, Color.rgb(255,0,0));
-                    pixelWriter.setColor((int)((v[1]+180+12.5)*10)-i, (int) (height+3120) - (int)((v[0]+90+300)*10)+j, Color.rgb(255,0,0));
-                    pixelWriter.setColor((int)((v[1]+180+12.5)*10)-i, (int) (height+3120) - (int)((v[0]+90+300)*10)-j, Color.rgb(255,0,0));
+                    Double[] coords = myMap.get(k);
+                    double calcX = (coords[1]+180)*(width/360);
+                    double latRad = coords[0]*Math.PI/180;   
+                    double mercN = Math.log(Math.tan((Math.PI/4)+(latRad/2)));
+                    double calcY = (height/2)-(width*mercN/(2*Math.PI));
+                    
+                    pixelWriter.setColor((int)calcX+i, (int)calcY+j, Color.rgb(255,0,0));
+                    pixelWriter.setColor((int)calcX+i, (int)calcY-j, Color.rgb(255,0,0));
+                    pixelWriter.setColor((int)calcX-i, (int)calcY+j, Color.rgb(255,0,0));
+                    pixelWriter.setColor((int)calcX-i, (int)calcY-j, Color.rgb(255,0,0));
                 }
             }
         }
+        */
+        
         //lol.listOfCountries().forEach( (Country i) -> pixelWriter.setColor((int)(i.Coordinates()[1]+60)*10+200, (int)(i.Coordinates()[0]+180)*10+100,  Color.rgb(255,0,0)));
         
         ImageView worldImageView = new ImageView(writableImage);
@@ -95,15 +102,9 @@ public class App extends Application{
         worldImageView.setOnMouseClicked(e -> {
             //Country crt = lol.getCountryByCoordinates(e.getX(), e.getY());
             //Country crt = new Country("gustavobg", 1.0, 2.0, 1000, 100, 2, 0, 80, 20);
-            for ( String k : myMap.keySet()){
-                Double[] v = myMap.get(k);
-                if(e.getX() >= (int)((v[1]+180+12.5)*10) - 7 && e.getX() <= (int)((v[1]+180+12.5)*10) + 7
-                &&  e.getY() >= (int) (height+3120) -(int)((v[0]+90+300)*10) - 7 && e.getY() <= (int) (height+3120) -(int)((v[0]+90+300)*10) + 7 ){
-                    
-                    new NewStage( lol.getCountryDataByName(k), primaryStage );
-                    //System.out.println(k);
-                  }
-            }
+
+            System.out.println(e.getX() + "/" + e.getY());
+
         });
 
         Scene scene = new Scene(scroller, width, height);
