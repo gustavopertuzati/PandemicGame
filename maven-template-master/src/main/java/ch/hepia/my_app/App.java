@@ -23,7 +23,6 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.image.WritableImage;
 
-
 public class App extends Application{
     public static void main(String[] args) {
         launch(args);
