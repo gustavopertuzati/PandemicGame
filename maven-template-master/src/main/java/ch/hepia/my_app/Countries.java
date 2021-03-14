@@ -20,7 +20,7 @@ public class Countries {
 
     public Country getCountryByCoordinates(double x, double y){
         for (Country c : this.countries){
-            if ( (Math.abs(c.coordinates()[0] - x) <= c.size()) && (Math.abs(c.coordinates()[1] - y) <= c.size())){
+            if ( (Math.abs(c.coordinates()[0] - x) <= c.size()*6.5) && (Math.abs(c.coordinates()[1] - y) <= c.size()*6.5)){
                 return c;
             }
         }
