@@ -90,7 +90,6 @@ public class App extends Application{
         ImageView worldImageView = new ImageView(writableImage);
  
         scroller.setContent(worldImageView);
-
         worldImageView.setPickOnBounds(true);
 
         worldImageView.setOnMouseClicked(e -> {
