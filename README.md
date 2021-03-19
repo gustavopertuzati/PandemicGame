@@ -30,7 +30,7 @@ mvn exec:java
 
 ## Contact
 
-# Auteurs
+### Auteurs
 * Thomas Dagier (thomas.dagier-joncour@etu.hesge.ch)
 * Gustavo Pertuzati (gustavo.pertuzati@etu.hesge.ch)
 * Anotoine Blancy (antoine.blancy@etu.hesge.ch)
