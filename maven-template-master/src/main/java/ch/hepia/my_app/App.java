@@ -67,38 +67,12 @@ public class App extends Application{
         box.getChildren().add(iV);
         lol.listOfCountries().forEach( c -> box.getChildren().add(getCountryCircle(c)));
         
-        ScrollPane scroller = new ScrollPane();
-        scroller.setContent(box);
+        ZoomableScrollPane scroller = new ZoomableScrollPane(box, newWidth, newHeight);
         scroller.setPrefSize(newWidth, newHeight);
         scroller.setPannable(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        
-        iV.setOnScroll(e->{});
-
-        scroller.addEventHandler(ScrollEvent.ANY, e -> {
-            double delta = e.getDeltaY();
-            //Rectangle2D viewport = iV.getViewport();
-            System.out.println("lol :D");
-            double min = Math.min(100 / scroller.getHvalue(), 100 / scroller.getVvalue());
-            double max = Math.min(newWidth / scroller.getHvalue(), newHeight / scroller.getVvalue());
-            double scale = Math.min(Math.max(Math.pow(1.01, delta), min), max);
-
-            Point2D mouse = new Point2D(e.getX(), e.getY());// imageViewToImage(iV, new Point2D(e.getX(), e.getY()));
-            double kek1 = scroller.getHvalue() * scale;
-            double kek2 = scroller.getVvalue() * scale;
-
-            min = mouse.getX() - (mouse.getX() - scroller.getHmin()) * scale;
-            max = newWidth - kek1;
-            double newMinX = Math.min(Math.max(0, min), max);
-            min = mouse.getY() - (mouse.getY() - scroller.getVmin()) * scale;
-            max = newHeight - kek2;
-            double newMinY = Math.min(Math.max(0, min), max);
-
-            iV.setViewport(new Rectangle2D(newMinX, newMinY, kek1, kek2));
-        });
-
-        
+               
         Scene scene = new Scene(scroller, newWidth, newHeight);
 
         primaryStage.setScene(scene);
