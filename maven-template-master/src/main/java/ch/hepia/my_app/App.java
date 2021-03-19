@@ -87,7 +87,16 @@ public class App extends Application{
         //lol.listOfCountries().forEach( (Country i) -> pixelWriter.setColor((int)(i.Coordinates()[1]+60)*10+200, (int)(i.Coordinates()[0]+180)*10+100,  Color.rgb(255,0,0)));
         
         ImageView worldImageView = new ImageView(writableImage);
- 
+
+        double newWidth = 1500;
+        double newHeight = 1500*height/width;
+
+        scroller.setPrefSize(newWidth, newHeight);
+        scroller.setPannable(true);
+        scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        Scene scene = new Scene(scroller, newWidth, newHeight);
         scroller.setContent(worldImageView);
         worldImageView.setPickOnBounds(true);
 
@@ -97,8 +106,6 @@ public class App extends Application{
                 new NewStage(crt, primaryStage);
             }catch(Exception oops){}
         });
-
-        Scene scene = new Scene(scroller, width, height);
 
         primaryStage.setScene(scene);
 
