@@ -42,13 +42,13 @@ public class App extends Application{
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries lol = test.getCountries("summary");
 
-
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
         double originalWidth = worldImage.getWidth();  
         double originalHeight = worldImage.getHeight();
+
         Group box = new Group();
+
         int newWidth = 1200;
-        //Pour garder le ratio largeur hauteur originale
         int newHeight = (int)(originalHeight*newWidth/originalWidth);
 
         ImageView iV = new ImageView(worldImage);        
@@ -59,11 +59,9 @@ public class App extends Application{
                 new NewStage(crt, primaryStage);
             }catch(Exception oops){
                 System.out.println(e.getX()+ "/" +e.getY());
-
             }
         });
 
-        
         box.getChildren().add(iV);
         lol.listOfCountries().forEach( c -> box.getChildren().add(getCountryCircle(c)));
         
@@ -74,9 +72,7 @@ public class App extends Application{
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                
         Scene scene = new Scene(scroller, newWidth, newHeight);
-
         primaryStage.setScene(scene);
-
         primaryStage.show();
     }
 
