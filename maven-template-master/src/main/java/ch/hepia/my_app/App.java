@@ -64,7 +64,13 @@ public class App extends Application{
 
         box.getChildren().add(iV);
         lol.listOfCountries().forEach( c -> box.getChildren().add(getCountryCircle(c)));
-        
+        int sum = 0;
+        for( Country i : lol.listOfCountries()){
+            sum += i.totalPopulation();
+        }
+
+        System.out.println("Lol thanos snap: " + sum);
+
         ZoomableScrollPane scroller = new ZoomableScrollPane(box, newWidth, newHeight);
         scroller.setPrefSize(newWidth, newHeight);
         scroller.setPannable(true);
@@ -77,9 +83,8 @@ public class App extends Application{
     }
 
     public Circle getCountryCircle(Country c){
-        Circle circ = new Circle(c.coordinates()[0], c.coordinates()[1], c.size()*6.5 , Color.RED);
+        Circle circ = new Circle(c.coordinates()[0], c.coordinates()[1], c.size()*6.5 , c.getColorFromCountry());
         circ.setMouseTransparent(true);
         return circ;
     }
-
 }

@@ -22,7 +22,6 @@ import java.net.ProtocolException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -44,6 +43,8 @@ public class APICountryManager {
         //Faire la requete
         try{
             Map<String, Integer[]> coords = readCoordinates("countrycoords.txt");
+            //Map<String, Integer> populations = getPopulations();
+
             URL url = new URL(this.apiLink+"/"+ request);
             HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
             connexion.setRequestMethod("GET");
@@ -51,7 +52,7 @@ public class APICountryManager {
             int response = connexion.getResponseCode();
             if(response != 200){
                 System.out.println("HTTP Request failed with response code: " + response + "\n Data will be taken form contrycords.txt");
-                coords.forEach( (k,v) -> countries.addCountry(new Country(k, v[0], v[1], 0,0,0,0,0,0, v[2])));                
+                coords.forEach( (k,v) -> countries.addCountry(new Country(k, v[0], v[1], 0,0,0,0,0,0, v[2], 0)));                
                 return countries;
             }
                         
@@ -87,7 +88,11 @@ public class APICountryManager {
                 Integer latitude = tmp[0];
                 Integer longitude = tmp[1];
                 int size = tmp[2];
-                Country currentCountry = new Country(countryName, latitude, longitude, totalCases, dailyCases, totalDeaths, dailyDeaths, totalRecovered, dailyRecovered, size);
+                
+                //int totalPopulation = populations.get(countryName);
+                int totalPopulation = tmp[3];
+
+                Country currentCountry = new Country(countryName, latitude, longitude, totalCases, dailyCases, totalDeaths, dailyDeaths, totalRecovered, dailyRecovered, size, totalPopulation);
                 
                 countries.addCountry(currentCountry);
             }
@@ -97,6 +102,33 @@ public class APICountryManager {
         return countries;
     }
 
+    /*private Map<String, Integer> getPopulations(){
+        try{
+            Map<String,Integer> populations = new HashMap<>();
+
+            String url = "http://restcountries.eu/rest/v1/all";
+            
+            Response resp = get(url);                        
+
+            JSONArray jsonResponse = new JSONArray(resp.asString());
+            
+            int count = jsonResponse.length(); // how many items in the array            
+            int sCode = resp.statusCode();  // status code of 200             
+
+            //create new arraylist to match CountriesData            
+            List<CountriesData> cDataList = new ArrayList<CountriesData>();
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<CountriesData>>() {}.getType();
+
+            cDataList = gson.fromJson(jsonResponse.toString(), listType);
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }*/
+
 
     private Map<String, Integer[]> readCoordinates(String path){
         Map<String, Integer[]> myMap = new HashMap<>();
@@ -104,7 +136,7 @@ public class APICountryManager {
             Scanner sc = new Scanner(this.getClass().getClassLoader().getResourceAsStream(path)); 
             while (sc.hasNextLine()) {
              String[] tmpStr = sc.nextLine().split("/"); 
-             Integer[] tmpInt = {Integer.parseInt(tmpStr[1]), Integer.parseInt(tmpStr[2]), Integer.parseInt(tmpStr[3])};
+             Integer[] tmpInt = {Integer.parseInt(tmpStr[1]), Integer.parseInt(tmpStr[2]), Integer.parseInt(tmpStr[3]), Integer.parseInt(tmpStr[4])};
             myMap.put(tmpStr[0], tmpInt);
             } 
         }catch(Exception e){

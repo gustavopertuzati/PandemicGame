@@ -2,6 +2,7 @@ package ch.hepia.my_app;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.paint.Color;
 import java.lang.Math;
 
 public class Countries {

@@ -15,6 +15,12 @@ import javafx.geometry.Rectangle2D;
 import javafx.geometry.Insets;
 import javafx.scene.text.Text;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.Node;
+import javafx.util.Duration;
+
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
