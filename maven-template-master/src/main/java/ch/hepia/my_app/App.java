@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
+
+import javafx.geometry.Rectangle2D;
+import javafx.geometry.Point2D;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
@@ -18,6 +22,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.Group;
 import javafx.scene.shape.Circle;
+import javafx.scene.input.ScrollEvent;
+
 
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Label;
@@ -45,8 +51,7 @@ public class App extends Application{
         int newWidth = 1200;
         int newHeight = (int)(originalHeight*newWidth/originalWidth);
 
-        ImageView iV = new ImageView(worldImage);
-        
+        ImageView iV = new ImageView(worldImage);        
         
         iV.setOnMouseClicked(e -> {
             try{
@@ -65,7 +70,7 @@ public class App extends Application{
         scroller.setPannable(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        
+               
         Scene scene = new Scene(scroller, newWidth, newHeight);
         primaryStage.setScene(scene);
         primaryStage.show();
