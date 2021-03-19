@@ -42,7 +42,7 @@ public class ZoomableScrollPane extends ScrollPane {
         Node outerNode = centeredNode(node);
         outerNode.addEventFilter(ScrollEvent.ANY, e-> {
           e.consume();
-          onScroll(e.getTextDeltaY(), new Point2D(e.getX(), e.getY()));
+          onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
           });
         return outerNode;
     }
@@ -68,9 +68,16 @@ public class ZoomableScrollPane extends ScrollPane {
         double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
     
         double zoomFactor =  Math.exp(wheelDelta * zoomIntensity);
+        System.out.println();
+        System.out.println(zoomFactor);
+        System.out.println(innerBounds.getWidth());
+        if((innerBounds.getWidth() >= width) && zoomFactor < 1){
+            System.out.println("kek");
+        }
+
         if( 
             ((innerBounds.getHeight() >= height*3.7) && zoomFactor > 1) || 
-            ((innerBounds.getWidth() <= width + width*0.05) && zoomFactor < 1)
+            ((innerBounds.getWidth() <= width + width*0.1) && zoomFactor < 1)
             ){
           zoomFactor = 1;
         }
@@ -85,9 +92,7 @@ public class ZoomableScrollPane extends ScrollPane {
         
         // calculate adjustment of scroll position (pixels)
         Point2D adjustment = target.getLocalToParentTransform().deltaTransform(posInZoomTarget.multiply(zoomFactor - 1));
-        
-        // convert back to [0, 1] range
-        // (too large/small values are automatically corrected by ScrollPane)
+
         Bounds updatedInnerBounds = zoomNode.getBoundsInLocal();
         this.setHvalue((valX + adjustment.getX()) /(updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
         this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
