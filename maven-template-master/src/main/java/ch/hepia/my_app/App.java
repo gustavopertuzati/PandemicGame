@@ -4,6 +4,14 @@ import java.util.Scanner;
 import java.util.Map;
 import java.util.HashMap;
 
+import javafx.geometry.Pos;
+import javafx.scene.layout.Region;
+import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,12 +24,15 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.Group;
-
-
+import javafx.animation.*;
+//import javafx.animation.Transition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.image.WritableImage;
+import javafx.scene.control.*;
 
 public class App extends Application{
     public static void main(String[] args) {
@@ -100,10 +111,12 @@ public class App extends Application{
         scroller.setContent(worldImageView);
         worldImageView.setPickOnBounds(true);
 
+        final Pane sidePane = createSidebarContent();
+
         worldImageView.setOnMouseClicked(e -> {
             try{
                 Country crt = lol.getCountryByCoordinates(e.getX(), e.getY());
-                new NewStage(crt, primaryStage);
+                SideBar sidebar = new SideBar(250, sidePane);
             }catch(Exception oops){}
         });
 
