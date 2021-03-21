@@ -1,138 +1,116 @@
 package ch.hepia.my_app;
 
-import java.util.Scanner;
-import java.util.Map;
-import java.util.HashMap;
-
-import javafx.geometry.Pos;
-import javafx.scene.layout.Region;
-import javafx.scene.Node;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.util.Duration;
-import javafx.scene.input.MouseEvent;
 import javafx.application.Application;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.PixelReader;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Paint;
-import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.Group;
-import javafx.animation.*;
-//import javafx.animation.Transition;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
+import javafx.geometry.Insets;
+import javafx.scene.text.Text;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
-import javafx.scene.image.WritableImage;
-import javafx.scene.control.*;
 
-class SideBar extends VBox
+class NewStage {
+
+    NewStage(Country c, Stage primaryStage)
     {
-        /**
-         * @return a control button to hide and show the sidebar
-         */
-        public MouseEvent getControlButton()
-        {
-            return controlButton;
-        }
-        private final MouseEvent controlButton;
+        Stage detailStage = new Stage();
+        detailStage.setTitle(c.CountryName());
 
-        /**
-         * creates a sidebar containing a vertical alignment of the given nodes
-         */
-        SideBar(final double expandedWidth, Node... nodes)
-        {
-            getStyleClass().add("sidebar");
-            this.setPrefWidth(expandedWidth);
-            this.setMinWidth(0);
+        Text countryDetail = new Text("\n\n" + c.toString());
 
-// create a bar to hide and show.
-            setAlignment(Pos.CENTER);
-            getChildren().addAll(nodes);
+        Button btn1 = new Button();
+        btn1.setText("More options");
+        
+        Button btn2 = new Button();
+        btn2.setText("Exit");
+        btn2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);;
+            }
+        });
+        
+        btn1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("To Be Coded...");
+            }
+        });
 
-// create a button to hide and show the sidebar.
-            controlButton = new Button("Collapse");
-            controlButton.getStyleClass().add("hide-left");
+        VBox detailRoot = new VBox();
+        
+        detailRoot.getChildren().add(countryDetail);
+        
+        btn1.setLayoutX(900);
+        btn1.setLayoutY(530);
+        detailRoot.getChildren().add(btn1);
+        
+        btn2.setLayoutX(900);
+        btn2.setLayoutY(630);
+        detailRoot.getChildren().add(btn2);
 
-// apply the animations when the button is pressed.
-            controlButton.setOnAction(new EventHandler<ActionEvent>()
-            {
-                @Override
-                public void handle(ActionEvent actionEvent)
-                {
-// create an animation to hide sidebar.
-                    final Animation hideSidebar = new Transition()
-                    {
-                        {
-                            setCycleDuration(Duration.millis(250));
-                        }
+        detailRoot.setAlignment(Pos.CENTER);
+        VBox.setMargin(countryDetail, new Insets(10, 10, 10, 10));
+        VBox.setMargin(btn2, new Insets(10, 10, 10, 10));
+        VBox.setMargin(btn1, new Insets(10, 10, 10, 10));
 
-                        @Override
-                        protected void interpolate(double frac)
-                        {
-                            final double curWidth = expandedWidth * (1.0 - frac);
-                            setPrefHeight(curWidth);
-                            setTranslateY(-expandedWidth + curWidth);
-                        }
-                    };
-                    hideSidebar.onFinishedProperty().set(new EventHandler<ActionEvent>()
-                    {
-                        @Override
-                        public void handle(ActionEvent actionEvent)
-                        {
-                            setVisible(false);
-                            controlButton.setText("Show");
-                            controlButton.getStyleClass().remove("hide-left");
-                            controlButton.getStyleClass().add("show-right");
-                        }
-                    });
-// create an animation to show a sidebar.
-                    final Animation showSidebar = new Transition()
-                    {
-                        {
-                            setCycleDuration(Duration.millis(250));
-                        }
+        Scene detailScene = new Scene(detailRoot, 800, 400, Color.BLACK);
+        
+        detailStage.setScene(detailScene);
+        detailStage.initModality(Modality.APPLICATION_MODAL);
+        detailStage.initOwner(primaryStage);
+        
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+ 
+        //set Stage boundaries to the lower right corner of the visible bounds of the main screen
+        detailStage.setX(primaryScreenBounds.getMinX() + primaryScreenBounds.getWidth() - 400);
+        detailStage.setY(primaryScreenBounds.getMaxY() - primaryScreenBounds.getHeight() - 300);
+        detailStage.setWidth(400);
+        detailStage.setHeight(1000);
+        /*
+        Stage newsStage = new Stage();
+        newsStage.setTitle("Latest news from " + c.CountryName());
+        
+        Text news = new Text("Bad news...");
+        
+        VBox newsRoot = new VBox();
+        
+        newsRoot.getChildren().add(news);
+        
+        newsRoot.setAlignment(Pos.CENTER_LEFT);
+        VBox.setMargin(news, new Insets(10, 10, 10, 10));
+        
+        Scene newsScene = new Scene(newsRoot, 1024, 800);
+        
+        newsStage.setScene(newsScene);
+        newsStage.initModality(Modality.APPLICATION_MODAL);
+        newsStage.initOwner(primaryStage);
+        
+        newsStage.setX(primaryScreenBounds.getMaxX() + primaryScreenBounds.getWidth() - 400);
+        newsStage.setY(primaryScreenBounds.getMinY() - primaryScreenBounds.getHeight() - 300);
+        newsStage.setWidth(1000);
+        newsStage.setHeight(400);
+        */
+        detailStage.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (! isNowFocused) {
+                detailStage.hide();
+                //newsStage.hide();
+            }
+        });
 
-                        @Override
-                        protected void interpolate(double frac)
-                        {
-                            final double curWidth = expandedWidth * frac;
-                            setPrefHeight(curWidth);
-                            setTranslateY(-expandedWidth + curWidth);
-                        }
-                    };
-                    showSidebar.onFinishedProperty().set(new EventHandler<ActionEvent>()
-                    {
-                        @Override
-                        public void handle(ActionEvent actionEvent)
-                        {
-                            controlButton.setText("Collapse");
-                            controlButton.getStyleClass().add("hide-left");
-                            controlButton.getStyleClass().remove("show-right");
-                        }
-                    });
-                    if (showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED)
-                    {
-                        if (isVisible())
-                        {
-                            hideSidebar.play();
-                        }
-                        else
-                        {
-                            setVisible(true);
-                            showSidebar.play();
-                        }
-                    }
-                }
-            });
-        }
+        detailStage.show();
+        //newsStage.show();
     }
+}

@@ -111,12 +111,10 @@ public class App extends Application{
         scroller.setContent(worldImageView);
         worldImageView.setPickOnBounds(true);
 
-        final Pane sidePane = createSidebarContent();
-
         worldImageView.setOnMouseClicked(e -> {
             try{
                 Country crt = lol.getCountryByCoordinates(e.getX(), e.getY());
-                SideBar sidebar = new SideBar(250, sidePane);
+                new NewStage(crt, primaryStage);
             }catch(Exception oops){}
         });
 
