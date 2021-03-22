@@ -4,6 +4,14 @@ import java.util.Scanner;
 import java.util.Map;
 import java.util.HashMap;
 
+import javafx.geometry.Pos;
+import javafx.scene.layout.Region;
+import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,14 +24,20 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.Group;
-
-
+import javafx.animation.*;
+//import javafx.animation.Transition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.image.WritableImage;
+import javafx.scene.control.*;
 
 public class App extends Application{
+
+    BorderPane bp = new BorderPane();
+
     public static void main(String[] args) {
         launch(args);
         
@@ -100,14 +114,40 @@ public class App extends Application{
         scroller.setContent(worldImageView);
         worldImageView.setPickOnBounds(true);
 
+        bp.setStyle("-fx-background-color: #2f4f4f;");
+        bp.setPrefSize(800, 600);
+
+        
         worldImageView.setOnMouseClicked(e -> {
             try{
                 Country crt = lol.getCountryByCoordinates(e.getX(), e.getY());
-                new NewStage(crt, primaryStage);
+                final Pane countryPane = NewStage.createSidebarContent(crt);
+                NewStage sidebar = new NewStage(250, countryPane);
+
+                VBox.setVgrow(countryPane, Priority.ALWAYS);
+
+                final BorderPane layout = new BorderPane();
+                layout.setBottom(sidebar);
+                layout.setCenter(scene);
+                Scene finalScene = new Scene(layout);
+                primaryStage.setScene(finalScene);
+                
+                //new NewStage(crt, primaryStage);
             }catch(Exception oops){}
         });
 
-        primaryStage.setScene(scene);
+        StackPane st = new StackPane();
+
+        //st.getChildren().addAll(scene);
+        //st.setAlignment(Pos.TOP_LEFT);
+
+        VBox vb = new VBox(10);
+        //vb.getChildren().addAll(scene/*st*/);
+
+
+
+        
+
 
         primaryStage.show();
     }

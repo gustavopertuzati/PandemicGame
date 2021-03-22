@@ -1,8 +1,27 @@
 package ch.hepia.my_app;
 
+
+import javafx.animation.Animation;
+import javafx.animation.Transition;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+/*
 import javafx.application.Application;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import jdk.internal.org.jline.terminal.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.scene.Scene;
@@ -21,10 +40,81 @@ import javafx.scene.paint.Color;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
-class NewStage {
+*/
 
-    NewStage(Country c, Stage primaryStage)
-    {
+class NewStage extends VBox{
+
+    public static BorderPane createSidebarContent(Country country){
+
+        new EventHandler<ActionEvent>(){
+            @Override 
+            public void handle( ActionEvent actionEvent ){
+                Text countryDetail = new Text("\n\n" + country.toString());
+            }
+        };
+        changeLyric.fire();
+        final BorderPane lyricPane = new BorderPane();
+        lyricPane.setTop(changeLyric);
+        return lyricPane;
+    }
+
+    NewStage(final double expandedWidth, Node... nodes){
+
+        getStyleClass().add("sidebar");
+        this.setPrefWidth(expandedWidth);
+        this.setMinWidth(0);
+
+        setAlignment(Pos.CENTER);
+        getChildren().addAll(nodes);
+
+        new EventHandler<ActionEvent>(){
+                @Override
+                public void handle(ActionEvent actionEvent){
+// create an animation to hide sidebar.
+                    final Animation hideSidebar = new Transition(){{
+                            setCycleDuration(Duration.millis(250));
+                        }
+
+                        @Override
+                        protected void interpolate(double frac){
+                            final double curWidth = expandedWidth * (1.0 - frac);
+                            setPrefHeight(curWidth);
+                            setTranslateY(-expandedWidth + curWidth);
+                        }
+                    };
+                    hideSidebar.onFinishedProperty().set(new EventHandler<ActionEvent>(){
+                        @Override
+                        public void handle(ActionEvent actionEvent){
+                            setVisible(false);
+                        }
+                    });
+// create an animation to show a sidebar.
+                    final Animation showSidebar = new Transition(){{
+                            setCycleDuration(Duration.millis(250));
+                        }
+
+                        @Override
+                        protected void interpolate(double frac){
+                            final double curWidth = expandedWidth * frac;
+                            setPrefHeight(curWidth);
+                            setTranslateY(-expandedWidth + curWidth);
+                        }
+                    };
+                    if (showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
+                        if (isVisible()){
+                            hideSidebar.play();
+                        }
+                        else{
+                            setVisible(true);
+                            showSidebar.play();
+                        }
+                    }
+                }
+            };
+    }
+}
+
+/*
         Stage detailStage = new Stage();
         detailStage.setTitle(c.CountryName());
 
@@ -102,15 +192,13 @@ class NewStage {
         newsStage.setY(primaryScreenBounds.getMinY() - primaryScreenBounds.getHeight() - 300);
         newsStage.setWidth(1000);
         newsStage.setHeight(400);
-        */
         detailStage.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
             if (! isNowFocused) {
                 detailStage.hide();
                 //newsStage.hide();
             }
         });
-
+        
         detailStage.show();
+        */
         //newsStage.show();
-    }
-}
