@@ -30,7 +30,7 @@ class NewStage {
     NewStage(Country c, Stage primaryStage)
     {
         Stage subStage = new Stage();
-        subStage.setTitle(c.CountryName());
+        subStage.setTitle(c.countryName());
 
         Text text = new Text("\n\n" + c.toString());
 

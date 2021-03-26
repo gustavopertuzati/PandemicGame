@@ -1,6 +1,6 @@
 package ch.hepia.my_app;
 
-import java.net.URL; 
+import java.net.URL;
 import java.net.URLConnection;
 import java.net.HttpURLConnection;
 import java.util.Scanner;
@@ -26,53 +26,55 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.time.LocalDate;
+
 public class APICountryManager {
-    
+
     private String apiLink; //https://api.covid19api.com
 
-    public APICountryManager(String apiLink){
+    public APICountryManager(String apiLink) {
         //Si il y a un slash à la fin du string il faut l'enlever
         this.apiLink = apiLink;
     }
-    
-    public Countries getCountries(String request){ //"countries"
+
+    public Countries getCountries(String request) { //"countries"
         //Si il y a un slash au début du string, il faut l'enlever
-        Map<String, Country> map = new HashMap<>();
+        Map < String, Country > map = new HashMap < > ();
         Countries countries = new Countries();
-    
+
         //Faire la requete
-        try{
-            Map<String, Integer[]> coords = readCoordinates("countrycoords.txt");
+        try {
+            Map < String, Integer[] > coords = readFile("countrycoords.txt");
             //Map<String, Integer> populations = getPopulations();
 
-            URL url = new URL(this.apiLink+"/"+ request);
+            URL url = new URL(this.apiLink + "/" + request);
             HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
             connexion.setRequestMethod("GET");
-            
+
             int response = connexion.getResponseCode();
-            if(response != 200){
+            if (response != 200) {
                 System.out.println("HTTP Request failed with response code: " + response + "\n Data will be taken form contrycords.txt");
-                coords.forEach( (k,v) -> countries.addCountry(new Country(k, v[0], v[1], 0,0,0,0,0,0, v[2], 0)));                
+                coords.forEach((k, v) -> countries.addCountry(new Country(k, v[0], v[1], 0, 0, 0, 0, 0, 0, v[2], 0)));
                 return countries;
             }
-                        
+
             String content = "";
             Scanner sc = new Scanner(url.openStream());
-            while(sc.hasNext()){
+            while (sc.hasNext()) {
                 content += sc.nextLine();
             }
             sc.close();
-            
+
             JSONParser parser = new JSONParser();
             JSONObject data_obj = (JSONObject) parser.parse(content);
             JSONArray jsonArrayCountries = (JSONArray) data_obj.get("Countries");
-            
-            for (int crt = 0; crt < jsonArrayCountries.size(); crt+=1){
 
-                
-                
-                JSONObject i =  (JSONObject)jsonArrayCountries.get(crt);
-                if(!coords.keySet().contains(i.get("Slug").toString())){
+            for (int crt = 0; crt < jsonArrayCountries.size(); crt += 1) {
+
+
+
+                JSONObject i = (JSONObject) jsonArrayCountries.get(crt);
+                if (!coords.keySet().contains(i.get("Slug").toString())) {
                     continue;
                 }
 
@@ -88,102 +90,114 @@ public class APICountryManager {
                 Integer latitude = tmp[0];
                 Integer longitude = tmp[1];
                 int size = tmp[2];
-                
+
                 //int totalPopulation = populations.get(countryName);
                 int totalPopulation = tmp[3];
 
                 Country currentCountry = new Country(countryName, latitude, longitude, totalCases, dailyCases, totalDeaths, dailyDeaths, totalRecovered, dailyRecovered, size, totalPopulation);
-                
+
                 countries.addCountry(currentCountry);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return countries;
     }
 
-    /*private Map<String, Integer> getPopulations(){
-        try{
-            Map<String,Integer> populations = new HashMap<>();
-
-            String url = "http://restcountries.eu/rest/v1/all";
-            
-            Response resp = get(url);                        
-
-            JSONArray jsonResponse = new JSONArray(resp.asString());
-            
-            int count = jsonResponse.length(); // how many items in the array            
-            int sCode = resp.statusCode();  // status code of 200             
-
-            //create new arraylist to match CountriesData            
-            List<CountriesData> cDataList = new ArrayList<CountriesData>();
-
-            Gson gson = new Gson();
-            Type listType = new TypeToken<List<CountriesData>>() {}.getType();
-
-            cDataList = gson.fromJson(jsonResponse.toString(), listType);
-            
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-    }*/
-
-
-    private Map<String, Integer[]> readCoordinates(String path){
-        Map<String, Integer[]> myMap = new HashMap<>();
-        try{
-            Scanner sc = new Scanner(this.getClass().getClassLoader().getResourceAsStream(path)); 
+    private Map < String, Integer[] > readFile(String path) {
+        Map < String, Integer[] > myMap = new HashMap < > ();
+        try {
+            Scanner sc = new Scanner(this.getClass().getClassLoader().getResourceAsStream(path));
             while (sc.hasNextLine()) {
-             String[] tmpStr = sc.nextLine().split("/"); 
-             Integer[] tmpInt = {Integer.parseInt(tmpStr[1]), Integer.parseInt(tmpStr[2]), Integer.parseInt(tmpStr[3]), Integer.parseInt(tmpStr[4])};
-            myMap.put(tmpStr[0], tmpInt);
-            } 
-        }catch(Exception e){
+                String[] tmpStr = sc.nextLine().split("/");
+                Integer[] tmpInt = {
+                    Integer.parseInt(tmpStr[1]),
+                    Integer.parseInt(tmpStr[2]),
+                    Integer.parseInt(tmpStr[3]),
+                    Integer.parseInt(tmpStr[4])
+                };
+                myMap.put(tmpStr[0], tmpInt);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return myMap;
     }
 
-
     //Utilisé à la main lentement pour récupérer les coordonnées
     //Provoque l'erreur Too Many Requests, donc fait à la main 
     //Puis stocké dans le fichier ressources/countrycoords
-    private double[] getCountryCoord(String slug){
+    private double[] getCountryCoord(String slug) {
 
         double[] coords = new double[2];
-        try{
-            URL url = new URL(this.apiLink+"/dayone/country/"+ slug + "/status/confirmed");
+        try {
+            URL url = new URL(this.apiLink + "/dayone/country/" + slug + "/status/confirmed");
             HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
             connexion.setRequestMethod("GET");
 
             int response = connexion.getResponseCode();
-            if(response != 200){
+            if (response != 200) {
                 throw new RuntimeException("HTTP Request failed with response code: " + response);
             }
 
             String content = "";
-                Scanner sc = new Scanner(url.openStream());
-                while(sc.hasNext()){
-                    content += sc.nextLine();
-                }
-                sc.close();
+            Scanner sc = new Scanner(url.openStream());
+            while (sc.hasNext()) {
+                content += sc.nextLine();
+            }
+            sc.close();
 
-                JSONParser parser = new JSONParser();
-                JSONArray data_obj = (JSONArray) parser.parse(content);
+            JSONParser parser = new JSONParser();
+            JSONArray data_obj = (JSONArray) parser.parse(content);
 
-                JSONObject i =  (JSONObject)data_obj.get(0);
+            JSONObject i = (JSONObject) data_obj.get(0);
 
-                coords[0] = Double.parseDouble(i.get("Lat").toString());
-                coords[1] = Double.parseDouble(i.get("Lon").toString());
-        }
-        catch(Exception e){
+            coords[0] = Double.parseDouble(i.get("Lat").toString());
+            coords[1] = Double.parseDouble(i.get("Lon").toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
-            return coords;
+        return coords;
     }
-    
-    public Country getSpecificCountryTime(){
-        throw new RuntimeException("Not implemented");
+
+    public Map < LocalDate, Integer[] > getCountryHistory(Country c) {
+        Map < LocalDate, Integer[] > map = new HashMap < > ();
+        try {
+
+            URL url = new URL(this.apiLink + "/total/country/" + c.slug());
+            HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
+            connexion.setRequestMethod("GET");
+
+            int response = connexion.getResponseCode();
+            if (response != 200) {
+                System.out.println("HTTP Request failed with response code: " + response + "\n Data will be taken form contrycords.txt");
+            }
+
+            String content = "";
+            Scanner sc = new Scanner(url.openStream());
+            while (sc.hasNext()) {
+                content += sc.nextLine();
+            }
+            sc.close();
+
+            JSONParser parser = new JSONParser();
+            JSONArray data_obj = (JSONArray) parser.parse(content);
+
+            for (Object i: data_obj) {
+                JSONObject a = (JSONObject) i;
+                String dateString = a.get("Date").toString();
+                Integer[] data = {
+                    Integer.parseInt(a.get("Confirmed").toString()),
+                    Integer.parseInt(a.get("Deaths").toString()),
+                    Integer.parseInt(a.get("Recovered").toString()),
+                    Integer.parseInt(a.get("Active").toString())
+                };
+                map.put(LocalDate.parse(dateString.substring(0, 10)),data);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 }

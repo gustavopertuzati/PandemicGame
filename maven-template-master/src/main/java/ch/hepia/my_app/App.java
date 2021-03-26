@@ -30,6 +30,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.image.WritableImage;
 
+import java.time.LocalDate;
 
 public class App extends Application{
     public static void main(String[] args) {
@@ -38,7 +39,6 @@ public class App extends Application{
     
     @Override
     public void start(Stage primaryStage) {
-        
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries lol = test.getCountries("summary");
 
@@ -67,9 +67,17 @@ public class App extends Application{
         int sum = 0;
         for( Country i : lol.listOfCountries()){
             sum += i.totalPopulation();
+            if(i.slug().equals("france")){
+                i.updateCountryHistory();
+                System.out.println(i.getDailyCasesByDate(LocalDate.of(2020,12,15)));
+
+            }
         }
 
         System.out.println("Lol thanos snap: " + sum);
+
+
+
 
         ZoomableScrollPane scroller = new ZoomableScrollPane(box, newWidth, newHeight);
         scroller.setPrefSize(newWidth, newHeight);

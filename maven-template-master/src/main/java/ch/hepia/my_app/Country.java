@@ -1,22 +1,33 @@
 package ch.hepia.my_app;
 import javafx.scene.paint.Color;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Country {
-
     private String countryName;
+    private String slug;
     private int latitude;
     private int longitude;
+    private int size;
+    private int totalPopulation;
+
+    // données joueur
     private int totalCases;
     private int dailyCases;
     private int totalDeaths;
     private int dailyDeaths;
     private int totalRecovered;
     private int dailyRecovered;
-    private int size;
-    private int totalPopulation;
+    private int totalActive;
 
-    public Country(String countryName, int latitude, int longitude, int totalCases, int dailyCases, int totalDeaths, int dailyDeaths, int totalRecovered, int dailyRecovered, int size, int totalPopulation){
-        this.countryName = countryName;
+    // données réelles
+    private Map < LocalDate, Integer[] > countryHistory = new HashMap < > ();
+
+
+    public Country(String countryName, int latitude, int longitude, int totalCases, int dailyCases, int totalDeaths,
+        int dailyDeaths, int totalRecovered, int dailyRecovered, int size, int totalPopulation) {
+        this.slug = countryName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.totalCases = totalCases;
@@ -25,15 +36,122 @@ public class Country {
         this.dailyDeaths = dailyDeaths;
         this.totalRecovered = totalRecovered;
         this.dailyRecovered = dailyRecovered;
+        this.totalActive = totalCases - (totalRecovered + totalDeaths);
         this.size = size;
         this.totalPopulation = totalPopulation;
     }
 
-    public String CountryName(){
-        return this.countryName;
+    public void updateCountryHistory() {
+        //Use API to read history
+        if(this.countryHistory.keySet().size() == 0){
+            APICountryManager ap = new APICountryManager("https://api.covid19api.com");
+            this.countryHistory = ap.getCountryHistory(this);
+        }
     }
 
-    public int[] coordinates(){
+    public Map<LocalDate, Integer[]> getCountryHistory(){
+        return this.countryHistory;
+    }
+
+    // cas journaliers + cas totaux
+
+    public int playerTotalCases() {
+        return this.totalCases;
+    }
+
+    public int playerDailyCases() {
+        return this.dailyCases;
+    }
+
+    public int getTotalCasesByDate(LocalDate date) {
+        if (this.countryHistory.keySet().contains(date)) {
+            return this.countryHistory.get(date)[0];
+        } else {
+            //En théorie devrait jamais arriver
+            throw new RuntimeException("Date is not in the country's history");
+        }
+    }
+
+    public int getDailyCasesByDate(LocalDate date) {
+        LocalDate date2 = date.minusDays(1);
+        return this.getTotalCasesByDate(date) - this.getTotalCasesByDate(date2);
+    }
+
+
+    // morts journalières + morts totales
+
+    public int playerTotalDeaths() {
+        return this.totalDeaths;
+    }
+
+    public int playerDailyDeaths() {
+        return this.dailyDeaths;
+    }
+
+    public int getTotalDeathsByDate(LocalDate date) {
+        if (this.countryHistory.keySet().contains(date)) {
+            return this.countryHistory.get(date)[1];
+        } else {
+            //En théorie devrait jamais arriver
+            throw new RuntimeException("Date is not in the country's history");
+        }
+    }
+
+    public int getDailyDeathsByDate(LocalDate date) {
+        LocalDate date2 = date.minusDays(1);
+        return this.getTotalDeathsByDate(date) - this.getTotalDeathsByDate(date2);
+    }
+
+
+    // rétablissements journaliers + rétablissement totaux
+
+    public int playerTotalRecovered() {
+        return this.totalRecovered;
+    }
+
+    public int playerDailyRecovered() {
+        return this.dailyRecovered;
+    }
+
+    public int getTotalRecoveredByDate(LocalDate date) {
+        if (this.countryHistory.keySet().contains(date)) {
+            return this.countryHistory.get(date)[2];
+        } else {
+            //En théorie devrait jamais arriver
+            throw new RuntimeException("Date is not in the country's history");
+        }
+    }
+
+    public int getDailyRecoveredByDate(LocalDate date) {
+        LocalDate date2 = date.minusDays(1);
+        return this.getTotalRecoveredByDate(date) - this.getTotalRecoveredByDate(date2);
+    }
+
+
+    // cas actifs journaliers + totaux  
+
+    public int playerTotalActive() {
+        return this.totalActive;
+    }
+
+    public int getTotalActiveByDate(LocalDate date) {
+        if (this.countryHistory.keySet().contains(date)) {
+            return this.countryHistory.get(date)[3];
+        } else {
+            //En théorie devrait jamais arriver
+            throw new RuntimeException("Date is not in the country's history");
+        }
+    }
+
+    public String slug() {
+        return this.slug;
+    }
+
+    public String countryName() {
+        return this.slug;
+    }
+
+    public int[] coordinates() {
         int[] coordinates = new int[2];
 
         coordinates[0] = this.latitude;
@@ -42,88 +160,33 @@ public class Country {
         return coordinates;
     }
 
-    public int totalCases(){
-        return this.totalCases;
-    }
 
-    public int dailyCases(){
-        return this.dailyCases;
-    }
+    // données globales au joueur et à la "réalité"
 
-    public int totalDeaths(){
-        return this.totalDeaths;
-    }
-
-    public int dailyDeaths(){
-        return this.dailyDeaths;
-    }
-
-    public int totalRecovered(){
-        return this.totalRecovered;
-    }
-
-    public int dailyRecovered(){
-        return this.dailyRecovered;
-    }
-
-    public int size(){
+    public int size() {
         return this.size;
     }
 
-    public int totalPopulation(){
-        //return this.totalPopulation;
-        return 67000000;
+    public int totalPopulation() {
+        return this.totalPopulation;
     }
 
     @Override
-    public String toString(){
-        return this.countryName + ": (" + this.latitude + ":" + this.longitude + ")" +   
-        "\n\tcases: " + this.totalCases + " (+" + this.dailyCases + ")" + 
-        "\n\tdeaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" + 
-        "\n\trecovered: " + this.totalRecovered + " (+" + this.dailyRecovered + ")\n"; 
+    public String toString() {
+        return this.countryName + ": (" + this.latitude + ":" + this.longitude + ")" +
+            "\n\tcases: " + this.totalCases + " (+" + this.dailyCases + ")" +
+            "\n\tactive: " + this.totalActive +
+            "\n\tdeaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" +
+            "\n\trecovered: " + this.totalRecovered + " (+" + this.dailyRecovered + ")\n";
     }
 
-    // modèle SIR
-    public Color getColorFromCountry(){
-
-        double durationOfInfectivity = 7.0;
-        /* durée d'incubation du virus (entre 2 et 14 jours):
-        en moyenne -> 5*/
-
-        double dailyContacts = 20;
-        /* nombre de personne croisées par jour :
-        aucunes mesures prises -> 30
-        couvre feux -> 15
-        confinement -> 5 */
-
-        double transmissionRate = 0.025;
-        /* taux de transmission du virus (fixe et dépend du virus) */
-
-        double sanitaryMeasures = 0.5;
-        /* facteur des mesures sanitaires. Il dépend :
-        de la distance sociale,
-        des barrières médicales (masques + gels),
-        du nombre de personnes téstées (donc on part du principe qu'elles s'isolent si elles ont le covid),
-        des transits inter-communautés (sortie limitée à un périmètre, frontières closes, avions/trains diminués...)*/
-
-        int popInfectible = this.totalPopulation() - this.totalCases();
-        /* population pouvant encore attraper le virus 
-        on part du principe qu'une personne guérie / morte ne peut pas re-avoir le virus */
-        
-        // FAUX CAR ON SE BASE UNIQUEMENT SUR LE NOMBRE DE PERSONNE QU'IL RESTE A INFECTER
-        // ON DEVRAIT AUSSI SE BASER SUR LE NOMBRE DE PERSONNE QUI SONT NOUVELLEMENT TOUCHEES ET LES MORTS / RECOVERY
-        double probability =  transmissionRate * ((double)popInfectible/(double)this.totalPopulation()) * (1 - sanitaryMeasures);
-
-
-        double R0 = probability * dailyContacts * durationOfInfectivity;
-        System.out.println("R0: " + R0);
-
-        // pourcentage de la population qui doit se faire vacciner pour que l'épidémie soit sure de s'arreter
-        //double persistance = 1 - (1 / R0); 
-
-        if(R0 < 1.0){
+    public Color getColorFromCountry() {
+        double ratio = (double)this.playerTotalActive() / (double)this.totalPopulation();
+        ratio += (double)this.playerDailyDeaths() / (double)this.totalPopulation();
+        System.out.println(this.countryName() + ": " + ratio);
+        if (ratio <0.0015){
             return Color.GREEN;
-        } else if(R0 < 2.5){
+        } else if (ratio < 0.0065){
             return Color.ORANGE;
         } else {
             return Color.RED;
