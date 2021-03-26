@@ -17,6 +17,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.text.Text;
 /*
 import javafx.application.Application;
 import javafx.scene.image.ImageView;
@@ -32,7 +33,6 @@ import javafx.scene.control.Label;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Insets;
-import javafx.scene.text.Text;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -46,12 +46,15 @@ class NewStage extends VBox{
 
     public static BorderPane createSidebarContent(Country country){
 
-        new EventHandler<ActionEvent>(){
+        final Button changeLyric = new Button("Show data");
+        changeLyric.getStyleClass().add("change country");
+        changeLyric.setMaxWidth(Double.MAX_VALUE);
+        changeLyric.setOnAction( new EventHandler<ActionEvent>(){
             @Override 
             public void handle( ActionEvent actionEvent ){
                 Text countryDetail = new Text("\n\n" + country.toString());
             }
-        };
+        });
         changeLyric.fire();
         final BorderPane lyricPane = new BorderPane();
         lyricPane.setTop(changeLyric);
