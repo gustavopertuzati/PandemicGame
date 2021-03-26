@@ -18,27 +18,40 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.Group;
+
 import javafx.scene.shape.Circle;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.text.Font;
 
+import javafx.geometry.Insets;
 
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
+
 import javafx.stage.Stage;
 import javafx.scene.image.WritableImage;
 
 import java.time.LocalDate;
 
-public class App extends Application{
+public class App extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
     @Override
     public void start(Stage primaryStage) {
+          
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries lol = test.getCountries("summary");
 
@@ -52,14 +65,29 @@ public class App extends Application{
         int newHeight = (int)(originalHeight*newWidth/originalWidth);
 
         ImageView iV = new ImageView(worldImage);        
-        
+        Label countryLabel = new Label("Select country to show details");
+        Button closeButton = new Button("X");
+        closeButton.setStyle("-fx-font-size: 6pt; -fx-text-fill:red;");
+        countryLabel.setGraphic(closeButton);
+        countryLabel.setContentDisplay(ContentDisplay.LEFT);
+        countryLabel.setBackground( new Background (new BackgroundFill(Color.rgb(0, 0, 80, 0.7), new CornerRadii(5.0), new Insets(-5.0))));
+
         iV.setOnMouseClicked(e -> {
             try{
                 Country crt = lol.getCountryByCoordinates(e.getX(), e.getY());
-                new NewStage(crt, primaryStage);
+                countryLabel.setText("       Country detail:\n\n" + crt.toString());
+                countryLabel.setFont(new Font("Arial", 23));
+                countryLabel.setTextFill(Color.web("#ffffff"));
+                countryLabel.setMinWidth(Region.USE_PREF_SIZE);
+                //NewStage ct = new NewStage(crt, primaryStage);
+                box.getChildren().addAll(countryLabel);
+                closeButton.setOnAction(event -> box.getChildren().remove(countryLabel));
+
             }catch(Exception oops){
                 System.out.println(e.getX()+ "/" +e.getY());
             }
+
+
         });
 
         box.getChildren().add(iV);
@@ -90,8 +118,11 @@ public class App extends Application{
         primaryStage.show();
     }
 
-    public Circle getCountryCircle(Country c){
-        Circle circ = new Circle(c.coordinates()[0], c.coordinates()[1], c.size()*6.5 , c.getColorFromCountry());
+
+
+
+    public Circle getCountryCircle(Country c) {
+        Circle circ = new Circle(c.coordinates()[0], c.coordinates()[1], c.size() * 6.5, c.getColorFromCountry());
         circ.setMouseTransparent(true);
         return circ;
     }

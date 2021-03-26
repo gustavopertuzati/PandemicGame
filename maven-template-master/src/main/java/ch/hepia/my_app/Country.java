@@ -183,7 +183,7 @@ public class Country {
     public Color getColorFromCountry() {
         double ratio = (double)this.playerTotalActive() / (double)this.totalPopulation();
         ratio += (double)this.playerDailyDeaths() / (double)this.totalPopulation();
-        System.out.println(this.countryName() + ": " + ratio);
+        //System.out.println(this.countryName() + ": " + ratio);
         if (ratio <0.0015){
             return Color.GREEN;
         } else if (ratio < 0.0065){

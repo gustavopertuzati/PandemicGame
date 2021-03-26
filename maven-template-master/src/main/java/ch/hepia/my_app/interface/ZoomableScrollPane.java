@@ -67,21 +67,13 @@ public class ZoomableScrollPane extends ScrollPane {
         double valX = this.getHvalue() * (innerBounds.getWidth() - viewportBounds.getWidth());
         double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
     
-        double zoomFactor =  Math.exp(wheelDelta * zoomIntensity);
-        if(((innerBounds.getHeight() >= height*3.7) && zoomFactor > 1)){
-            System.out.println(innerBounds.getWidth() +" lol " + width);
-            System.out.println(innerBounds.getHeight() +" lol " + height*3.7);
-
-        }
-        
+        double zoomFactor =  Math.exp(wheelDelta * zoomIntensity);        
         if( 
             ((innerBounds.getHeight() >= height*3.7) && zoomFactor > 1) || 
             ((innerBounds.getWidth() < 2500) && zoomFactor < 1)
             ){
                 zoomFactor = 1;
-            }
-            System.out.println(zoomFactor);
-      
+        }
         scaleValue = scaleValue * zoomFactor;
 
         updateScale();

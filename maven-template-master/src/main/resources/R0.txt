@@ -38,7 +38,6 @@
 
 
         double R0 = probability * dailyContacts * durationOfInfectivity;
-        System.out.println("R0: " + R0);
 
         // pourcentage de la population qui doit se faire vacciner pour que l'épidémie soit sure de s'arreter
         //double persistance = 1 - (1 / R0);
