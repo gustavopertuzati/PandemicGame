@@ -4,14 +4,6 @@ import java.util.Scanner;
 import java.util.Map;
 import java.util.HashMap;
 
-import javafx.geometry.Pos;
-import javafx.scene.layout.Region;
-import javafx.scene.Node;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,23 +13,28 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.Group;
-import javafx.animation.*;
-//import javafx.animation.Transition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.scene.text.Font;
+
+import javafx.geometry.Insets;
+
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
+
 import javafx.stage.Stage;
 import javafx.scene.image.WritableImage;
-import javafx.scene.control.*;
 
 public class App extends Application{
-
-    BorderPane bp = new BorderPane();
-
     public static void main(String[] args) {
         launch(args);
         
@@ -114,40 +111,30 @@ public class App extends Application{
         scroller.setContent(worldImageView);
         worldImageView.setPickOnBounds(true);
 
-        bp.setStyle("-fx-background-color: #2f4f4f;");
-        bp.setPrefSize(800, 600);
 
-        
+        HBox sidePanel = new HBox(scroller);
+        Label countryLabel = new Label("Select country to show details");
+        Button closeButton = new Button("X");
+        closeButton.setStyle("-fx-font-size: 6pt; -fx-text-fill:red;");
+        countryLabel.setGraphic(closeButton);
+        countryLabel.setContentDisplay(ContentDisplay.LEFT);
+        countryLabel.setBackground( new Background (new BackgroundFill(Color.rgb(0, 0, 80, 0.7), new CornerRadii(5.0), new Insets(-5.0))));
         worldImageView.setOnMouseClicked(e -> {
             try{
                 Country crt = lol.getCountryByCoordinates(e.getX(), e.getY());
-                final Pane countryPane = NewStage.createSidebarContent(crt);
-                NewStage sidebar = new NewStage(250, countryPane);
-
-                VBox.setVgrow(countryPane, Priority.ALWAYS);
-
-                final BorderPane layout = new BorderPane();
-                layout.setBottom(sidebar);
-                layout.setCenter(scene);
-                Scene finalScene = new Scene(layout);
-                primaryStage.setScene(finalScene);
-                
-                //new NewStage(crt, primaryStage);
+                countryLabel.setText("       Country detail:\n\n" + crt.toString());
+                countryLabel.setFont(new Font("Arial", 23));
+                countryLabel.setTextFill(Color.web("#ffffff"));
+                countryLabel.setMinWidth(Region.USE_PREF_SIZE);
+                //NewStage ct = new NewStage(crt, primaryStage);
+                sidePanel.getChildren().addAll(countryLabel);
+                closeButton.setOnAction(event -> sidePanel.getChildren().remove(countryLabel));
             }catch(Exception oops){}
         });
 
-        StackPane st = new StackPane();
+        Scene scene2 = new Scene(sidePanel, newWidth, newHeight);
 
-        //st.getChildren().addAll(scene);
-        //st.setAlignment(Pos.TOP_LEFT);
-
-        VBox vb = new VBox(10);
-        //vb.getChildren().addAll(scene/*st*/);
-
-
-
-        
-
+        primaryStage.setScene(scene2);
 
         primaryStage.show();
     }
