@@ -125,12 +125,12 @@ public class App extends Application{
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        Scene scene = new Scene(scroller, newWidth, newHeight);
+        //Scene scene = new Scene(scroller, newWidth, newHeight);
         scroller.setContent(worldImageView);
         worldImageView.setPickOnBounds(true);
 
         final Pane menuPane = createSidebarContent();
-        SideBar sidebar = new SideBar(250, menuPane);
+        SideBar sidebar = new SideBar(90, menuPane);
 
         final BorderPane layout = new BorderPane();
 
@@ -140,10 +140,9 @@ public class App extends Application{
         st.setAlignment(Pos.TOP_RIGHT);
 
         HBox sidePanel = new HBox(scroller);
-        Label countryLabel = new Label("Select country to show details");
-        Button closeButton = new Button("X");
-        closeButton.setStyle("-fx-font-size: 6pt; -fx-text-fill:red;");
-        countryLabel.setGraphic(closeButton);
+        Label countryLabel = new Label("Select country \nto show details");
+        countryLabel.setMinWidth(Region.USE_PREF_SIZE);
+        countryLabel.setFont(new Font("Arial", 23));
         countryLabel.setContentDisplay(ContentDisplay.LEFT);
         countryLabel.setBackground( new Background (new BackgroundFill(Color.rgb(0, 0, 80, 0.7), new CornerRadii(5.0), new Insets(-5.0))));
         worldImageView.setOnMouseClicked(e -> {
@@ -158,13 +157,12 @@ public class App extends Application{
         });
         
         sidePanel.getChildren().addAll(countryLabel, st);
-        closeButton.setOnAction(event -> sidePanel.getChildren().remove(countryLabel));
         layout.setBottom(sidebar);
         layout.setCenter(sidePanel);
-        Scene scene2 = new Scene(layout, newWidth, newHeight);
+        Scene finalScene = new Scene(layout, newWidth, newHeight);
 
 
-        primaryStage.setScene(scene2);
+        primaryStage.setScene(finalScene);
 
         primaryStage.show();
     }
@@ -172,10 +170,10 @@ public class App extends Application{
     private BorderPane createSidebarContent()
     {
 // create some content to put in the sidebar.
-        final Button menu = new Button("Menu");
-        menu.getStyleClass().add("change-lyric");
-        menu.setMaxWidth(Double.MAX_VALUE);
-        menu.setOnAction(new EventHandler<ActionEvent>()
+        final Button resumeBtn = new Button("Resume");
+        resumeBtn.getStyleClass().add("show-resume");
+        resumeBtn.setMaxWidth(Double.MAX_VALUE);
+        resumeBtn.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent actionEvent)
@@ -183,13 +181,13 @@ public class App extends Application{
                 System.out.println("Some action");
             }
         });
-        menu.fire();
+        resumeBtn.fire();
         final BorderPane menuPane = new BorderPane();
-        menuPane.setTop(menu);
+        menuPane.setTop(resumeBtn);
         return menuPane;
     }
 
-    class SideBar extends VBox
+    class SideBar extends HBox
     {
         /**
          * @return a control button to hide and show the sidebar
@@ -209,21 +207,22 @@ public class App extends Application{
             this.setPrefWidth(expandedWidth);
             this.setMinWidth(0);
 
-// create a bar to hide and show.
-            setAlignment(Pos.CENTER_LEFT);
+            // create a bar to hide and show.
+            setAlignment(Pos.CENTER);
             getChildren().addAll(nodes);
 
-// create a button to hide and show the sidebar.
-            controlButton = new Button("Collapse");
+            // create a button to hide and show the sidebar.
+            controlButton = new Button("Menu");
+            controlButton.setMinWidth(Region.USE_PREF_SIZE);
             controlButton.getStyleClass().add("hide-left");
 
-// apply the animations when the button is pressed.
+            // apply the animations when the button is pressed.
             controlButton.setOnAction(new EventHandler<ActionEvent>()
             {
                 @Override
                 public void handle(ActionEvent actionEvent)
                 {
-// create an animation to hide sidebar.
+                    // create an animation to hide sidebar.
                     final Animation hideSidebar = new Transition()
                     {
                         {
@@ -244,12 +243,12 @@ public class App extends Application{
                         public void handle(ActionEvent actionEvent)
                         {
                             setVisible(false);
-                            controlButton.setText("Show");
+                            controlButton.setText("Menu");
                             controlButton.getStyleClass().remove("hide-left");
                             controlButton.getStyleClass().add("show-right");
                         }
                     });
-// create an animation to show a sidebar.
+                    // create an animation to show a sidebar.
                     final Animation showSidebar = new Transition()
                     {
                         {
@@ -269,7 +268,7 @@ public class App extends Application{
                         @Override
                         public void handle(ActionEvent actionEvent)
                         {
-                            controlButton.setText("Collapse");
+                            controlButton.setText("Hide menu");
                             controlButton.getStyleClass().add("hide-left");
                             controlButton.getStyleClass().remove("show-right");
                         }
