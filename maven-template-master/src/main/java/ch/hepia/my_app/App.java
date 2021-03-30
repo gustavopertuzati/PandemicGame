@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
+import java.util.Optional;
 
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Point2D;
@@ -67,24 +68,30 @@ public class App extends Application {
         ImageView iV = new ImageView(worldImage);        
         Label countryLabel = new Label("Select country to show details");
         Button closeButton = new Button("X");
+
         closeButton.setStyle("-fx-font-size: 6pt; -fx-text-fill:red;");
         countryLabel.setGraphic(closeButton);
         countryLabel.setContentDisplay(ContentDisplay.LEFT);
         countryLabel.setBackground( new Background (new BackgroundFill(Color.rgb(0, 0, 80, 0.7), new CornerRadii(5.0), new Insets(-5.0))));
-
         iV.setOnMouseClicked(e -> {
             try{
-                Country crt = lol.getCountryByCoordinates(e.getX(), e.getY());
-                countryLabel.setText("       Country detail:\n\n" + crt.toString());
-                countryLabel.setFont(new Font("Arial", 23));
-                countryLabel.setTextFill(Color.web("#ffffff"));
-                countryLabel.setMinWidth(Region.USE_PREF_SIZE);
-                //NewStage ct = new NewStage(crt, primaryStage);
-                box.getChildren().addAll(countryLabel);
-                closeButton.setOnAction(event -> box.getChildren().remove(countryLabel));
+
+                Optional<Country> opTmp = lol.getCountryByCoordinates(e.getX(), e.getY());
+                if(!opTmp.isEmpty()){
+                    Country crt = opTmp.get();
+                    countryLabel.setLayoutX(e.getX());
+                    countryLabel.setLayoutY(e.getY());
+                    countryLabel.setText("       Country detail:\n\n" + crt.toString());
+                    countryLabel.setFont(new Font("Arial", 23));
+                    countryLabel.setTextFill(Color.web("#ffffff"));
+                    countryLabel.setMinWidth(Region.USE_PREF_SIZE);
+                    //NewStage ct = new NewStage(crt, primaryStage);
+                    box.getChildren().addAll(countryLabel);
+                    closeButton.setOnAction(event -> box.getChildren().remove(countryLabel));
+                }
+
 
             }catch(Exception oops){
-                System.out.println(e.getX()+ "/" +e.getY());
             }
 
 
