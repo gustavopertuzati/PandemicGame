@@ -159,10 +159,10 @@ public class Country {
     @Override
     public String toString() {
         return this.slug + ":" +
-            "\n  cases: " + this.totalCases + " (+" + this.dailyCases + ")" +
-            "\n  active: " + this.totalActive +
-            "\n  deaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" +
-            "\n  recovered: " + this.totalRecovered + " (+" + this.dailyRecovered + ")\n";
+            "\n\tcases: " + this.totalCases + " (+" + this.dailyCases + ")" +
+            "\n\tactive: " + this.totalActive +
+            "\n\tdeaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" +
+            "\n\trecovered: " + this.totalRecovered + " (+" + this.dailyRecovered + ")\n";
     }
 
     public Color getColorFromCountry() {
@@ -231,9 +231,16 @@ public class Country {
         this.totalDeaths += newDead;
     }
 
+    private void updateState(){
+
+    }
+
     public void updateDisease(){
         this.newRecoveries();
         this.newCases();
         this.newDeaths();
+
+        
+
     }
 }
