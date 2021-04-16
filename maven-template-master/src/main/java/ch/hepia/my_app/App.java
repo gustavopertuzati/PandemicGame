@@ -109,7 +109,7 @@ public class App extends Application {
             }
         }
 
-        System.out.println("Lol thanos snap: " + sum);
+        //System.out.println("Lol thanos snap: " + sum);
 
 
 

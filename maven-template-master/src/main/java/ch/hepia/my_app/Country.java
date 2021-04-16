@@ -7,6 +7,7 @@ import java.util.Random;
 
 
 public class Country {
+    // données communes
     private String countryName;
     private String slug;
     private int latitude;
@@ -26,9 +27,8 @@ public class Country {
     // données réelles
     private Map < LocalDate, Integer[] > countryHistory = new HashMap < > ();
 
-
     public Country(String countryName, int latitude, int longitude, int totalCases, int dailyCases, int totalDeaths,
-        int dailyDeaths, int totalRecovered, int dailyRecovered, int size, int totalPopulation) {
+        int dailyDeaths, int totalRecovered, int dailyRecovered, int size, int totalPopulation, String slug) {
         this.slug = countryName;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -43,20 +43,7 @@ public class Country {
         this.totalPopulation = totalPopulation;
     }
 
-    public void updateCountryHistory() {
-        //Use API to read history
-        if(this.countryHistory.keySet().size() == 0){
-            APICountryManager ap = new APICountryManager("https://api.covid19api.com");
-            this.countryHistory = ap.getCountryHistory(this);
-        }
-    }
-
-    public Map<LocalDate, Integer[]> getCountryHistory(){
-        return this.countryHistory;
-    }
-
-    // cas journaliers + cas totaux
-
+    // cas journaliers et cas totaux
     public int playerTotalCases() {
         return this.totalCases;
     }
@@ -80,8 +67,7 @@ public class Country {
     }
 
 
-    // morts journalières + morts totales
-
+    // morts journalières et morts totales
     public int playerTotalDeaths() {
         return this.totalDeaths;
     }
@@ -105,8 +91,7 @@ public class Country {
     }
 
 
-    // rétablissements journaliers + rétablissement totaux
-
+    // rétablissements journaliers et rétablissement totaux
     public int playerTotalRecovered() {
         return this.totalRecovered;
     }
@@ -130,8 +115,7 @@ public class Country {
     }
 
 
-    // cas actifs journaliers + totaux  
-
+    // cas actifs journaliers et totaux  
     public int playerTotalActive() {
         return this.totalActive;
     }
@@ -145,12 +129,22 @@ public class Country {
         }
     }
 
+    
+    // données globales
+    public int size() {
+        return this.size;
+    }
+
+    public int totalPopulation() {
+        return this.totalPopulation;
+    }
+    
     public String slug() {
         return this.slug;
     }
 
     public String countryName() {
-        return this.slug;
+        return this.countryName;
     }
 
     public int[] coordinates() {
@@ -162,24 +156,13 @@ public class Country {
         return coordinates;
     }
 
-
-    // données globales au joueur et à la "réalité"
-
-    public int size() {
-        return this.size;
-    }
-
-    public int totalPopulation() {
-        return this.totalPopulation;
-    }
-
     @Override
     public String toString() {
-        return this.slug + ": (" + this.latitude + ":" + this.longitude + ")" +
-            "\n\tcases: " + this.totalCases + " (+" + this.dailyCases + ")" +
-            "\n\tactive: " + this.totalActive +
-            "\n\tdeaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" +
-            "\n\trecovered: " + this.totalRecovered + " (+" + this.dailyRecovered + ")\n";
+        return this.slug + ":" +
+            "\n  cases: " + this.totalCases + " (+" + this.dailyCases + ")" +
+            "\n  active: " + this.totalActive +
+            "\n  deaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" +
+            "\n  recovered: " + this.totalRecovered + " (+" + this.dailyRecovered + ")\n";
     }
 
     public Color getColorFromCountry() {
@@ -196,10 +179,21 @@ public class Country {
     }
 
 
+    // update de l'historique du pays
+    public void updateCountryHistory() {
+        //Use API to read history
+        if(this.countryHistory.keySet().size() == 0){
+            APICountryManager ap = new APICountryManager("https://api.covid19api.com");
+            this.countryHistory = ap.getCountryHistory(this);
+        }
+    }
+
+    public Map<LocalDate, Integer[]> getCountryHistory(){
+        return this.countryHistory;
+    }
+
 
     //Formules pour les trois méthodes new à changer en fonction des résultats
-
-
     private void newCases(){
 
         //This depends on the measures taken by the country ( i.e. confinement or remote work etc...)
@@ -217,7 +211,6 @@ public class Country {
         }
     }
 
-
     private void newRecoveries(){
         Random rand = new Random();
         //This should be about a 5% recovery everytime this method is called
@@ -227,7 +220,6 @@ public class Country {
         this.totalActive -= newRecov;
         this.totalRecovered += newRecov;
     }
-
 
     private void newDeaths(){
         Random rand = new Random();
@@ -239,18 +231,9 @@ public class Country {
         this.totalDeaths += newDead;
     }
 
-
-
     public void updateDisease(){
         this.newRecoveries();
         this.newCases();
         this.newDeaths();
     }
-
-
-
-
-
-
-
 }

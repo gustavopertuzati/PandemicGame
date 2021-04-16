@@ -23,9 +23,7 @@ import javafx.event.EventHandler;
 
 class NewStage {
 
-    NewStage(Country c, Stage primaryStage)
-    {
-
+    NewStage(Country c, Stage primaryStage){
         Stage detailStage = new Stage();
         detailStage.setTitle(c.countryName());
 
@@ -51,7 +49,6 @@ class NewStage {
         });
 
         VBox detailRoot = new VBox();
-        
         detailRoot.getChildren().add(countryDetail);
         
         btn1.setLayoutX(900);
@@ -68,13 +65,11 @@ class NewStage {
         VBox.setMargin(btn1, new Insets(10, 10, 10, 10));
 
         Scene detailScene = new Scene(detailRoot, 800, 400, Color.BLACK);
-        
         detailStage.setScene(detailScene);
         detailStage.initModality(Modality.APPLICATION_MODAL);
         detailStage.initOwner(primaryStage);
         
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
- 
         //set Stage boundaries to the lower right corner of the visible bounds of the main screen
         detailStage.setX(primaryScreenBounds.getMinX() + primaryScreenBounds.getWidth() - 400);
         detailStage.setY(primaryScreenBounds.getMaxY() - primaryScreenBounds.getHeight() - 300);

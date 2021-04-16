@@ -45,14 +45,14 @@ public class Countries {
 
     public int totalActive(){
         return this.countries.stream()
-                                .mapToInt(c -> c.playerTotalDeaths())
-                                .sum();
+                             .mapToInt(c -> c.playerTotalActive())
+                             .sum();
     }
 
     public int totalDeaths(){
         return this.countries.stream()
-                                .mapToInt(c -> c.playerTotalDeaths())
-                                .sum();
+                             .mapToInt(c -> c.playerTotalDeaths())
+                             .sum();
     }
 
     public int totalPop(){
@@ -72,8 +72,4 @@ public class Countries {
                                 .mapToInt(c -> c.playerDailyDeaths())
                                 .sum();        
     }
-
-
-
-
 }

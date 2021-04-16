@@ -33,19 +33,22 @@ public class APICountryManager {
     private String apiLink; //https://api.covid19api.com
 
     public APICountryManager(String apiLink) {
-        //Si il y a un slash à la fin du string il faut l'enlever
+        if (apiLink.charAt(apiLink.length() - 1) == '/') {
+            apiLink = apiLink.substring(0, apiLink.length() - 1);
+        }
         this.apiLink = apiLink;
     }
 
-    public Countries getCountries(String request) { //"countries"
-        //Si il y a un slash au début du string, il faut l'enlever
+    public Countries getCountries(String request) {
+        if (apiLink.charAt(0) == '/') {
+            apiLink = apiLink.substring(1, apiLink.length());
+        }
+
         Map < String, Country > map = new HashMap < > ();
         Countries countries = new Countries();
 
-        //Faire la requete
         try {
             Map < String, Integer[] > coords = readFile("countrycoords.txt");
-            //Map<String, Integer> populations = getPopulations();
 
             URL url = new URL(this.apiLink + "/" + request);
             HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
@@ -54,7 +57,7 @@ public class APICountryManager {
             int response = connexion.getResponseCode();
             if (response != 200) {
                 System.out.println("HTTP Request failed with response code: " + response + "\n Data will be taken form contrycords.txt");
-                coords.forEach((k, v) -> countries.addCountry(new Country(k, v[0], v[1], 0, 0, 0, 0, 0, 0, v[2], 0)));
+                coords.forEach((k, v) -> countries.addCountry(new Country(k, v[0], v[1], 0, 0, 0, 0, 0, 0, v[2], 0, k)));
                 return countries;
             }
 
@@ -70,32 +73,26 @@ public class APICountryManager {
             JSONArray jsonArrayCountries = (JSONArray) data_obj.get("Countries");
 
             for (int crt = 0; crt < jsonArrayCountries.size(); crt += 1) {
-
-
-
                 JSONObject i = (JSONObject) jsonArrayCountries.get(crt);
                 if (!coords.keySet().contains(i.get("Slug").toString())) {
                     continue;
                 }
-
-                //On peut changer Country à Slug si jamais c'est chiant de gérer les espaces et maj
-                String countryName = i.get("Slug").toString();
+                String countryName = i.get("Country").toString();
+                String countrySlug = i.get("Slug").toString();
                 int totalCases = Integer.parseInt(i.get("TotalConfirmed").toString());
                 int dailyCases = Integer.parseInt(i.get("NewConfirmed").toString());
                 int totalDeaths = Integer.parseInt(i.get("TotalDeaths").toString());
                 int dailyDeaths = Integer.parseInt(i.get("NewDeaths").toString());
                 int totalRecovered = Integer.parseInt(i.get("TotalRecovered").toString());
                 int dailyRecovered = Integer.parseInt(i.get("NewRecovered").toString());
-                Integer[] tmp = coords.get(countryName);
+                Integer[] tmp = coords.get(countrySlug);
                 Integer latitude = tmp[0];
                 Integer longitude = tmp[1];
                 int size = tmp[2];
-
-                //int totalPopulation = populations.get(countryName);
                 int totalPopulation = tmp[3];
-
-                Country currentCountry = new Country(countryName, latitude, longitude, totalCases, dailyCases, totalDeaths, dailyDeaths, totalRecovered, dailyRecovered, size, totalPopulation);
-
+                Country currentCountry = new Country(countryName, latitude,
+                    longitude, totalCases, dailyCases, totalDeaths, dailyDeaths,
+                    totalRecovered, dailyRecovered, size, totalPopulation, countrySlug);
                 countries.addCountry(currentCountry);
             }
         } catch (Exception e) {
@@ -192,7 +189,7 @@ public class APICountryManager {
                     Integer.parseInt(a.get("Recovered").toString()),
                     Integer.parseInt(a.get("Active").toString())
                 };
-                map.put(LocalDate.parse(dateString.substring(0, 10)),data);
+                map.put(LocalDate.parse(dateString.substring(0, 10)), data);
             }
 
         } catch (Exception e) {
