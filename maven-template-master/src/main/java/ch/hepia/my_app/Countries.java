@@ -42,4 +42,38 @@ public class Countries {
     public List < Country > listOfCountries() {
         return this.countries;
     }
+
+    public int totalActive(){
+        return this.countries.stream()
+                                .mapToInt(c -> c.playerTotalDeaths())
+                                .sum();
+    }
+
+    public int totalDeaths(){
+        return this.countries.stream()
+                                .mapToInt(c -> c.playerTotalDeaths())
+                                .sum();
+    }
+
+    public int totalPop(){
+        return this.countries.stream()
+                                .mapToInt(c -> c.totalPopulation())
+                                .sum();
+    }
+
+    public int totalDailyActive(){
+        return this.countries.stream()
+                                .mapToInt(c -> c.playerDailyCases())
+                                .sum();
+    }
+
+    public int totalDailyDeaths(){
+        return this.countries.stream()
+                                .mapToInt(c -> c.playerDailyDeaths())
+                                .sum();        
+    }
+
+
+
+
 }
