@@ -28,6 +28,11 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.Group;
+import javafx.scene.Node;
+
+
+
+
 
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -83,16 +88,22 @@ public class App extends Application {
         
         Group box = new Group();
         box.getChildren().add(iV);
-        lol.listOfCountries().forEach( c -> box.getChildren().add(getCountryCircle(c)));
         for( Country i : lol.listOfCountries()){
             if(i.slug().equals("france")){
                 i.updateCountryHistory();
                 System.out.println(i.getDailyCasesByDate(LocalDate.of(2020,12,15)));
-
+                
             }
         }
         
         ZoomableScrollPane scroller = new ZoomableScrollPane(box, newWidth, newHeight);
+        lol.listOfCountries().forEach( c -> box.getChildren().add(getCountryCircle(c, scroller)));
+        scroller.addEventFilter(ScrollEvent.ANY, e->{
+            removeCircles(box);
+            e.consume();
+            scroller.onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
+            lol.listOfCountries().forEach( c -> box.getChildren().add(getCountryCircle(c, scroller)));
+        });
         scroller.setPrefSize(newWidth, newHeight);
         scroller.setPannable(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -103,8 +114,22 @@ public class App extends Application {
         primaryStage.show();
     }
 
-    public Circle getCountryCircle(Country c) {
-        Circle circ = new Circle(c.coordinates()[0], c.coordinates()[1], c.size() * 6.5, c.getColorFromCountry());
+    public void removeCircles(Group box){
+        ArrayList<Node> lstCircles = new ArrayList<>();
+        for(Node i : box.getChildren()){
+            if(i.getClass() == Circle.class){
+                lstCircles.add(i);
+            }
+        }
+        lstCircles.forEach(i -> box.getChildren().remove(i));
+    }
+
+    public Circle getCountryCircle(Country c, ZoomableScrollPane pane) {
+        Circle circ = new Circle(-1,-1,-1);
+        if(pane.getZoomWidth() < c.size()*800){
+            return circ;
+        }
+        circ = new Circle(c.coordinates()[0], c.coordinates()[1], 15 , c.getColorFromCountry());
         circ.setMouseTransparent(true);
         return circ;
     }

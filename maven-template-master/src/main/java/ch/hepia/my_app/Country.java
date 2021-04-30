@@ -240,7 +240,6 @@ public class Country {
         this.newCases();
         this.newDeaths();
 
-        
 
     }
 }
