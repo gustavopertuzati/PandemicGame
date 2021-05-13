@@ -100,8 +100,8 @@ public class App extends Application {
         lol.listOfCountries().forEach( c -> box.getChildren().add(getCountryCircle(c, scroller)));
         scroller.addEventFilter(ScrollEvent.ANY, e->{
             removeCircles(box);
-            e.consume();
             scroller.onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
+            System.out.println(scroller.getZoomWidth());
             lol.listOfCountries().forEach( c -> box.getChildren().add(getCountryCircle(c, scroller)));
         });
         scroller.setPrefSize(newWidth, newHeight);
