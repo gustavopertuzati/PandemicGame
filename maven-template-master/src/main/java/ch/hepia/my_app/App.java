@@ -66,14 +66,13 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-          
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries lol = test.getCountries("summary");
 
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
         double originalWidth = worldImage.getWidth();  
         double originalHeight = worldImage.getHeight();
-        int newWidth = 1200;
+        int newWidth = 1420;
         int newHeight = (int)(originalHeight*newWidth/originalWidth);
         
         ImageView iV = new ImageView(worldImage); 
