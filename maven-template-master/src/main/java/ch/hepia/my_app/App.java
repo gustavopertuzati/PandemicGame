@@ -127,8 +127,7 @@ public class App extends Application {
     public Circle getCountryCircle(Country c, ZoomableScrollPane pane) {
         Circle circ = new Circle(-1,-1,-1);
 
-        System.out.println(c.slug() + ":" + 1/(0.1*c.size()));
-        if(5000/pane.getZoomWidth() < 1/(0.1*c.size())){
+        if(pane.getZoomWidth()/400 < 1/(0.1*c.size())){
             return circ;
         }
         circ = new Circle(c.coordinates()[0], c.coordinates()[1], 15 , c.getColorFromCountry());
