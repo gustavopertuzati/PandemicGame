@@ -3,9 +3,9 @@ import java.util.ArrayList;
 
 public class Virus{
 
-  private double infectivity;
-  private double lethality;
-  private double resistance;
+  private double infectivity; // propagation du virus
+  private double lethality; // a quel point ca tue
+  private double resistance; //solidité du virus
   //private List<Perk> perkLst;
   private int level;
 
