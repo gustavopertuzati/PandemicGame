@@ -17,7 +17,6 @@ import javafx.scene.text.Text;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 

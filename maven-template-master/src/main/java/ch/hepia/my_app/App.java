@@ -73,10 +73,8 @@ public class App extends Application{
         double width = worldImage.getWidth();
         double height = worldImage.getHeight();
         
-        
         WritableImage writableImage =  new WritableImage((int)width, (int)height);
         PixelWriter pixelWriter = writableImage.getPixelWriter();
-        
         
         ScrollPane scroller = new ScrollPane();
 
@@ -117,8 +115,8 @@ public class App extends Application{
         
         ImageView worldImageView = new ImageView(writableImage);
 
-        double newWidth = 1500;
-        double newHeight = 1500*height/width;
+        double newWidth = 1600;
+        double newHeight = 1600*height/width;
 
         scroller.setPrefSize(newWidth, newHeight);
         scroller.setPannable(true);
@@ -157,10 +155,9 @@ public class App extends Application{
         });
         
         sidePanel.getChildren().addAll(countryLabel, st);
-        layout.setBottom(sidebar);
-        layout.setCenter(sidePanel);
+        layout.setBottom(sidebar); // bottom
+        layout.setCenter(sidePanel); // right
         Scene finalScene = new Scene(layout, newWidth, newHeight);
-
 
         primaryStage.setScene(finalScene);
 
@@ -170,20 +167,40 @@ public class App extends Application{
     private BorderPane createSidebarContent()
     {
 // create some content to put in the sidebar.
-        final Button resumeBtn = new Button("Resume");
-        resumeBtn.getStyleClass().add("show-resume");
-        resumeBtn.setMaxWidth(Double.MAX_VALUE);
-        resumeBtn.setOnAction(new EventHandler<ActionEvent>()
+        final Button virusBtn = new Button("virus");
+        final Button cureBtn = new Button("cure");
+        
+        virusBtn.getStyleClass().add("show-resume");
+        virusBtn.setMaxWidth(Double.MAX_VALUE);
+        virusBtn.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent actionEvent)
             {
-                System.out.println("Some action");
+                System.out.println("afficher les infos du virus");
             }
         });
-        resumeBtn.fire();
+        virusBtn.fire();
+        virusBtn.setLayoutX(500);
+        virusBtn.setLayoutY(500);
+
+        cureBtn.getStyleClass().add("show-resume");
+        cureBtn.setMaxWidth(Double.MAX_VALUE);
+        cureBtn.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent actionEvent)
+            {
+                System.out.println("afficher les infos du vaccin");
+            }
+        });
+        cureBtn.fire();
+        cureBtn.setLayoutX(50);
+        cureBtn.setLayoutY(50);
+
         final BorderPane menuPane = new BorderPane();
-        menuPane.setTop(resumeBtn);
+        menuPane.setTop(virusBtn);
+        menuPane.setTop(cureBtn);
         return menuPane;
     }
 
