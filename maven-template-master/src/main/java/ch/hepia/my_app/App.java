@@ -5,61 +5,68 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.application.Application;
 import java.util.Optional;
 
-import javafx.geometry.Rectangle2D;
-import javafx.geometry.Point2D;
+import javafx.animation.Animation;
+import javafx.animation.Transition;
+
+import javafx.application.Application;
+
+import javafx.scene.Scene;
+import javafx.scene.Node;
+import javafx.scene.Group;
+import javafx.scene.control.*;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.PixelReader;
+
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
-import javafx.scene.Scene;
+
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.Group;
-import javafx.scene.Node;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.FlowPane;
 
-
-
-
-
-import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 
 import javafx.scene.shape.Circle;
-import javafx.scene.input.ScrollEvent;
+
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
+import javafx.geometry.Rectangle2D;
+import javafx.geometry.Point2D;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
-import javafx.geometry.Insets;
-
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-
 import javafx.stage.Modality;
-import javafx.scene.text.Text;
-
 import javafx.stage.Stage;
-import javafx.scene.image.WritableImage;
+
+import javafx.util.Duration;
 
 import java.time.LocalDate;
 
 public class App extends Application {
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -68,27 +75,25 @@ public class App extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setResizable(false);
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
-        Countries lol = test.getCountries("summary");
+        Countries countries = test.getCountries("summary");
 
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
-        double originalWidth = worldImage.getWidth();  
-        double originalHeight = worldImage.getHeight();
         int newWidth = 1420;
-        int newHeight = (int)(originalHeight*newWidth/originalWidth);
+        int newHeight = (int)(worldImage.getHeight() * newWidth / worldImage.getWidth());
         
         ImageView iV = new ImageView(worldImage); 
         iV.setOnMouseClicked(e -> {
             try{
-                Optional<Country> opTmp = lol.getCountryByCoordinates(e.getX(), e.getY());
-                if(!opTmp.isEmpty()){
-                    NewStage ct = new NewStage(opTmp.get(), primaryStage, e.getScreenX(), e.getScreenY() );
+                Optional<Country> op = countries.getCountryByCoordinates(e.getX(), e.getY());
+                if(!op.isEmpty()){
+                    NewStage ct = new NewStage(op.get(), primaryStage, e.getScreenX(), e.getScreenY() );
                 }
-            }catch(Exception g){}
+            }catch(Exception any){}
         });
         
         Group box = new Group();
         box.getChildren().add(iV);
-        for( Country i : lol.listOfCountries()){
+        for( Country i : countries.listOfCountries()){
             if(i.slug().equals("france")){
                 i.updateCountryHistory();
                 System.out.println(i.getDailyCasesByDate(LocalDate.of(2020,12,15)));
@@ -97,14 +102,14 @@ public class App extends Application {
         }
         
         ZoomableScrollPane scroller = new ZoomableScrollPane(box, newWidth, newHeight);
-        lol.listOfCountries().forEach( c -> box.getChildren().addAll(getCountryCircle(c, scroller)[0], getCountryCircle(c, scroller)[1]));
+        countries.listOfCountries().forEach( c -> box.getChildren().addAll(getCountryCircle(c, scroller)[0], getCountryCircle(c, scroller)[1]));
         
 
 
         scroller.getContent().addEventHandler(ScrollEvent.ANY, e->{
             scroller.onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
             removeCircles(box);
-            lol.listOfCountries().forEach( c -> box.getChildren().addAll(getCountryCircle(c, scroller)[0], getCountryCircle(c, scroller)[1]));
+            countries.listOfCountries().forEach( c -> box.getChildren().addAll(getCountryCircle(c, scroller)[0], getCountryCircle(c, scroller)[1]));
             System.out.println(scroller.getZoomWidth());
             e.consume();
         });
@@ -115,9 +120,41 @@ public class App extends Application {
         scroller.setPannable(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-               
-        Scene scene = new Scene(scroller, newWidth, newHeight);
-        primaryStage.setScene(scene);
+        
+        Group game = new Group();
+        game.getChildren().add(scroller);
+        //game.getChildren().add("barre des cas");
+
+        BottomBar btBar = new BottomBar();
+        btBar.fill();      
+        btBar.setSpacing(30);        
+        btBar.setAlignment(Pos.BOTTOM_CENTER);
+        btBar.setPrefWidth(newWidth);
+        btBar.setMinHeight(40);
+        btBar.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        
+        Button virusBtn = btBar.buttonVirus();
+        Button cureBtn = btBar.buttonCure();
+
+        Pane virusContentPane = createVirusSidebarContent();
+        //Pane cureContentPane = createVirusSidebarContent();
+
+        SideBar sbVirus = new SideBar(90,0, virusBtn, virusContentPane);
+        //SideBar sbCure = new SideBar(90,0,cureContentPane);
+
+        HBox gameWithSides = createGameUI(game, sbVirus);//, sbCure);
+        
+        VBox root = new VBox(gameWithSides, btBar);
+        //VBox root = new VBox(game, btBar);
+        
+        newHeight += 50;
+        Scene finalScene = new Scene(root, newWidth, newHeight);
+        primaryStage.setScene(finalScene);
+        primaryStage.setResizable(false);
+        primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue)
+                primaryStage.setMaximized(false);
+        });
         primaryStage.show();
     }
 
@@ -146,5 +183,25 @@ public class App extends Application {
         circ[1].setMouseTransparent(true);
 
         return circ;
+    }
+
+    
+
+    private BorderPane createVirusSidebarContent(){
+        // create some content to put in the sidebar.
+        return new BorderPane();
+    }
+
+    private HBox createGameUI(Group game, SideBar sbVirus){//}, SideBar sbCure){
+
+        HBox root = new HBox();
+
+        //root.getChildren().addAll(game, sbVirus.getControlButton(), sbCure.getControlButton());
+
+        //root.setAlignment(Pos.CENTER);
+
+        root.getChildren().addAll(game, sbVirus);//, sbCure);
+        return root;
+
     }
 }
