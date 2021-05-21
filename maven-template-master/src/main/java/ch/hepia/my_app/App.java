@@ -66,6 +66,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        primaryStage.setResizable(false);
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries lol = test.getCountries("summary");
 
@@ -96,13 +97,20 @@ public class App extends Application {
         }
         
         ZoomableScrollPane scroller = new ZoomableScrollPane(box, newWidth, newHeight);
-        lol.listOfCountries().forEach( c -> box.getChildren().add(getCountryCircle(c, scroller)));
-        scroller.addEventFilter(ScrollEvent.ANY, e->{
-            removeCircles(box);
+        lol.listOfCountries().forEach( c -> box.getChildren().addAll(getCountryCircle(c, scroller)[0], getCountryCircle(c, scroller)[1]));
+        
+
+
+        scroller.getContent().addEventHandler(ScrollEvent.ANY, e->{
             scroller.onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
+            removeCircles(box);
+            lol.listOfCountries().forEach( c -> box.getChildren().addAll(getCountryCircle(c, scroller)[0], getCountryCircle(c, scroller)[1]));
             System.out.println(scroller.getZoomWidth());
-            lol.listOfCountries().forEach( c -> box.getChildren().add(getCountryCircle(c, scroller)));
+            e.consume();
         });
+
+
+
         scroller.setPrefSize(newWidth, newHeight);
         scroller.setPannable(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -123,14 +131,20 @@ public class App extends Application {
         lstCircles.forEach(i -> box.getChildren().remove(i));
     }
 
-    public Circle getCountryCircle(Country c, ZoomableScrollPane pane) {
-        Circle circ = new Circle(-1,-1,-1);
+    public Circle[] getCountryCircle(Country c, ZoomableScrollPane pane) {
+        Circle[] circ = new Circle[2];
+        circ[0] = new Circle(-1,-1,-1);
+        circ[1] = new Circle(-1,-1,-1);
 
         if(pane.getZoomWidth()/400 < 1/(0.1*c.size())){
             return circ;
         }
-        circ = new Circle(c.coordinates()[0], c.coordinates()[1], 15 , c.getColorFromCountry());
-        circ.setMouseTransparent(true);
+        circ[0] = new Circle(c.coordinates()[0], c.coordinates()[1], c.getCircleWidth() + 3 , Color.BLACK );
+        circ[1] = new Circle(c.coordinates()[0], c.coordinates()[1], c.getCircleWidth() , c.getColorFromCountry());
+
+        circ[0].setMouseTransparent(true);
+        circ[1].setMouseTransparent(true);
+
         return circ;
     }
 }

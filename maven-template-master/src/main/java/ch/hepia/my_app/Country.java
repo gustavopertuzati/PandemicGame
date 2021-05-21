@@ -178,6 +178,18 @@ public class Country {
         }
     }
 
+    public double getCircleWidth() {
+        double ratio = (double)this.playerTotalActive() / (double)this.totalPopulation();
+        ratio += (double)this.playerDailyDeaths() / (double)this.totalPopulation();
+        //System.out.println(this.countryName() + ": " + ratio);
+        if (ratio <0.0015){
+            return 15;
+        } else if (ratio < 0.0065){
+            return 20;
+        } else {
+            return 25;
+        }
+    }
 
     // update de l'historique du pays
     public void updateCountryHistory() {
