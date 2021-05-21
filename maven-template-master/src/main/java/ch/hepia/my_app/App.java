@@ -125,15 +125,18 @@ public class App extends Application {
         bottomBar.setMinHeight(40);
         bottomBar.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 //      
-        AnchorPane root = createGameUI(game);
            
-        VBox.setVgrow(root, Priority.ALWAYS);
+        VBox.setVgrow(game, Priority.ALWAYS);
         VBox.setVgrow(bottomBar, Priority.ALWAYS);
 
-        VBox gameBox = new VBox(root, bottomBar);
+        VBox gameBox = new VBox(game, bottomBar);
+
+        BorderPane bp = createSidebarContent();
+        SideBar sideBar = new SideBar(90,0, bp);
+        StackPane root = createGameUI(gameBox, sideBar);
         
         newHeight += 50;
-        Scene finalScene = new Scene(gameBox, newWidth, newHeight);
+        Scene finalScene = new Scene(root, newWidth, newHeight);
         primaryStage.setScene(finalScene);
         primaryStage.setResizable(false);
         primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
@@ -220,13 +223,52 @@ public class App extends Application {
         return bottom;
     }
 
-    private AnchorPane createGameUI(Group game){
+    private BorderPane createSidebarContent(){
+        // create some content to put in the sidebar.
+        final Button virusBtn = new Button("virus");
+        final Button cureBtn = new Button("cure");
+        
+        virusBtn.getStyleClass().add("show-resume");
+        virusBtn.setMaxWidth(Double.MAX_VALUE);
+        virusBtn.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent actionEvent)
+            {
+                System.out.println("afficher les infos du virus");
+            }
+        });
+        virusBtn.fire();
+        virusBtn.setLayoutX(500);
+        virusBtn.setLayoutY(500);
 
-        AnchorPane root = new AnchorPane(game);
+        cureBtn.getStyleClass().add("show-resume");
+        cureBtn.setMaxWidth(Double.MAX_VALUE);
+        cureBtn.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent actionEvent)
+            {
+                System.out.println("afficher les infos du vaccin");
+            }
+        });
+        cureBtn.fire();
+        cureBtn.setLayoutX(50);
+        cureBtn.setLayoutY(50);
 
-        Button button = new Button("virus");        
+        final BorderPane menuPane = new BorderPane();
+        menuPane.setTop(virusBtn);
+        menuPane.setTop(cureBtn);
+        return menuPane;
+    }
 
-        SideBar sideBar = new SideBar(90, 0, button, root);
+    private StackPane createGameUI(VBox game, SideBar sideBar){
+
+        StackPane root = new StackPane();
+
+        root.getChildren().addAll(game, sideBar.getControlButton());
+
+        root.setAlignment(Pos.BOTTOM_LEFT);
 
         return root;
 

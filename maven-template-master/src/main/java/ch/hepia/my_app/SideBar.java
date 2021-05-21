@@ -36,12 +36,12 @@ class SideBar extends HBox{
 
     private final Button controlButton;
 
-    SideBar(final double expandedLength, final double hiddenLength, Button button, Node... nodes){
+    SideBar(final double expandedLength, final double hiddenLength, /*Button button,*/ Node... nodes){
 
         this.setPrefWidth(expandedLength);
         this.setMinWidth(0);
 
-        controlButton = button;
+        controlButton = new Button("Collapse");
 
         controlButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override public void handle(ActionEvent actionEvent){
