@@ -1,5 +1,7 @@
 package ch.hepia.my_app;
 
+import javax.swing.Action;
+
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 
@@ -26,85 +28,68 @@ import javafx.event.EventHandler;
 import javafx.util.Duration;
 
 
-class SideBar extends VBox{
-    /**
-     * @return a control button to hide and show the sidebar
-     */
+class SideBar extends HBox{
+    
     public Button getControlButton(){
         return controlButton;
     }
+
     private final Button controlButton;
 
-    /**
-     * creates a sidebar containing a vertical alignment of the given nodes
-     */
-    SideBar(final double expandedWidth, Node... nodes){
-        getStyleClass().add("sidebar");
-        this.setPrefWidth(expandedWidth);
+    SideBar(final double expandedLength, final double hiddenLength, Button button, Node... nodes){
+
+        this.setPrefWidth(expandedLength);
         this.setMinWidth(0);
 
-        // create a bar to hide and show.
-        setAlignment(Pos.CENTER);
-        getChildren().addAll(nodes);
+        controlButton = button;
 
-        // create a button to hide and show the sidebar.
-        controlButton = new Button("Menu");
-        controlButton.setMinWidth(Region.USE_PREF_SIZE);
-        controlButton.getStyleClass().add("hide-left");
-
-        // apply the animations when the button is pressed.
         controlButton.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent actionEvent){
-                // create an animation to hide sidebar.
-                final Animation hideSidebar = new Transition(){
-                    { setCycleDuration(Duration.millis(250)); }
-
-                    @Override
-                    protected void interpolate(double frac){
-                        final double curWidth = expandedWidth * (1.0 - frac);
-                        setPrefHeight(curWidth);
-                        setTranslateY(-expandedWidth + curWidth);
-                    }
-                };
-                hideSidebar.onFinishedProperty().set(new EventHandler<ActionEvent>(){
-                    @Override
-                    public void handle(ActionEvent actionEvent){
-                        setVisible(false);
-                        controlButton.setText("Menu");
-                        controlButton.getStyleClass().remove("hide-left");
-                        controlButton.getStyleClass().add("show-right");
-                    }
-                });
-                // create an animation to show a sidebar.
-                final Animation showSidebar = new Transition(){
-                    { setCycleDuration(Duration.millis(250)); }
-
-                    @Override
-                    protected void interpolate(double frac){
-                        final double curWidth = expandedWidth * frac;
-                        setPrefHeight(curWidth);
-                        setTranslateY(-expandedWidth + curWidth);
-                    }
-                };
-                showSidebar.onFinishedProperty().set(new EventHandler<ActionEvent>(){
-                    @Override
-                    public void handle(ActionEvent actionEvent){
-                        controlButton.setText("Hide menu");
-                        controlButton.getStyleClass().add("hide-left");
-                        controlButton.getStyleClass().remove("show-right");
-                    }
-                });
-                if (showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
-                    if (isVisible()){
-                        hideSidebar.play();
-                    }
-                    else{
-                        setVisible(true);
-                        showSidebar.play();
-                    }
-                }
+            @Override public void handle(ActionEvent actionEvent){
+                setVisible(false);
             }
         });
+
+        final Animation hideSidebar = new Transition(){
+            {
+                setCycleDuration(Duration.millis(250));
+            }
+            protected void interpolate(double frac){
+                if(frac < 1 -(hiddenLength / expandedLength)){
+                    final double curLength = expandedLength * (1.0 - frac);
+                    setPrefWidth(curLength);
+                }
+            }
+        };
+
+        hideSidebar.onFinishedProperty().set(new EventHandler<ActionEvent>(){
+            @Override public void handle(ActionEvent actionEvent){
+                controlButton.setText("Afficher");
+            }
+        });
+
+        final Animation showSidebar = new Transition(){
+            {
+                setCycleDuration(Duration.millis(250));
+            }
+            protected void interpolate(double frac){
+                if(frac > (hiddenLength / expandedLength)){
+                    final double curLength = expandedLength * frac;
+                    setPrefWidth(curLength);
+                }
+            }
+        };
+
+        showSidebar.onFinishedProperty().set(new EventHandler<ActionEvent>(){
+            @Override public void handle(ActionEvent actionEvent){
+                controlButton.setText("Retour");
+            }
+        });
+
+        if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
+            if(getPrefWidth() == expandedLength) hideSidebar.play();
+            else showSidebar.play();
+        }
+
     }
+
 }
