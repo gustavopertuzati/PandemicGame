@@ -118,22 +118,29 @@ public class App extends Application {
         
         Group game = new Group();
         game.getChildren().add(scroller);
+        //game.getChildren().add("barre des cas");
+
+        BottomBar btBar = new BottomBar();
+        btBar.fill();      
+        btBar.setSpacing(30);        
+        btBar.setAlignment(Pos.BOTTOM_CENTER);
+        btBar.setPrefWidth(newWidth);
+        btBar.setMinHeight(40);
+        btBar.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         
-        HBox bottomBar = createBottomHBox();        
-        bottomBar.setAlignment(Pos.BOTTOM_CENTER);
-        bottomBar.setPrefWidth(newWidth);
-        bottomBar.setMinHeight(40);
-        bottomBar.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-//      
-           
-        VBox.setVgrow(game, Priority.ALWAYS);
-        VBox.setVgrow(bottomBar, Priority.ALWAYS);
+        Button virusBtn = btBar.buttonVirus();
+        Button cureBtn = btBar.buttonCure();
 
-        VBox gameBox = new VBox(game, bottomBar);
+        Pane virusContentPane = createVirusSidebarContent();
+        //Pane cureContentPane = createVirusSidebarContent();
 
-        BorderPane bp = createSidebarContent();
-        SideBar sideBar = new SideBar(90,0, bp);
-        StackPane root = createGameUI(gameBox, sideBar);
+        SideBar sbVirus = new SideBar(90,0, virusBtn, virusContentPane);
+        //SideBar sbCure = new SideBar(90,0,cureContentPane);
+
+        HBox gameWithSides = createGameUI(game, sbVirus);//, sbCure);
+        
+        VBox root = new VBox(gameWithSides, btBar);
+        //VBox root = new VBox(game, btBar);
         
         newHeight += 50;
         Scene finalScene = new Scene(root, newWidth, newHeight);
@@ -167,109 +174,22 @@ public class App extends Application {
         return circ;
     }
 
-    private HBox createBottomHBox(){
+    
 
-        final Button virusBtn = new Button("virus");
-        virusBtn.setWrapText(true);
-        virusBtn.setMinWidth(120);
-        virusBtn.setMinHeight(40);
-        virusBtn.setStyle("-fx-font-size: 1.0em;");
-
-        ProgressBar pbVirus = new ProgressBar(0);
-        pbVirus.setProgress(0.1);
-        pbVirus.setPrefSize(450, 40);
-        pbVirus.setStyle("-fx-accent: green;");
-        
-        Label date = new Label(LocalDate.now().toString());
-        date.setWrapText(true);
-        date.setMinWidth(150);
-        date.setMinHeight(40);
-        date.setStyle("-fx-font-size: 2em;");
-
-        ProgressBar pbCure = new ProgressBar(0);
-        pbCure.setProgress(0.1);
-        pbCure.setPrefSize(450, 40);
-        pbCure.setStyle("-fx-accent: blue;");
-        
-        final Button cureBtn = new Button("cure");
-        cureBtn.setWrapText(true);
-        cureBtn.setMinWidth(120);
-        cureBtn.setMinHeight(40);
-        cureBtn.setStyle("-fx-font-size: 1.0em;");
-
-        //SideBar sbVirus = new SideBar(90, 90, virusBtn);
-        //SideBar sbCure = new SideBar(90, 90, cureBtn);
-        HBox bottom = new HBox(20, virusBtn, pbVirus, date, pbCure, cureBtn);
-        bottom.setSpacing(30);
-
-
-
-        virusBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                pbVirus.setProgress(0.5); // a virer
-                // afficher le menu
-            }
-        });
-
-        cureBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                pbCure.setProgress(0.5); // a virer
-                // afficher le menu
-            }
-        });
-
-        return bottom;
-    }
-
-    private BorderPane createSidebarContent(){
+    private BorderPane createVirusSidebarContent(){
         // create some content to put in the sidebar.
-        final Button virusBtn = new Button("virus");
-        final Button cureBtn = new Button("cure");
-        
-        virusBtn.getStyleClass().add("show-resume");
-        virusBtn.setMaxWidth(Double.MAX_VALUE);
-        virusBtn.setOnAction(new EventHandler<ActionEvent>()
-        {
-            @Override
-            public void handle(ActionEvent actionEvent)
-            {
-                System.out.println("afficher les infos du virus");
-            }
-        });
-        virusBtn.fire();
-        virusBtn.setLayoutX(500);
-        virusBtn.setLayoutY(500);
-
-        cureBtn.getStyleClass().add("show-resume");
-        cureBtn.setMaxWidth(Double.MAX_VALUE);
-        cureBtn.setOnAction(new EventHandler<ActionEvent>()
-        {
-            @Override
-            public void handle(ActionEvent actionEvent)
-            {
-                System.out.println("afficher les infos du vaccin");
-            }
-        });
-        cureBtn.fire();
-        cureBtn.setLayoutX(50);
-        cureBtn.setLayoutY(50);
-
-        final BorderPane menuPane = new BorderPane();
-        menuPane.setTop(virusBtn);
-        menuPane.setTop(cureBtn);
-        return menuPane;
+        return new BorderPane();
     }
 
-    private StackPane createGameUI(VBox game, SideBar sideBar){
+    private HBox createGameUI(Group game, SideBar sbVirus){//}, SideBar sbCure){
 
-        StackPane root = new StackPane();
+        HBox root = new HBox();
 
-        root.getChildren().addAll(game, sideBar.getControlButton());
+        //root.getChildren().addAll(game, sbVirus.getControlButton(), sbCure.getControlButton());
 
-        root.setAlignment(Pos.BOTTOM_LEFT);
+        //root.setAlignment(Pos.CENTER);
 
+        root.getChildren().addAll(game, sbVirus);//, sbCure);
         return root;
 
     }

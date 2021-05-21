@@ -30,18 +30,19 @@ import javafx.util.Duration;
 
 class SideBar extends HBox{
     
+    private Button controlButton;
+    
     public Button getControlButton(){
-        return controlButton;
+        return this.controlButton;
     }
 
-    private final Button controlButton;
 
-    SideBar(final double expandedLength, final double hiddenLength, /*Button button,*/ Node... nodes){
-
+    SideBar(final double expandedLength, final double hiddenLength, Button btn, Node... nodes){
+        
         this.setPrefWidth(expandedLength);
         this.setMinWidth(0);
 
-        controlButton = new Button("Collapse");
+        this.controlButton = btn;
 
         controlButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override public void handle(ActionEvent actionEvent){
@@ -63,6 +64,7 @@ class SideBar extends HBox{
 
         hideSidebar.onFinishedProperty().set(new EventHandler<ActionEvent>(){
             @Override public void handle(ActionEvent actionEvent){
+                setVisible(false);
                 controlButton.setText("Afficher");
             }
         });
@@ -86,8 +88,12 @@ class SideBar extends HBox{
         });
 
         if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
-            if(getPrefWidth() == expandedLength) hideSidebar.play();
-            else showSidebar.play();
+            if(isVisible()){
+                hideSidebar.play();  
+            } else {
+                setVisible(true);
+                showSidebar.play();
+            }
         }
 
     }
