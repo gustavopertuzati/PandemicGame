@@ -196,8 +196,12 @@ public class App extends Application {
         cureBtn.setMinHeight(40);
         cureBtn.setStyle("-fx-font-size: 1.0em;");
 
+        //SideBar sbVirus = new SideBar(90, 90, virusBtn);
+        //SideBar sbCure = new SideBar(90, 90, cureBtn);
         HBox bottom = new HBox(20, virusBtn, pbVirus, date, pbCure, cureBtn);
         bottom.setSpacing(30);
+
+
 
         virusBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
