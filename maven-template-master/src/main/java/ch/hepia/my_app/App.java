@@ -124,32 +124,10 @@ public class App extends Application {
         bottomBar.setPrefWidth(newWidth);
         bottomBar.setMinHeight(40);
         bottomBar.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-//
-        AnchorPane root = new AnchorPane(game);
-
-        HBox bottomCures = new HBox();
-        bottomCures.setStyle("-fx-background-color: green;");
-        bottomCures.setMaxWidth(newWidth-200);
-        bottomCures.setMaxWidth(newWidth-200);
-        bottomCures.setMinHeight(160);
-
-        HBox bottomSick = new HBox();
-        bottomCures.setStyle("-fx-background-color: red;");
-        bottomCures.setMaxWidth(newWidth-700);
-        bottomCures.setMinHeight(160);
-
-        HBox bottomHbox = new HBox(bottomCures, bottomSick);
-
-        AnchorPane.setBottomAnchor(bottomHbox, 50d);
-        AnchorPane.setLeftAnchor(bottomHbox, 75d);
-        AnchorPane.setRightAnchor(bottomHbox, 75d);
-
-        root.getChildren().add(bottomHbox);
-
-        VBox.setMargin(bottomHbox, new Insets(0,10,10,10));
-        game.getChildren().add(bottomHbox);
-                
-        VBox.setVgrow(game, Priority.ALWAYS);
+//      
+        AnchorPane root = createGameUI(game);
+           
+        VBox.setVgrow(root, Priority.ALWAYS);
         VBox.setVgrow(bottomBar, Priority.ALWAYS);
 
         VBox gameBox = new VBox(root, bottomBar);
@@ -216,8 +194,12 @@ public class App extends Application {
         cureBtn.setMinHeight(40);
         cureBtn.setStyle("-fx-font-size: 1.0em;");
 
+        //SideBar sbVirus = new SideBar(90, 90, virusBtn);
+        //SideBar sbCure = new SideBar(90, 90, cureBtn);
         HBox bottom = new HBox(20, virusBtn, pbVirus, date, pbCure, cureBtn);
         bottom.setSpacing(30);
+
+
 
         virusBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -236,5 +218,17 @@ public class App extends Application {
         });
 
         return bottom;
+    }
+
+    private AnchorPane createGameUI(Group game){
+
+        AnchorPane root = new AnchorPane(game);
+
+        Button button = new Button("virus");        
+
+        SideBar sideBar = new SideBar(90, 0, button, root);
+
+        return root;
+
     }
 }
