@@ -153,8 +153,6 @@ public class App extends Application {
         VBox.setVgrow(bottomBar, Priority.ALWAYS);
 
         VBox gameBox = new VBox(root, bottomBar);
-
-        // pour la side bar on doit pouvoir utiliser le dernier commit dans la branche "menu"
         
         newHeight += 50;
         Scene finalScene = new Scene(gameBox, newWidth, newHeight);
