@@ -73,7 +73,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setResizable(false);
+        //primaryStage.setResizable(false);
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries countries = test.getCountries("summary");
 
@@ -110,11 +110,8 @@ public class App extends Application {
             scroller.onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
             removeCircles(box);
             countries.listOfCountries().forEach( c -> box.getChildren().addAll(getCountryCircle(c, scroller)[0], getCountryCircle(c, scroller)[1]));
-            System.out.println(scroller.getZoomWidth());
             e.consume();
         });
-
-
 
         scroller.setPrefSize(newWidth, newHeight);
         scroller.setPannable(true);
@@ -131,30 +128,42 @@ public class App extends Application {
         btBar.setAlignment(Pos.BOTTOM_CENTER);
         btBar.setPrefWidth(newWidth);
         btBar.setMinHeight(40);
-        btBar.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        btBar.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));        
+        
         
         Button virusBtn = btBar.buttonVirus();
-        Button cureBtn = btBar.buttonCure();
-
-        Pane virusContentPane = createVirusSidebarContent();
-        //Pane cureContentPane = createVirusSidebarContent();
-
-        SideBar sbVirus = new SideBar(90,0, virusBtn, virusContentPane);
-        //SideBar sbCure = new SideBar(90,0,cureContentPane);
-
-        HBox gameWithSides = createGameUI(game, sbVirus);//, sbCure);
+        Pane virusContentPane = new BorderPane();
+        SideBar sbVirus = new SideBar(newWidth/3,0, virusBtn, newHeight, virusContentPane);
+        sbVirus.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         
+        Button cureBtn = btBar.buttonCure();
+        Pane cureContentPane = new BorderPane(new Circle(10,10,10, Color.RED));
+        SideBar sbCure = new SideBar(-1*(newWidth-(newWidth/3)),0, cureBtn, newHeight, cureContentPane);
+        //sbCure.SideBarCure(-1*(newWidth-(newWidth/3)), 0, cureBtn, newHeight, cureContentPane);
+        //sbCure.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        
+
+        Group gameWithSides = new Group();
+        sbVirus.setTranslateX(0);
+        game.setTranslateX(0);
+        sbCure.setTranslateX(newWidth);
+
+        game.setViewOrder(12);
+        sbVirus.setViewOrder(8);
+        sbCure.setViewOrder(8);
+
+
+        gameWithSides.getChildren().addAll(game, sbVirus, sbCure);
         VBox root = new VBox(gameWithSides, btBar);
-        //VBox root = new VBox(game, btBar);
         
         newHeight += 50;
         Scene finalScene = new Scene(root, newWidth, newHeight);
         primaryStage.setScene(finalScene);
-        primaryStage.setResizable(false);
+        /*primaryStage.setResizable(false);
         primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue)
                 primaryStage.setMaximized(false);
-        });
+        });*/
         primaryStage.show();
     }
 
@@ -183,25 +192,5 @@ public class App extends Application {
         circ[1].setMouseTransparent(true);
 
         return circ;
-    }
-
-    
-
-    private BorderPane createVirusSidebarContent(){
-        // create some content to put in the sidebar.
-        return new BorderPane();
-    }
-
-    private HBox createGameUI(Group game, SideBar sbVirus){//}, SideBar sbCure){
-
-        HBox root = new HBox();
-
-        //root.getChildren().addAll(game, sbVirus.getControlButton(), sbCure.getControlButton());
-
-        //root.setAlignment(Pos.CENTER);
-
-        root.getChildren().addAll(game, sbVirus);//, sbCure);
-        return root;
-
     }
 }

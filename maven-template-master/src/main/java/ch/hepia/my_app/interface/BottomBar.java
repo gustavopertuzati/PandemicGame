@@ -55,21 +55,6 @@ public class BottomBar extends HBox{
         date.setMinWidth(150);
         date.setMinHeight(40);
         date.setStyle("-fx-font-size: 2em;");
-        
-        /*btnVirus.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                pbVirus.setProgress(0.5);
-            }
-        });
-
-        btnCure.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                pbCure.setProgress(0.5);
-
-            }
-        });*/
 
         this.getChildren().addAll(this.btnVirus, this.pbVirus, this.date, this.pbCure, this.btnCure);
     }
