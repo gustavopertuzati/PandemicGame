@@ -45,10 +45,14 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
+import javafx.scene.Parent;
+
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
 
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Point2D;
@@ -130,31 +134,32 @@ public class App extends Application {
         btBar.setMinHeight(40);
         btBar.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));        
         
-        
+/////////////////////////////////////////////////
+
+        //MEGA CHANTIER!!!
+
         Button virusBtn = btBar.buttonVirus();
+        
         Pane virusContentPane = new BorderPane();
-        SideBar sbVirus = new SideBar(newWidth/3,0, virusBtn, newHeight, virusContentPane);
-        sbVirus.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        LeftSideBar sbVirus = new LeftSideBar(newWidth/3,0, virusBtn, newHeight, virusContentPane);
+        sbVirus.setBackground(new Background(new BackgroundFill(Color.color(0.2,0.2,0.2,0.75), CornerRadii.EMPTY, Insets.EMPTY)));
         
         Button cureBtn = btBar.buttonCure();
-        Pane cureContentPane = new BorderPane(new Circle(10,10,10, Color.RED));
-        SideBar sbCure = new SideBar(-1*(newWidth-(newWidth/3)),0, cureBtn, newHeight, cureContentPane);
-        //sbCure.SideBarCure(-1*(newWidth-(newWidth/3)), 0, cureBtn, newHeight, cureContentPane);
-        //sbCure.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-        
+        Rectangle bgC = new Rectangle(newWidth/3, newHeight, Color.color(0.2,0.2,0.2,0.75));
+        RightSideBar sbCure = new RightSideBar(newWidth/3,newWidth-(newWidth/3), bgC);
+        cureBtn.setOnAction(e -> sbCure.animate());
 
-        Group gameWithSides = new Group();
         sbVirus.setTranslateX(0);
-        game.setTranslateX(0);
         sbCure.setTranslateX(newWidth);
 
-        game.setViewOrder(12);
-        sbVirus.setViewOrder(8);
-        sbCure.setViewOrder(8);
+        game.getChildren().addAll(sbVirus, sbCure);
+        game.setTranslateX(0);
+        
+        VBox root = new VBox(game, btBar);
 
+        //SORTIE DU MEGA CHANTIER
 
-        gameWithSides.getChildren().addAll(game, sbVirus, sbCure);
-        VBox root = new VBox(gameWithSides, btBar);
+////////////////////////////////////////////////
         
         newHeight += 50;
         Scene finalScene = new Scene(root, newWidth, newHeight);
