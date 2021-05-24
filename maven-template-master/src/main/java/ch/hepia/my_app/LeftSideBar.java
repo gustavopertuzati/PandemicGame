@@ -53,12 +53,11 @@ class LeftSideBar extends HBox{
         getChildren().addAll(nodes);
     
         this.hideSidebar = new Transition(){
-            { setCycleDuration(Duration.millis(1)); }
+            { setCycleDuration(Duration.millis(250)); }
             protected void interpolate(double frac){ 
-                if(frac < 1 - (hiddenLength / expandedLength)){
-                    final double curLength = expandedLength * (1.0 - frac);
-                    System.out.println(frac);
-                    setPrefWidth(curLength);
+                if(frac < 1 - (hiddenLength / expandedLength) ) {
+                    final double curWidth = expandedLength * (1.0 - frac);
+                    setPrefWidth(curWidth);
                 }
             }
         };
@@ -70,11 +69,12 @@ class LeftSideBar extends HBox{
         });
 
         this.showSidebar = new Transition(){
-            { setCycleDuration(Duration.millis(1)); }
+            { setCycleDuration(Duration.millis(250)); }
             protected void interpolate(double frac){
-                if(frac > (hiddenLength / expandedLength)){
-                    final double curLength = expandedLength * frac;
-                    setPrefWidth(curLength);
+                if(frac > (hiddenLength / expandedLength) ) {
+                    final double curWidth = expandedLength * frac;
+                    setPrefWidth(curWidth);
+                    //setTranslateX(-expandedLength + curWidth);
                 }
             }
         };

@@ -141,7 +141,7 @@ public class App extends Application {
         Button virusBtn = btBar.buttonVirus();
         
         Pane virusContentPane = new BorderPane();
-        LeftSideBar sbVirus = new LeftSideBar(newWidth/3,0, virusBtn, newHeight, virusContentPane);
+        LeftSideBar sbVirus = new LeftSideBar(newWidth/3,newWidth/3, virusBtn, newHeight, virusContentPane);
         sbVirus.setBackground(new Background(new BackgroundFill(Color.color(0.2,0.2,0.2,0.75), CornerRadii.EMPTY, Insets.EMPTY)));
         
         Button cureBtn = btBar.buttonCure();
