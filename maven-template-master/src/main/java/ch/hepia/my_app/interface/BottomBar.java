@@ -43,12 +43,11 @@ public class BottomBar extends HBox{
     }
 
     public void fill(){
-        this.btnVirus = ButtonFromBottomBar("virus");
-        
         this.btnCure = ButtonFromBottomBar("cure");
-        
-        this.pbVirus = ProgressBarFromBottomBar(0, "-fx-accent: green;");
         this.pbCure = ProgressBarFromBottomBar(0, "-fx-accent: blue;");
+        
+        this.btnVirus = ButtonFromBottomBar("virus");
+        this.pbVirus = ProgressBarFromBottomBar(0, "-fx-accent: green;");
         
         this.date = new Label(LocalDate.now().toString());
         date.setWrapText(true);
@@ -56,7 +55,7 @@ public class BottomBar extends HBox{
         date.setMinHeight(40);
         date.setStyle("-fx-font-size: 2em;");
 
-        this.getChildren().addAll(this.btnVirus, this.pbVirus, this.date, this.pbCure, this.btnCure);
+        this.getChildren().addAll(this.btnCure, this.pbCure, this.date, this.pbVirus, this.btnVirus);
     }
 
     private Button ButtonFromBottomBar(String name){

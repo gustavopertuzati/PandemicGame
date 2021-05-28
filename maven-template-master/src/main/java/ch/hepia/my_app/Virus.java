@@ -20,7 +20,7 @@ public class Virus{
     this.resistance = 0.005;
     //this.perkLst = new ArrayList<Perk>();
 
-    this.currentPoints = 0;
+    this.currentPoints = 5;
   }
 
   /*public void learnPerk(Perk p){
