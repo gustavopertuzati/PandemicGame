@@ -105,17 +105,15 @@ class SideBar extends HBox{
         
         System.out.println("Cure: " + isOtherVisible);
         if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
-                    System.out.println("Virus: " + isAnimating);
-                    if(isAnimating){
-                        hideSidebar.play();
-                        //setVisible(false);
-                    } else if (!isOtherVisible) {
-                        setVisible(true);
-
-                        showSidebar.play();
-                    }
-                }
-
+            System.out.println("Virus: " + isAnimating);
+            if(isAnimating){
+                hideSidebar.play();
+                //setVisible(false);
+            } else if (!isOtherVisible) {
+                setVisible(true);
+                showSidebar.play();
+            }
+        }
     }
 
     public boolean isAnimating(){
