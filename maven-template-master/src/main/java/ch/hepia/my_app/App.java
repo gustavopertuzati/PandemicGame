@@ -103,7 +103,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
+        System.out.println("Starting app...");
         Virus v = new Virus();
         //primaryStage.setResizable(false);
 
@@ -112,10 +112,13 @@ public class App extends Application {
         perks.init();
         LinkedHashMap buttonsPerksmap = perks.buttonsPerksMap();
         //
-
+        System.out.println("Getting Api Data...");
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
+        System.out.println("\tGetting Summary data...");
         Countries countries = test.getCountries("summary");
+        countries.addCountry(new Country("bidon", 0, 0,0,0,0,0,0,0,0,0,""));
 
+        System.out.println("Initializing UI...");
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
         int newWidth = 1420;
         int newHeight = (int)(worldImage.getHeight() * newWidth / worldImage.getWidth());
@@ -176,7 +179,7 @@ public class App extends Application {
         virusContentPane.getChildren().add(new ContentVirusMenu(buttonsPerksmap, v));
         
         Button virusBtn = btBar.buttonVirus();
-        SideBar sbVirus = new SideBar(newWidth/3,0, virusBtn, newHeight, virusContentPane);
+        LeftSideBar sbVirus = new LeftSideBar(newWidth/3,0, virusBtn, newHeight, virusContentPane);
         Image virusImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuVirus.png"));
         sbVirus.setBackground(new Background(new BackgroundFill(new ImagePattern(virusImage), CornerRadii.EMPTY, Insets.EMPTY)));
         
@@ -187,8 +190,8 @@ public class App extends Application {
 
         Button cureBtn = btBar.buttonCure();
         RightSideBar sbCure = new RightSideBar(newWidth/3, newWidth-(newWidth/3), iVcure);
-        virusBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating()));
-        cureBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating()));
+        virusBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating(), sbCure));
+        cureBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating(), sbVirus));
         sbCure.setTranslateX(newWidth);
 
         //SORTIE DU MEGA CHANTIER

@@ -31,7 +31,7 @@ import javafx.event.EventHandler;
 import javafx.util.Duration;
 
 
-class SideBar extends HBox{
+public class LeftSideBar extends HBox{
     
     private Animation hideSidebar;
     private Animation showSidebar;
@@ -40,7 +40,7 @@ class SideBar extends HBox{
 
     private boolean isAnimating = false;
 
-    SideBar(final double expandedLength, final double hiddenLength, Button btn, int newHeight, Node... nodes){
+    public LeftSideBar(final double expandedLength, final double hiddenLength, Button btn, int newHeight, Node... nodes){
         
         this.controlButton = btn;
 
@@ -100,19 +100,22 @@ class SideBar extends HBox{
             }
         });*/
     }
-    public void animate(boolean isOtherVisible){
+    public void animate(boolean isOtherVisible, RightSideBar rsb){
         
         
         System.out.println("Cure: " + isOtherVisible);
         if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
-            System.out.println("Virus: " + isAnimating);
+            //Si on ferme
             if(isAnimating){
                 hideSidebar.play();
-                //setVisible(false);
-            } else if (!isOtherVisible) {
-                setVisible(true);
-                showSidebar.play();
+                return;
+            }else if(isOtherVisible){
+            //Si on ouvre et que le menu opposé est ouvert
+                rsb.animate(false, this);
             }
+            //On ouvre
+            setVisible(true);
+            showSidebar.play();
         }
     }
 

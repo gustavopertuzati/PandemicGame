@@ -63,11 +63,11 @@ class RightSideBar extends HBox{
 
     }
 
-    public void animate(boolean isOtherVisible){
+    public void animate(boolean isOtherVisible, LeftSideBar lsb){
 
-        if(isAnimating){return;};
+        //if(isAnimating){return;};
         //isAnimating = true;
-        
+        /*
         tt.setFromX(getTranslateX());
         System.out.println(getTranslateX());
             if(getTranslateX() <= hiddenLength){
@@ -75,9 +75,25 @@ class RightSideBar extends HBox{
                 isShowing = false;
             }else if(!isOtherVisible){
                 tt.setToX(getTranslateX() - expandedLength);
+                lsb.animate(false, this);
                 isShowing = true;
             }
-            tt.play();
+        */
+        //Si on ferme
+        if(getTranslateX() <= hiddenLength ){
+
+            tt.setToX(getTranslateX() + expandedLength);
+            isShowing = false;
+        }else{
+            if(isOtherVisible){
+                //Si on ouvre et que le menu opposé est ouvert
+                lsb.animate(isShowing, this);
+            }
+            //On ouvre
+            tt.setToX(getTranslateX() - expandedLength);
+            isShowing = true;
+        }
+        tt.play();
     }
 
     public boolean isAnimating(){
