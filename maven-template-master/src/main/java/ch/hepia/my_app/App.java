@@ -41,6 +41,10 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -107,8 +111,6 @@ public class App extends Application {
         
         ZoomableScrollPane scroller = new ZoomableScrollPane(box, newWidth, newHeight);
         countries.listOfCountries().forEach( c -> box.getChildren().addAll(getCountryCircle(c, scroller)[0], getCountryCircle(c, scroller)[1]));
-        
-
 
         scroller.getContent().addEventHandler(ScrollEvent.ANY, e->{
             scroller.onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
@@ -132,31 +134,52 @@ public class App extends Application {
         btBar.setAlignment(Pos.BOTTOM_CENTER);
         btBar.setPrefWidth(newWidth);
         btBar.setMinHeight(40);
-        btBar.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));        
+        //btBar.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));        
         
 /////////////////////////////////////////////////
 
         //MEGA CHANTIER!!!
+        BorderPane virusContentPane = new BorderPane();
+        
+        Image virusImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuVirusTest.png"));        
+        ImageView iVvirus = new ImageView(virusImage);
+        iVvirus.setFitWidth(newWidth/3);
+        iVvirus.setFitHeight(newHeight);
+        
+        virusContentPane.getChildren().add(iVvirus);
+        //virusContentPane.setCenter(iVvirus);
+        //virusContentPane.setLeft(iVvirus);
+        //BackgroundSize bSize = new BackgroundSize(BackgroundSize.AUTO , BackgroundSize.AUTO, false, false, true, false);
+
+        /*virusContentPane.setBackground(new Background(new BackgroundImage(virusImage,BackgroundRepeat.REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.DEFAULT,
+            bSize)));*/
+
+        Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));        
+        ImageView iVcure = new ImageView(cureImage);
+        iVcure.setFitWidth(newWidth/3);
+        iVcure.setFitHeight(newHeight);
+        
 
         Button virusBtn = btBar.buttonVirus();
-        
-        Pane virusContentPane = new BorderPane();
-        LeftSideBar sbVirus = new LeftSideBar(newWidth/3,newWidth/3, virusBtn, newHeight, virusContentPane);
-        sbVirus.setBackground(new Background(new BackgroundFill(Color.color(0.2,0.2,0.2,0.75), CornerRadii.EMPTY, Insets.EMPTY)));
-        
-        Button cureBtn = btBar.buttonCure();
-        Rectangle bgC = new Rectangle(newWidth/3, newHeight, Color.color(0.2,0.2,0.2,0.75));
-        RightSideBar sbCure = new RightSideBar(newWidth/3,newWidth-(newWidth/3), bgC);
-        cureBtn.setOnAction(e -> sbCure.animate());
+        SideBar sbVirus = new SideBar(newWidth/3,0, virusBtn, newHeight, virusContentPane);
+        /*sbVirus.setBackground(new Background(new BackgroundImage(virusImage,BackgroundRepeat.REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.DEFAULT,
+            bSize)));//setBackground(new Background(new BackgroundFill(Color.color(0.2,0.2,0.2,0.75), CornerRadii.EMPTY, Insets.EMPTY)));       */ 
 
-        sbVirus.setTranslateX(0);
+        Button cureBtn = btBar.buttonCure();
+        RightSideBar sbCure = new RightSideBar(newWidth/3, newWidth-(newWidth/3), iVcure);
+        cureBtn.setOnAction(e -> sbCure.animate());
         sbCure.setTranslateX(newWidth);
 
         game.getChildren().addAll(sbVirus, sbCure);
-        game.setTranslateX(0);
+        scroller.setTranslateX(0);
+
         
         VBox root = new VBox(game, btBar);
-
+        //scroller.setVisible(false);
         //SORTIE DU MEGA CHANTIER
 
 ////////////////////////////////////////////////

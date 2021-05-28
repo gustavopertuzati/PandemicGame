@@ -68,7 +68,7 @@ class RightSideBar extends Parent{
         isAnimating = true;
 
         tt.setFromX(getTranslateX());
-
+        System.out.println(getTranslateX());
         if(getTranslateX() > hiddenLength){
             tt.setToX(getTranslateX() - expandedLength);
         }else{
@@ -77,4 +77,4 @@ class RightSideBar extends Parent{
 
         tt.play();
     }
-}       
+}
