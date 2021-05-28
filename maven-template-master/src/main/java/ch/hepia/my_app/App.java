@@ -176,7 +176,11 @@ public class App extends Application {
         //virusContentPane.getChildren().add();
         
         Button cureBtn = btBar.buttonCure();
+<<<<<<< HEAD
         LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight);
+=======
+        SideBar sbCure = new SideBar(newWidth/3,0, cureBtn, newHeight);
+>>>>>>> master
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
         sbCure.setBackground(new Background(new BackgroundFill(new ImagePattern(cureImage), CornerRadii.EMPTY, Insets.EMPTY)));
         
@@ -191,8 +195,13 @@ public class App extends Application {
 
         Button virusBtn = btBar.buttonVirus();
         RightSideBar sbVirus = new RightSideBar(newWidth/3, newWidth-(newWidth/3), g);
+<<<<<<< HEAD
         cureBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating(), sbCure));
         virusBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating(),sbVirus ));
+=======
+        cureBtn.setOnAction(e -> sbCure.animate( sbVirus.isAnimating()));
+        virusBtn.setOnAction(e -> sbVirus.animate(sbCure.isAnimating()));
+>>>>>>> master
         sbVirus.setTranslateX(newWidth);
         
 ////////////////////////////////////////////////

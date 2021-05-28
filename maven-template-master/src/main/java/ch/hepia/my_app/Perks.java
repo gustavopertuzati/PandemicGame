@@ -39,7 +39,11 @@ public class Perks{
     public LinkedHashMap < Button, Perk > buttonsPerksMap() {
         LinkedHashMap< Button, Perk> perksMap = new LinkedHashMap<>();
         for(Perk p: this.perks){
-            perksMap.put(new Button(p.name()), p);
+            Button b = new Button(p.name());
+            b.setStyle("-fx-background-color: #fff;");
+            b.setPrefWidth(100);
+            b.setPrefHeight(40);
+            perksMap.put(b, p);
         }
         return perksMap;
     }

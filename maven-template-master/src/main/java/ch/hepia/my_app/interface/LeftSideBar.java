@@ -71,7 +71,7 @@ public class LeftSideBar extends HBox{
         });
 
         this.showSidebar = new Transition(){
-            { setCycleDuration(Duration.millis(250)); }
+            { setCycleDuration(Duration.millis(300)); }
             @Override
             protected void interpolate(double frac){
                 if(frac > (hiddenLength / expandedLength) ) {

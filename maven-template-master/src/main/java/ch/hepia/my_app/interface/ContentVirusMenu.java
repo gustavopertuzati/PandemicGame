@@ -58,7 +58,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Point2D;
 import javafx.geometry.Insets;
@@ -75,7 +74,7 @@ import javafx.util.Duration;
 import java.time.LocalDate;
 import javafx.scene.layout.GridPane;
 
-class ContentVirusMenu extends HBox{
+class ContentVirusMenu extends BorderPane{
     
     private LinkedHashMap<Button, Perk> map;
     private Button infectivity;
@@ -88,21 +87,41 @@ class ContentVirusMenu extends HBox{
         List<Button> buttons = new ArrayList<>();
         for(Button b: map.keySet()){
             buttons.add(b);
-            b.setDisable(!v.hasEnoughPoints(map.get(b)));
+            b.setDisable(v.hasEnoughPoints(map.get(b)));
             b.setOnAction(e -> 
                 //Acquerir le perk
                 v.update(map.get(b))
             );
         }
 
+        List<String> menubar = new ArrayList<>();
+        menubar.add("Transmission");
+        menubar.add("Lethality");
+        menubar.add("Resistance");
+        
         GridPane gridPane = new GridPane();
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < 4; i++){
             for(int j = 0; j < 3; j++){
-                gridPane.add(buttons.get(j*3+i), j, i, 1, 1);
+                if(i == 0){
+                    Button b = new Button(menubar.get(j));
+                    b.setStyle("-fx-border-color: transparent;");
+                    b.setStyle("-fx-border-width: 0;");
+                    b.setStyle("-fx-background-radius: 0;");
+                    b.setStyle("-fx-background-color: transparent;");
+                    b.setStyle("-fx-font-size: 1em; /* 12 */");
+                    b.setStyle("-fx-text-fill: #828282;");
+
+                    gridPane.add(b, j, i, 1, 1);
+                } else{
+                    gridPane.add(buttons.get(j*3+i), j, i, 1, 1);
+                }
             }
         }
-        gridPane.setHgap(60);
-        gridPane.setVgap(80);
-        this.getChildren().add(gridPane);
+        //gridPane.setHgap(10);
+        //gridPane.setVgap(80);
+
+        this.setBottom(gridPane);
+        //this.getChildren().add(gridPane);
+        //this.setSpacing(20);
     }
 }
