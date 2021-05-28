@@ -104,12 +104,13 @@ class ContentVirusMenu extends BorderPane{
             for(int j = 0; j < 3; j++){
                 if(i == 0){
                     Button b = new Button(menubar.get(j));
-                    b.setStyle("-fx-border-color: transparent;");
+                    b.setStyle("-fx-border-color: #fff;");
                     b.setStyle("-fx-border-width: 0;");
                     b.setStyle("-fx-background-radius: 0;");
                     b.setStyle("-fx-background-color: transparent;");
-                    b.setStyle("-fx-font-size: 1em; /* 12 */");
-                    b.setStyle("-fx-text-fill: #828282;");
+                    //b.setStyle("-fx-font-size: 1.5em;");
+                    //b.setStyle("-fx-font-color: #fff;");
+                    //b.setStyle("-fx-border-radius: 5px;");
 
                     gridPane.add(b, j, i, 1, 1);
                 } else{

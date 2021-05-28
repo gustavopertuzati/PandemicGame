@@ -19,8 +19,8 @@ import javafx.scene.Node;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.PixelReader;
@@ -176,12 +176,11 @@ public class App extends Application {
         //virusContentPane.getChildren().add();
         
         Button cureBtn = btBar.buttonCure();
-<<<<<<< HEAD
         LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight);
-=======
-        SideBar sbCure = new SideBar(newWidth/3,0, cureBtn, newHeight);
->>>>>>> master
+
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
+        //cureImage.setOpacity(0.9);
+
         sbCure.setBackground(new Background(new BackgroundFill(new ImagePattern(cureImage), CornerRadii.EMPTY, Insets.EMPTY)));
         
         
@@ -190,18 +189,14 @@ public class App extends Application {
         ImageView iVvirus = new ImageView(virusImage);
         iVvirus.setFitWidth(newWidth/3);
         iVvirus.setFitHeight(newHeight);
+        iVvirus.setOpacity(0.9);
         Group g = new Group();
         g.getChildren().addAll(iVvirus, new ContentVirusMenu(buttonsPerksmap, v));
 
         Button virusBtn = btBar.buttonVirus();
         RightSideBar sbVirus = new RightSideBar(newWidth/3, newWidth-(newWidth/3), g);
-<<<<<<< HEAD
-        cureBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating(), sbCure));
-        virusBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating(),sbVirus ));
-=======
-        cureBtn.setOnAction(e -> sbCure.animate( sbVirus.isAnimating()));
-        virusBtn.setOnAction(e -> sbVirus.animate(sbCure.isAnimating()));
->>>>>>> master
+        virusBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating(), sbCure));
+        cureBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating(),sbVirus ));
         sbVirus.setTranslateX(newWidth);
         
 ////////////////////////////////////////////////
