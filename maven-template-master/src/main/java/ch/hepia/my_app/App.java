@@ -83,74 +83,33 @@ public class App extends Application {
     }
 
     /* TODO CE SOIR:
+
+     * -> règler le bug avec les menus
+     * -> verifier qu'on peut refermer le menu de droite en cliquant sur le bouton de gauche pour ouvrir que 1 menu à la fois
      * -> swapper le menu virus a droite et vaccin à gauche (modifier aussi la bottom bar)
+
      * -> ajouter les boutons pour les onglets dans le menu du virus
      * -> faire bien les boutons avec les lignes qui les relient et qui changent de couleur
-     * -> changer les boutons de couleur quand on débloque la compétence et pareil pour les lignes
-     * -> clarifier le code dans le chantier
-     * -> verifier qu'on peut refermer le menu de droite en cliquant sur le bouton de gauche pour ouvrir que 1 menu à la fois
-     * -> commencer à implémenter le fait qu'on puisse cliquer sur les boutons que si on a le nombre suffisant de points (addapter la progress bar dans la bottom bar)
      * -> faire les boutons propre avec la description (voir le site de plague inc) et implémenter le menu de vaccin (à gauche)
+     * -> changer les boutons de couleur quand on débloque la compétence et pareil pour les lignes
+     * -> commencer à implémenter le fait qu'on puisse cliquer sur les boutons que si on a le nombre suffisant de points (addapter la progress bar dans la bottom bar)
+
+
+     * -> clarifier le code dans le chantier
      * -> modifier un peu les classes pour que ce soit plus modulaire
+
      * -> commencer a faire un affichage dynamique (ex: l'espace entre les boutons dans le menu n'est plus une constante mais dépend de newWidth et newHeight)
-     * -> réparer perks.init() qui trouve pas les fichiers
-     * -> règler le bug avec les menus
      */
 
     @Override
     public void start(Stage primaryStage) {
 
         Virus v = new Virus();
-
         //primaryStage.setResizable(false);
+
         // TEMPORAIRE : AJOUT DES PERKS ICI
         Perks perks = new Perks();
-        perks.addPerk(new PerkInfectivity(0, "Blood I", "kek", 0, 0, 0));
-        perks.addPerk(new PerkInfectivity(1, "Blood II", "kek", 0, 0, 0));
-        perks.addPerk(new PerkInfectivity(2, "Blood III", "kek", 0, 0, 0));
-        
-        perks.addPerk(new PerkInfectivity(3, "Animals I", "kek", 0, 0, 0));
-        perks.addPerk(new PerkInfectivity(4, "Animals II", "kek", 0, 0, 0));
-        perks.addPerk(new PerkInfectivity(5, "Animals III", "kek", 0, 0, 0));
-
-        perks.addPerk(new PerkInfectivity(6, "Air I", "kek", 0, 0, 0));
-        perks.addPerk(new PerkInfectivity(7, "Air II", "kek", 0, 0, 0));
-        perks.addPerk(new PerkInfectivity(8, "Air III", "kek", 0, 0, 0));
-
-        perks.addPerk(new PerkInfectivity(9, "Water I", "kek", 0, 0, 0));
-        perks.addPerk(new PerkInfectivity(10, "Water II", "kek", 0, 0, 0));
-        perks.addPerk(new PerkInfectivity(11, "Water III", "kek", 0, 0, 0));
-
-        // INFECTIFIVITY
-        perks.addPerk(new PerkLethality(12, "Nausea I", "kek", 0, 0, 0));
-        perks.addPerk(new PerkLethality(13, "Nausea II", "kek", 0, 0, 0));
-        perks.addPerk(new PerkLethality(14, "Nausea III", "kek", 0, 0, 0));
-        
-        perks.addPerk(new PerkLethality(15, "Cough I", "kek", 0, 0, 0));
-        perks.addPerk(new PerkLethality(16, "Cough II", "kek", 0, 0, 0));
-        perks.addPerk(new PerkLethality(17, "Cough III", "kek", 0, 0, 0));
-
-        perks.addPerk(new PerkLethality(18, "Anemia I", "kek", 0, 0, 0));
-        perks.addPerk(new PerkLethality(19, "Anemia II", "kek", 0, 0, 0));
-        perks.addPerk(new PerkLethality(20, "Anemia III", "kek", 0, 0, 0));
-
-        perks.addPerk(new PerkLethality(21, "Insomnia I", "kek", 0, 0, 0));
-        perks.addPerk(new PerkLethality(21, "Insomnia II", "kek", 0, 0, 0));
-        perks.addPerk(new PerkLethality(22, "Insomnia III", "kek", 0, 0, 0));
-
-        // RESITANCE
-        perks.addPerk(new PerkResistance(23, "Bacterial resistance I", "kek", 0, 0, 0));
-        perks.addPerk(new PerkResistance(24, "Bacterial resistance II", "kek", 0, 0, 0));
-        perks.addPerk(new PerkResistance(25, "Bacterial resistance III", "kek", 0, 0, 0));
-        
-        perks.addPerk(new PerkResistance(26, "Drug resistance I", "kek", 0, 0, 0));
-        perks.addPerk(new PerkResistance(27, "Drug resistance II", "kek", 0, 0, 0));
-        perks.addPerk(new PerkResistance(28, "Drug resistance III", "kek", 0, 0, 0));
-
-        perks.addPerk(new PerkResistance(29, "Vaccine resistance I", "kek", 0, 0, 0));
-        perks.addPerk(new PerkResistance(30, "Vaccine resistance II", "kek", 0, 0, 0));
-        perks.addPerk(new PerkResistance(31, "Vaccine resistance III", "kek", 0, 0, 0));
-        //perks.init();
+        perks.init();
         LinkedHashMap buttonsPerksmap = perks.buttonsPerksMap();
         //
 
@@ -212,42 +171,34 @@ public class App extends Application {
 /////////////////////////////////////////////////
 
         //MEGA CHANTIER!!!
+        
         BorderPane virusContentPane = new BorderPane();
-
-        List<Button> kek = new ArrayList<Button>(buttonsPerksmap.keySet());
-        ContentVirusMenu virusContent = new ContentVirusMenu(kek);
+        virusContentPane.getChildren().add(new ContentVirusMenu(buttonsPerksmap, v));
         
-        Image virusImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuVirus.png"));        
-        ImageView iVvirus = new ImageView(virusImage);
-        iVvirus.setFitWidth(newWidth/3);
-        iVvirus.setFitHeight(newHeight);
+        Button virusBtn = btBar.buttonVirus();
+        SideBar sbVirus = new SideBar(newWidth/3,0, virusBtn, newHeight, virusContentPane);
+        Image virusImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuVirus.png"));
+        sbVirus.setBackground(new Background(new BackgroundFill(new ImagePattern(virusImage), CornerRadii.EMPTY, Insets.EMPTY)));
         
-        virusContentPane.getChildren().addAll(/*iVvirus , */virusContent);
-
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));        
         ImageView iVcure = new ImageView(cureImage);
         iVcure.setFitWidth(newWidth/3);
         iVcure.setFitHeight(newHeight);
-        
-
-        Button virusBtn = btBar.buttonVirus();
-        SideBar sbVirus = new SideBar(newWidth/3,0, virusBtn, newHeight, virusContentPane);
-        sbVirus.setBackground(new Background(new BackgroundFill(new ImagePattern(virusImage), CornerRadii.EMPTY, Insets.EMPTY)));
 
         Button cureBtn = btBar.buttonCure();
-        RightSideBar sbCure = new RightSideBar(newWidth/3, newWidth-(newWidth/3), iVcure);//, virusContent);
+        RightSideBar sbCure = new RightSideBar(newWidth/3, newWidth-(newWidth/3), iVcure);
         virusBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating()));
         cureBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating()));
         sbCure.setTranslateX(newWidth);
 
+        //SORTIE DU MEGA CHANTIER
+        
+////////////////////////////////////////////////
+
         game.getChildren().addAll(sbVirus, sbCure);
         scroller.setTranslateX(0);
-
         
         VBox root = new VBox(game, btBar);
-        //SORTIE DU MEGA CHANTIER
-
-////////////////////////////////////////////////
         
         newHeight += 50;
         Scene finalScene = new Scene(root, newWidth, newHeight);

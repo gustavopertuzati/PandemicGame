@@ -10,8 +10,8 @@ public class Virus{
   private double resistance; //solidité du virus
   //private List<Perk> perkLst;
 
-  //Level is the amount of points 
-  private int level;
+  //currentPoints is the amount of points 
+  private int currentPoints;
 
   public Virus(){
     //Takes constants "similar" to the real covid-19's "stats"
@@ -20,7 +20,7 @@ public class Virus{
     this.resistance = 0.005;
     //this.perkLst = new ArrayList<Perk>();
 
-    this.level = 0;
+    this.currentPoints = 0;
   }
 
   /*public void learnPerk(Perk p){
@@ -35,7 +35,7 @@ public class Virus{
   }
 
   public void addPoint(){
-    this.level += 1;
+    this.currentPoints += 1;
   }
 
 
@@ -57,5 +57,13 @@ public class Virus{
 
   public void applyResistanceBonus(double bonus){
     this.resistance *= (1 + bonus);
+  }
+
+  public void update(Perk p){
+
+  }
+
+  public boolean hasEnoughPoints(Perk p){
+    return p.cost() >= this.currentPoints;
   }
 }

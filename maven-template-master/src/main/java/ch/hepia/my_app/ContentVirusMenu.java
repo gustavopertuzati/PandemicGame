@@ -3,6 +3,7 @@ package ch.hepia.my_app;
 import java.util.Scanner;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -76,18 +77,28 @@ import javafx.scene.layout.GridPane;
 
 class ContentVirusMenu extends HBox{
     
-    private List<Button> buttonsPerk;
+    private LinkedHashMap<Button, Perk> map;
     private Button infectivity;
     private Button lethality;
     private Button resistance;
 
-    ContentVirusMenu(List<Button> buttons){        
-        this.buttonsPerk = buttons;
+    ContentVirusMenu(LinkedHashMap<Button, Perk> map, Virus v){        
+        this.map = map;
+
+        List<Button> buttons = new ArrayList<>();
+        for(Button b: map.keySet()){
+            buttons.add(b);
+            b.setDisable(!v.hasEnoughPoints(map.get(b)));
+            b.setOnAction(e -> 
+                //Acquerir le perk
+                v.update(map.get(b))
+            );
+        }
 
         GridPane gridPane = new GridPane();
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
-                gridPane.add(this.buttonsPerk.get(j*3+i), j, i, 1, 1);
+                gridPane.add(buttons.get(j*3+i), j, i, 1, 1);
             }
         }
         gridPane.setHgap(60);
