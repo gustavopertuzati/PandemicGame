@@ -1,3 +1,5 @@
+package ch.hepia.my_app;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -7,6 +9,8 @@ public class Virus{
   private double lethality; // a quel point ca tue
   private double resistance; //solidité du virus
   //private List<Perk> perkLst;
+
+  //Level is the amount of points 
   private int level;
 
   public Virus(){
@@ -15,6 +19,8 @@ public class Virus{
     this.lethality = 0.005; //0.5% de mortalitlé
     this.lethality = 0.005;
     //this.perkLst = new ArrayList<Perk>();
+
+    this.level = 0;
   }
 
   /*public void learnPerk(Perk p){
@@ -23,6 +29,11 @@ public class Virus{
     }
     this.perkLst.add(p);
   }*/
+
+
+  public void addPoint(){
+    this.level += 1;
+  }
 
 
 

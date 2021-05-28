@@ -244,14 +244,12 @@ public class Country {
     }
 
     private void updateState(){
-
+        System.out.println("State updates not implemented yet");
     }
 
     public void updateDisease(){
         this.newRecoveries();
         this.newCases();
         this.newDeaths();
-
-
     }
 }

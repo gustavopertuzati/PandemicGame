@@ -3,6 +3,7 @@ package ch.hepia.my_app;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.paint.Color;
+
 import java.lang.Math;
 
 import java.util.Optional;
@@ -43,6 +44,12 @@ public class Countries {
         return this.countries;
     }
 
+    public int totalCases(){
+        return this.countries.stream()
+                   .mapToInt(c -> c.playerTotalCases())
+                   .sum();
+    }
+
     public int totalActive(){
         return this.countries.stream()
                              .mapToInt(c -> c.playerTotalActive())
@@ -72,4 +79,23 @@ public class Countries {
                                 .mapToInt(c -> c.playerDailyDeaths())
                                 .sum();        
     }
+
+    public int getTotalDailyPoints(){
+        return (this.totalDailyActive() + this.totalDailyDeaths()) / 1000;
+    }
+    
+
+    public List<int[]> getRandomCountryCoordinates(int num){
+        List<int[]> lstCoords = new ArrayList<>();
+        for(int i = 0; i < num; i+=1){
+            int randIndex = (int)Math.floor(Math.random()*(this.countries.size()));
+            Country crt = this.countries.get(randIndex);
+            int[] tmp = new int[2];
+            tmp[0] = crt.coordinates()[0];
+            tmp[1] = crt.coordinates()[1];
+            lstCoords.add(tmp);
+        }
+        return lstCoords;
+    }
+
 }

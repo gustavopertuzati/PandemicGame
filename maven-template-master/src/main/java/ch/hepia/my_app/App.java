@@ -77,6 +77,9 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
+        Virus v = new Virus();
+
         //primaryStage.setResizable(false);
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries countries = test.getCountries("summary");
@@ -96,7 +99,9 @@ public class App extends Application {
         });
         
         Group box = new Group();
+
         box.getChildren().add(iV);
+        
         for( Country i : countries.listOfCountries()){
             if(i.slug().equals("france")){
                 i.updateCountryHistory();
@@ -169,6 +174,10 @@ public class App extends Application {
             if (newValue)
                 primaryStage.setMaximized(false);
         });*/
+
+        Rewards.addRewardCirclesToBox(box, countries, v, 4 );
+        
+
         primaryStage.show();
     }
 
