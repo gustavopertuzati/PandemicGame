@@ -2,42 +2,29 @@ package ch.hepia.my_app;
 
 // classe bidon à mettre dans la bdd plus tard
 
-public class Perk {
+public abstract class Perk {
+    private int id;
     private String name;
     private String description;
-    private boolean status;
-    private double[] infectivityByLevel = new double[3];
-    private double[] lethalityByLevel = new double[3];
-    private double[] resistanceByLevel = new double[3];
+    private int currentLevel;
     // peut être des coordonnées, des images...
 
 
-    public Perk(String name, String description){
+    public Perk(int id, String name, String description){
+        this.id = id;
         this.name = name;
         this.description = description;
-        this.status = false;
+        this.currentLevel = 0;
     }
 
-    public void updateInfectivity(double valueRank1, double valueRank2, double valueRank3){
-        this.infectivityByLevel[0] = valueRank1;
-        this.infectivityByLevel[1] = valueRank2;
-        this.infectivityByLevel[2] = valueRank3;
+    public abstract void update(Virus v);
+
+    public int currentLevel(){
+        return this.currentLevel;
     }
 
-    public void updateLethality(double valueRank1, double valueRank2, double valueRank3){
-        this.lethalityByLevel[0] = valueRank1;
-        this.lethalityByLevel[1] = valueRank2;
-        this.lethalityByLevel[2] = valueRank3;
-    }
-
-    public void updateResistance(double valueRank1, double valueRank2, double valueRank3){
-        this.resistanceByLevel[0] = valueRank1;
-        this.resistanceByLevel[1] = valueRank2;
-        this.resistanceByLevel[2] = valueRank3;
-    }
-
-    public boolean status(){
-        return this.status;
+    public void updateLevel(){
+        this.currentLevel += 1;
     }
 
     public String description(){
@@ -46,5 +33,9 @@ public class Perk {
 
     public String name(){
         return this.name;
+    }
+
+    public int id(){
+        return this.id;
     }
 }

@@ -31,16 +31,16 @@ import javafx.event.EventHandler;
 import javafx.util.Duration;
 
 
-class LeftSideBar extends HBox{
+class SideBar extends HBox{
     
     private Animation hideSidebar;
     private Animation showSidebar;
 
     private Button controlButton;
 
-    // stp gustavo tu peux faire çaaaaaaaaa ? j'essaie mais c'est l'enfer ce truc 
+    private boolean isAnimating = false;
 
-    LeftSideBar(final double expandedLength, final double hiddenLength, Button btn, int newHeight, Node... nodes){
+    SideBar(final double expandedLength, final double hiddenLength, Button btn, int newHeight, Node... nodes){
         
         this.controlButton = btn;
 
@@ -54,6 +54,7 @@ class LeftSideBar extends HBox{
     
         this.hideSidebar = new Transition(){
             { setCycleDuration(Duration.millis(250)); }
+            @Override
             protected void interpolate(double frac){ 
                 if(frac < 1 - (hiddenLength / expandedLength) ) {
                     final double curWidth = expandedLength * (1.0 - frac);
@@ -64,38 +65,62 @@ class LeftSideBar extends HBox{
 
         this.hideSidebar.onFinishedProperty().set(new EventHandler<ActionEvent>(){
             @Override public void handle(ActionEvent actionEvent){
+                isAnimating = !isAnimating;
                 setVisible(false);
             }
         });
 
         this.showSidebar = new Transition(){
             { setCycleDuration(Duration.millis(250)); }
+            @Override
             protected void interpolate(double frac){
                 if(frac > (hiddenLength / expandedLength) ) {
                     final double curWidth = expandedLength * frac;
                     setPrefWidth(curWidth);
-                    //setTranslateX(-expandedLength + curWidth);
                 }
             }
         };
 
         this.showSidebar.onFinishedProperty().set(new EventHandler<ActionEvent>(){
-            @Override public void handle(ActionEvent actionEvent){}
+            @Override public void handle(ActionEvent actionEvent){
+                isAnimating = !isAnimating;
+            }
         });
         
-        this.controlButton.setOnAction(new EventHandler<ActionEvent>(){
+        /*this.controlButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override public void handle(ActionEvent actionEvent){
                 if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
                     if(isVisible()){
                         hideSidebar.play();
-                    } else {
+                    } else if (isOtherVisible) {
+                        setVisible(true);
                         showSidebar.play();
                     }
-                    setVisible(!isVisible());
                 }
             }
-        });
+        });*/
+    }
+    public void animate(boolean isOtherVisible){
+        
+        
+        System.out.println("Cure: " + isOtherVisible);
+        if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
+                    System.out.println("Virus: " + isAnimating);
+                    if(isAnimating){
+                        hideSidebar.play();
+                        //setVisible(false);
+                    } else if (!isOtherVisible) {
+                        setVisible(true);
+
+                        showSidebar.play();
+                    }
+                }
+
     }
 
-    
-} 
+    public boolean isAnimating(){
+        return this.isAnimating;
+    }
+
+
+}
