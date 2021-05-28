@@ -34,7 +34,7 @@ import javafx.event.EventHandler;
 import javafx.util.Duration;
 
 //Version + simple du sidebar, qui marche mais j'arrive à faire marcher que à droite :'(
-class RightSideBar extends Parent{
+class RightSideBar extends HBox{
 
     private double expandedLength;
     private double hiddenLength;
@@ -50,7 +50,7 @@ class RightSideBar extends Parent{
 
         getChildren().addAll(nodes);
 
-        tt.setOnFinished(e -> isAnimating = false);
+        tt.setOnFinished(e -> isAnimating = !isAnimating);
 
         tt.setInterpolator(new Interpolator(){
             @Override
@@ -61,20 +61,24 @@ class RightSideBar extends Parent{
 
     }
 
-    public void animate(){
+    public void animate(boolean isOtherVisible){
 
         if(isAnimating) return;
         
-        isAnimating = true;
-
+        
+        //isAnimating = true;
+        
         tt.setFromX(getTranslateX());
         System.out.println(getTranslateX());
-        if(getTranslateX() > hiddenLength){
-            tt.setToX(getTranslateX() - expandedLength);
-        }else{
-            tt.setToX(getTranslateX() + expandedLength);
-        }
+            if(getTranslateX() <= hiddenLength && !isOtherVisible ){//|| !isOtherVisible){
+                tt.setToX(getTranslateX() + expandedLength);
+            }else if(getTranslateX() > hiddenLength){
+                tt.setToX(getTranslateX() - expandedLength);
+            }
+            tt.play();
+    }
 
-        tt.play();
+    public boolean isAnimating(){
+        return this.isAnimating;
     }
 }
