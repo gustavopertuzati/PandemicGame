@@ -84,7 +84,6 @@ public class App extends Application {
 
     /* TODO CE SOIR:
 
-     * -> règler le bug avec les menus
      * -> verifier qu'on peut refermer le menu de droite en cliquant sur le bouton de gauche pour ouvrir que 1 menu à la fois
      * -> swapper le menu virus a droite et vaccin à gauche (modifier aussi la bottom bar)
 
@@ -103,7 +102,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        System.out.println("Starting app...");
+
         Virus v = new Virus();
         //primaryStage.setResizable(false);
 
@@ -112,13 +111,10 @@ public class App extends Application {
         perks.init();
         LinkedHashMap buttonsPerksmap = perks.buttonsPerksMap();
         //
-        System.out.println("Getting Api Data...");
-        APICountryManager test = new APICountryManager("https://api.covid19api.com");
-        System.out.println("\tGetting Summary data...");
-        Countries countries = test.getCountries("summary");
-        countries.addCountry(new Country("bidon", 0, 0,0,0,0,0,0,0,0,0,""));
 
-        System.out.println("Initializing UI...");
+        APICountryManager test = new APICountryManager("https://api.covid19api.com");
+        Countries countries = test.getCountries("summary");
+
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
         int newWidth = 1420;
         int newHeight = (int)(worldImage.getHeight() * newWidth / worldImage.getWidth());
@@ -172,29 +168,32 @@ public class App extends Application {
         btBar.setMinHeight(40);
         
 /////////////////////////////////////////////////
-
-        //MEGA CHANTIER!!!
         
-        BorderPane virusContentPane = new BorderPane();
-        virusContentPane.getChildren().add(new ContentVirusMenu(buttonsPerksmap, v));
+        // Sidebar left
         
-        Button virusBtn = btBar.buttonVirus();
-        LeftSideBar sbVirus = new LeftSideBar(newWidth/3,0, virusBtn, newHeight, virusContentPane);
-        Image virusImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuVirus.png"));
-        sbVirus.setBackground(new Background(new BackgroundFill(new ImagePattern(virusImage), CornerRadii.EMPTY, Insets.EMPTY)));
+        // on va avoir besoin de ca pour les labels et tout dans cure
+        //BorderPane virusContentPane = new BorderPane();
+        //virusContentPane.getChildren().add();
         
-        Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));        
-        ImageView iVcure = new ImageView(cureImage);
-        iVcure.setFitWidth(newWidth/3);
-        iVcure.setFitHeight(newHeight);
-
         Button cureBtn = btBar.buttonCure();
-        RightSideBar sbCure = new RightSideBar(newWidth/3, newWidth-(newWidth/3), iVcure);
-        virusBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating(), sbCure));
-        cureBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating(), sbVirus));
-        sbCure.setTranslateX(newWidth);
+        LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight);
+        Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
+        sbCure.setBackground(new Background(new BackgroundFill(new ImagePattern(cureImage), CornerRadii.EMPTY, Insets.EMPTY)));
+        
+        
+        // Sidebar right
+        Image virusImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuVirus.png"));        
+        ImageView iVvirus = new ImageView(virusImage);
+        iVvirus.setFitWidth(newWidth/3);
+        iVvirus.setFitHeight(newHeight);
+        Group g = new Group();
+        g.getChildren().addAll(iVvirus, new ContentVirusMenu(buttonsPerksmap, v));
 
-        //SORTIE DU MEGA CHANTIER
+        Button virusBtn = btBar.buttonVirus();
+        RightSideBar sbVirus = new RightSideBar(newWidth/3, newWidth-(newWidth/3), g);
+        cureBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating(), sbCure));
+        virusBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating(),sbVirus ));
+        sbVirus.setTranslateX(newWidth);
         
 ////////////////////////////////////////////////
 
