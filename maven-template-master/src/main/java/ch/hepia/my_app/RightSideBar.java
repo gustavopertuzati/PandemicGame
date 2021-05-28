@@ -43,6 +43,8 @@ class RightSideBar extends HBox{
 
     private boolean isAnimating = false;
 
+    private boolean isShowing = false;
+
     public RightSideBar(final double expandedLength, final double hiddenLength, Node... nodes){
 
         this.expandedLength = expandedLength;
@@ -50,7 +52,7 @@ class RightSideBar extends HBox{
 
         getChildren().addAll(nodes);
 
-        tt.setOnFinished(e -> isAnimating = !isAnimating);
+        tt.setOnFinished(e -> isAnimating = false);
 
         tt.setInterpolator(new Interpolator(){
             @Override
@@ -63,22 +65,22 @@ class RightSideBar extends HBox{
 
     public void animate(boolean isOtherVisible){
 
-        if(isAnimating) return;
-        
-        
+        if(isAnimating){return;};
         //isAnimating = true;
         
         tt.setFromX(getTranslateX());
         System.out.println(getTranslateX());
-            if(getTranslateX() <= hiddenLength && !isOtherVisible ){//|| !isOtherVisible){
+            if(getTranslateX() <= hiddenLength){
                 tt.setToX(getTranslateX() + expandedLength);
-            }else if(getTranslateX() > hiddenLength){
+                isShowing = false;
+            }else if(!isOtherVisible){
                 tt.setToX(getTranslateX() - expandedLength);
+                isShowing = true;
             }
             tt.play();
     }
 
     public boolean isAnimating(){
-        return this.isAnimating;
+        return this.isShowing;
     }
 }
