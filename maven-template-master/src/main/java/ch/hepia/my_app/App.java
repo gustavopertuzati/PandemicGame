@@ -84,20 +84,18 @@ public class App extends Application {
 
     /* TODO CE SOIR:
 
-     * -> verifier qu'on peut refermer le menu de droite en cliquant sur le bouton de gauche pour ouvrir que 1 menu à la fois
-     * -> swapper le menu virus a droite et vaccin à gauche (modifier aussi la bottom bar)
-
-     * -> ajouter les boutons pour les onglets dans le menu du virus
-     * -> faire bien les boutons avec les lignes qui les relient et qui changent de couleur
+     * -> bloquer les boutons quand c'est acheté et tout
      * -> faire les boutons propre avec la description (voir le site de plague inc) et implémenter le menu de vaccin (à gauche)
      * -> changer les boutons de couleur quand on débloque la compétence et pareil pour les lignes
-     * -> commencer à implémenter le fait qu'on puisse cliquer sur les boutons que si on a le nombre suffisant de points (addapter la progress bar dans la bottom bar)
-
+     * -> addapter la progress bar dans la bottom bar quand on a des points
+     * -> belle mise en forme du menu (boutons propres + fond plus stylé)
+     * -> revoir les boutons de la bottombar
 
      * -> clarifier le code dans le chantier
-     * -> modifier un peu les classes pour que ce soit plus modulaire
-
+     * -> modifier un peu les classes pour que ce soit plus modulaire -> surtout contentVirusMenu #Maille
      * -> commencer a faire un affichage dynamique (ex: l'espace entre les boutons dans le menu n'est plus une constante mais dépend de newWidth et newHeight)
+
+     * GUS -> faire la barre des cas
      */
 
     @Override
