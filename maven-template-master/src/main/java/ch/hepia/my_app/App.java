@@ -191,12 +191,20 @@ public class App extends Application {
         iVvirus.setFitHeight(newHeight);
         iVvirus.setOpacity(0.9);
         Group g = new Group();
-        g.getChildren().addAll(iVvirus, new ContentVirusMenu(buttonsPerksmap, v));
+
+        ContentVirusMenu cvm = new ContentVirusMenu(buttonsPerksmap, v);
+        g.getChildren().addAll(iVvirus, cvm);
 
         Button virusBtn = btBar.buttonVirus();
         RightSideBar sbVirus = new RightSideBar(newWidth/3, newWidth-(newWidth/3), g);
-        virusBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating(), sbCure));
-        cureBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating(),sbVirus ));
+        virusBtn.setOnAction(e -> {
+            sbVirus.animate( sbCure.isAnimating(), sbCure);
+            cvm.updateMenuContent();
+        });
+        cureBtn.setOnAction(e ->{
+            sbCure.animate(sbVirus.isAnimating(),sbVirus );
+            //cvm.updateMenuContent();
+        });
         sbVirus.setTranslateX(newWidth);
         
 ////////////////////////////////////////////////
@@ -215,7 +223,7 @@ public class App extends Application {
                 primaryStage.setMaximized(false);
         });*/
 
-        Rewards.addRewardCirclesToBox(box, countries, v, 4 );
+        Rewards.addRewardCirclesToBox(box, countries, v, 10 );
         
 
         primaryStage.show();
