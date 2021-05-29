@@ -2,11 +2,21 @@ package ch.hepia.my_app;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.input.MouseEvent;
+
+
+
 
 import java.lang.Math;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.Map;
+import java.util.HashMap;
+
 
 import java.time.LocalDate;
 
@@ -105,6 +115,19 @@ public class Countries {
     //Function that is called for 
     public void elapseDayForAllCountries(){
         this.countries.forEach(c->c.elapseDay());
+    }
+
+
+
+    public Map<Country, Circle[]> getCountryCirclesMap(BiConsumer<MouseEvent,Country> cons){
+        Map<Country, Circle[]> map = new HashMap<>();
+        this.countries.forEach(c->{
+            map.put(c, c.getCountryCircles());
+            map.get(c)[1].setOnMouseClicked( e ->{
+                cons.accept(e, c);
+            });
+        });
+        return map;
     }
 
 }

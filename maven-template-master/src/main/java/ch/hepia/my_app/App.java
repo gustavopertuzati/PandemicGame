@@ -114,7 +114,6 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         //primaryStage.setResizable(false);
         v = new Virus();
         ld = LocalDate.of(2020,01,22);
@@ -132,38 +131,36 @@ public class App extends Application {
         int newWidth = 1420;
         int newHeight = (int)(worldImage.getHeight() * newWidth / worldImage.getWidth());
         
-        ImageView iV = new ImageView(worldImage); 
-        iV.setOnMouseClicked(e -> {
-            try{
-                Optional<Country> op = countries.getCountryByCoordinates(e.getX(), e.getY());
-                if(!op.isEmpty()){
-                    NewStage ct = new NewStage(op.get(), primaryStage, e.getScreenX(), e.getScreenY() );
-                }
-            }catch(Exception any){}
-        });
+        ImageView iV = new ImageView(worldImage);
         
+
+        //On récupère pour chaque pays, le cercle qui le représente ainsi que son cercle contour noir
+        Map<Country,Circle[]> countryCirclesMap = countries.getCountryCirclesMap((e, c) ->  {
+            NewStage ct = new NewStage(c, primaryStage, e.getScreenX(), e.getScreenY());
+        });
+
+
         Group box = new Group();
 
         box.getChildren().add(iV);
         
-        for( Country i : countries.listOfCountries()){
-            if(i.slug().equals("france")){
-                i.updateCountryHistory();
-                System.out.println(i.getDailyCasesByDate(LocalDate.of(2020,12,15)));
-                
-            }
-        }
         
         ZoomableScrollPane scroller = new ZoomableScrollPane(box, newWidth, newHeight);
-        countries.listOfCountries().forEach( c -> box.getChildren().addAll(getCountryCircle(c, scroller)[0], getCountryCircle(c, scroller)[1]));
+        
+
+        //On ajoute les cercles initiaux a la carte
+        adjustCircles(countryCirclesMap, scroller.getZoomWidth(),box );
 
         scroller.getContent().addEventHandler(ScrollEvent.ANY, e->{
+            //Le zoom
             scroller.onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
-            removeCircles(box);
-            countries.listOfCountries().forEach( c -> box.getChildren().addAll(getCountryCircle(c, scroller)[0], getCountryCircle(c, scroller)[1]));
+
+            //La suppression et l'ajout des cercles en fonction du niveau du zoom
+            adjustCircles(countryCirclesMap, scroller.getZoomWidth(),box );
             e.consume();
         });
 
+        //Parametres du ZoomableScrollPane
         scroller.setPrefSize(newWidth, newHeight);
         scroller.setPannable(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -259,31 +256,19 @@ public class App extends Application {
     }
 
 
-
-    public void removeCircles(Group box){
-        ArrayList<Node> lstCircles = new ArrayList<>();
-        for(Node i : box.getChildren()){
-            if(i.getClass() == Circle.class){
-                lstCircles.add(i);
+    public void adjustCircles(Map<Country, Circle[]> map, double zoomWidth, Group container){
+        for(Country c : map.keySet()){
+            if(zoomWidth/400 < 1/(0.1*c.size())){
+                //Si le pays n'est pas assez grand pour etre affiché, et qu'on l'affiche, on l'enlève
+                if(container.getChildren().contains(map.get(c)[1]))
+                    container.getChildren().removeAll(map.get(c)[0], map.get(c)[1]);
+            }else{
+                //Si le pays est assez grand pour etre affiché, et qu'il n'est pas déjà affiché, on l'affiche
+                if(!container.getChildren().contains(map.get(c)[1])){
+                    container.getChildren().addAll(map.get(c)[0], map.get(c)[1]);
+                }
             }
         }
-        lstCircles.forEach(i -> box.getChildren().remove(i));
     }
 
-    public Circle[] getCountryCircle(Country c, ZoomableScrollPane pane) {
-        Circle[] circ = new Circle[2];
-        circ[0] = new Circle(-1,-1,-1);
-        circ[1] = new Circle(-1,-1,-1);
-
-        if(pane.getZoomWidth()/400 < 1/(0.1*c.size())){
-            return circ;
-        }
-        circ[0] = new Circle(c.coordinates()[0], c.coordinates()[1], c.getCircleWidth() + 3 , Color.BLACK );
-        circ[1] = new Circle(c.coordinates()[0], c.coordinates()[1], c.getCircleWidth() , c.getColorFromCountry());
-
-        circ[0].setMouseTransparent(true);
-        circ[1].setMouseTransparent(true);
-
-        return circ;
-    }
 }

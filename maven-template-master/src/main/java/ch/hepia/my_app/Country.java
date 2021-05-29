@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random; 
 
+import javafx.scene.shape.Circle;
+
+
 
 public class Country {
     // données communes
@@ -252,4 +255,19 @@ public class Country {
         this.newCases();
         this.newDeaths();
     }
+
+
+
+
+
+    public Circle[] getCountryCircles() {
+        Circle[] circ = new Circle[2];
+
+        circ[0] = new Circle(this.latitude, this.longitude, this.getCircleWidth() + 3 , Color.BLACK );
+        circ[1] = new Circle(this.latitude, this.longitude, this.getCircleWidth() , this.getColorFromCountry());
+
+        return circ;
+    }
+
+
 }
