@@ -5,8 +5,11 @@ import java.util.List;
 import javafx.scene.paint.Color;
 
 import java.lang.Math;
-
+import java.time.LocalDate;
 import java.util.Optional;
+
+import java.time.LocalDate;
+
 
 public class Countries {
 
@@ -96,6 +99,12 @@ public class Countries {
             lstCoords.add(tmp);
         }
         return lstCoords;
+    }
+
+
+    //Function that is called for 
+    public void elapseDayForAllCountries(){
+        this.countries.forEach(c->c.elapseDay());
     }
 
 }

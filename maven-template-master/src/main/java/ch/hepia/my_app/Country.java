@@ -247,7 +247,7 @@ public class Country {
         System.out.println("State updates not implemented yet");
     }
 
-    public void updateDisease(){
+    public void elapseDay(){
         this.newRecoveries();
         this.newCases();
         this.newDeaths();

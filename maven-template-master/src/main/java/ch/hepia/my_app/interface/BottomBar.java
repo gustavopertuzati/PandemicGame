@@ -49,7 +49,7 @@ public class BottomBar extends HBox{
         this.btnVirus = ButtonFromBottomBar("virus");
         this.pbVirus = ProgressBarFromBottomBar(0, "-fx-accent: green;");
         
-        this.date = new Label(LocalDate.now().toString());
+        this.date = new Label(LocalDate.of(2020,01,22).toString());
         date.setWrapText(true);
         date.setMinWidth(150);
         date.setMinHeight(40);
@@ -57,6 +57,11 @@ public class BottomBar extends HBox{
 
         this.getChildren().addAll(this.btnCure, this.pbCure, this.date, this.pbVirus, this.btnVirus);
     }
+
+    public void updateDate(LocalDate ld){
+        this.date.setText(ld.toString());
+    }
+
 
     private Button ButtonFromBottomBar(String name){
         Button btn = new Button(name);

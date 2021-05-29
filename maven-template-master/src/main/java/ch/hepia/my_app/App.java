@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 
@@ -100,11 +104,22 @@ public class App extends Application {
      * -> commencer a faire un affichage dynamique (ex: l'espace entre les boutons dans le menu n'est plus une constante mais dépend de newWidth et newHeight)
      */
 
+    //Game Timer
+    private LocalDate ld;
+
+    //Covid virus
+    private Virus v;
+
+    //Countries for the game
+    private Countries countries;
+    private BottomBar btBar;
+
     @Override
     public void start(Stage primaryStage) {
 
-        Virus v = new Virus();
         //primaryStage.setResizable(false);
+        v = new Virus();
+        ld = LocalDate.of(2020,01,22);
 
         // TEMPORAIRE : AJOUT DES PERKS ICI
         Perks perks = new Perks();
@@ -113,7 +128,7 @@ public class App extends Application {
         //
 
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
-        Countries countries = test.getCountries("summary");
+        countries = test.getCountries("summary");
 
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
         int newWidth = 1420;
@@ -160,7 +175,7 @@ public class App extends Application {
         game.getChildren().add(scroller);
         //game.getChildren().add("barre des cas");
 
-        BottomBar btBar = new BottomBar();
+        btBar = new BottomBar();
         btBar.fill();      
         btBar.setSpacing(30);        
         btBar.setAlignment(Pos.BOTTOM_CENTER);
@@ -176,11 +191,7 @@ public class App extends Application {
         //virusContentPane.getChildren().add();
         
         Button cureBtn = btBar.buttonCure();
-<<<<<<< HEAD
         LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight);
-=======
-        SideBar sbCure = new SideBar(newWidth/3,0, cureBtn, newHeight);
->>>>>>> master
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
         sbCure.setBackground(new Background(new BackgroundFill(new ImagePattern(cureImage), CornerRadii.EMPTY, Insets.EMPTY)));
         
@@ -195,13 +206,8 @@ public class App extends Application {
 
         Button virusBtn = btBar.buttonVirus();
         RightSideBar sbVirus = new RightSideBar(newWidth/3, newWidth-(newWidth/3), g);
-<<<<<<< HEAD
-        cureBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating(), sbCure));
-        virusBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating(),sbVirus ));
-=======
-        cureBtn.setOnAction(e -> sbCure.animate( sbVirus.isAnimating()));
-        virusBtn.setOnAction(e -> sbVirus.animate(sbCure.isAnimating()));
->>>>>>> master
+        virusBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating(), sbCure));
+        cureBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating(), sbVirus));
         sbVirus.setTranslateX(newWidth);
         
 ////////////////////////////////////////////////
@@ -223,8 +229,26 @@ public class App extends Application {
         Rewards.addRewardCirclesToBox(box, countries, v, 4 );
         
 
+        //How many seconds for a day to elapse in seconds
+        int speed = 10;
+
+        Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1), e ->{
+                ld = ld.plusDays(1);
+                elapseDayForGame(countries, btBar, ld);
+        }));
+        tl.setCycleCount(Timeline.INDEFINITE);
+        tl.play();
+
         primaryStage.show();
     }
+
+
+    public void elapseDayForGame(Countries c, BottomBar b, LocalDate ld){
+        btBar.updateDate(ld);
+        c.elapseDayForAllCountries();
+    }
+
+
 
     public void removeCircles(Group box){
         ArrayList<Node> lstCircles = new ArrayList<>();
