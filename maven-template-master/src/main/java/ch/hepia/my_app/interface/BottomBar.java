@@ -63,13 +63,8 @@ public class BottomBar extends HBox{
         this.btnVirus = ButtonFromBottomBar("");
         this.btnVirus.setGraphic(iconVirus);
         this.pbVirus = ProgressBarFromBottomBar(0, "-fx-accent: green;");
-<<<<<<< HEAD
         
         this.date = new Label(LocalDate.of(2020,01,22).toString());
-=======
-
-        this.date = new Label(LocalDate.now().toString());
->>>>>>> master
         date.setWrapText(true);
         date.setMinWidth(150);
         date.setMinHeight(40);

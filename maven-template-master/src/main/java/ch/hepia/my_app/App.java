@@ -190,10 +190,6 @@ public class App extends Application {
         
         Button cureBtn = btBar.buttonCure();
         LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight);
-<<<<<<< HEAD
-=======
-
->>>>>>> master
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
         //cureImage.setOpacity(0.9);
 
@@ -213,10 +209,7 @@ public class App extends Application {
 
         Button virusBtn = btBar.buttonVirus();
         RightSideBar sbVirus = new RightSideBar(newWidth/3, newWidth-(newWidth/3), g);
-<<<<<<< HEAD
-        virusBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating(), sbCure));
-        cureBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating(), sbVirus));
-=======
+
         virusBtn.setOnAction(e -> {
             sbVirus.animate( sbCure.isAnimating(), sbCure);
             cvm.updateMenuContent();
@@ -225,7 +218,6 @@ public class App extends Application {
             sbCure.animate(sbVirus.isAnimating(),sbVirus );
             //cvm.updateMenuContent();
         });
->>>>>>> master
         sbVirus.setTranslateX(newWidth);
         
 ////////////////////////////////////////////////
