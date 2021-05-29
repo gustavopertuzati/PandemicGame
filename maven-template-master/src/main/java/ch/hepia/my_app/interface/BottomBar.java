@@ -1,5 +1,7 @@
 package ch.hepia.my_app;
 
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 
 import javafx.application.Application;
 
@@ -43,13 +45,31 @@ public class BottomBar extends HBox{
     }
 
     public void fill(){
-        this.btnCure = ButtonFromBottomBar("cure");
-        this.pbCure = ProgressBarFromBottomBar(0, "-fx-accent: blue;");
+                
+        Image imgCure = new Image(this.getClass().getClassLoader().getResourceAsStream("images/icon_cure.png"));        
+        ImageView iconCure = new ImageView(imgCure);
+        iconCure.setFitWidth(150);
+        iconCure.setFitHeight(40);
         
-        this.btnVirus = ButtonFromBottomBar("virus");
+        this.btnCure = ButtonFromBottomBar("");
+        this.btnCure.setGraphic(iconCure);
+        this.pbCure = ProgressBarFromBottomBar(0, "-fx-accent: blue;");
+
+        Image imgVirus = new Image(this.getClass().getClassLoader().getResourceAsStream("images/icon_virus.png"));        
+        ImageView iconVirus = new ImageView(imgVirus);
+        iconVirus.setFitWidth(150);
+        iconVirus.setFitHeight(40);
+
+        this.btnVirus = ButtonFromBottomBar("");
+        this.btnVirus.setGraphic(iconVirus);
         this.pbVirus = ProgressBarFromBottomBar(0, "-fx-accent: green;");
+<<<<<<< HEAD
         
         this.date = new Label(LocalDate.of(2020,01,22).toString());
+=======
+
+        this.date = new Label(LocalDate.now().toString());
+>>>>>>> master
         date.setWrapText(true);
         date.setMinWidth(150);
         date.setMinHeight(40);

@@ -41,8 +41,8 @@ public class Perks{
         for(Perk p: this.perks){
             Button b = new Button(p.name());
             b.setStyle("-fx-background-color: #fff;");
-            b.setPrefWidth(100);
-            b.setPrefHeight(40);
+            b.setPrefWidth(120);
+            b.setPrefHeight(60);
             perksMap.put(b, p);
         }
         return perksMap;
@@ -80,20 +80,24 @@ public class Perks{
         this.addPerk(new PerkLethality(20, "Anemia III", "kek", 0, 0, 0, 10));
 
         this.addPerk(new PerkLethality(21, "Insomnia I", "kek", 0, 0, 0, 1));
-        this.addPerk(new PerkLethality(21, "Insomnia II", "kek", 0, 0, 0, 5));
-        this.addPerk(new PerkLethality(22, "Insomnia III", "kek", 0, 0, 0, 10));
+        this.addPerk(new PerkLethality(22, "Insomnia II", "kek", 0, 0, 0, 5));
+        this.addPerk(new PerkLethality(23, "Insomnia III", "kek", 0, 0, 0, 10));
 
         // RESITANCE
-        this.addPerk(new PerkResistance(23, "Bacterial resistance I", "kek", 0, 0, 0, 1));
-        this.addPerk(new PerkResistance(24, "Bacterial resistance II", "kek", 0, 0, 0, 5));
-        this.addPerk(new PerkResistance(25, "Bacterial resistance III", "kek", 0, 0, 0, 10));
+        this.addPerk(new PerkResistance(24, "Bacterial resistance I", "kek", 0, 0, 0, 1));
+        this.addPerk(new PerkResistance(25, "Bacterial resistance II", "kek", 0, 0, 0, 5));
+        this.addPerk(new PerkResistance(26, "Bacterial resistance III", "kek", 0, 0, 0, 10));
         
-        this.addPerk(new PerkResistance(26, "Drug resistance I", "kek", 0, 0, 0, 1));
-        this.addPerk(new PerkResistance(27, "Drug resistance II", "kek", 0, 0, 0, 5));
-        this.addPerk(new PerkResistance(28, "Drug resistance III", "kek", 0, 0, 0, 10));
+        this.addPerk(new PerkResistance(27, "Drug resistance I", "kek", 0, 0, 0, 1));
+        this.addPerk(new PerkResistance(28, "Drug resistance II", "kek", 0, 0, 0, 5));
+        this.addPerk(new PerkResistance(29, "Drug resistance III", "kek", 0, 0, 0, 10));
 
-        this.addPerk(new PerkResistance(29, "Vaccine resistance I", "kek", 0, 0, 0, 1));
-        this.addPerk(new PerkResistance(30, "Vaccine resistance II", "kek", 0, 0, 0, 5));
-        this.addPerk(new PerkResistance(31, "Vaccine resistance III", "kek", 0, 0, 0, 10));        
+        this.addPerk(new PerkResistance(30, "Vaccine resistance I", "kek", 0, 0, 0, 1));
+        this.addPerk(new PerkResistance(31, "Vaccine resistance II", "kek", 0, 0, 0, 5));
+        this.addPerk(new PerkResistance(32, "Vaccine resistance III", "kek", 0, 0, 0, 10));
+        
+        this.addPerk(new PerkResistance(33, "kek I", "kek", 0, 0, 0, 1));
+        this.addPerk(new PerkResistance(34, "kek II", "kek", 0, 0, 0, 5));
+        this.addPerk(new PerkResistance(35, "kek III", "kek", 0, 0, 0, 10));
     }
 }

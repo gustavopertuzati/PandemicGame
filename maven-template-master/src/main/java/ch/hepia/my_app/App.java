@@ -23,8 +23,8 @@ import javafx.scene.Node;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.PixelReader;
@@ -88,20 +88,18 @@ public class App extends Application {
 
     /* TODO CE SOIR:
 
-     * -> verifier qu'on peut refermer le menu de droite en cliquant sur le bouton de gauche pour ouvrir que 1 menu à la fois
-     * -> swapper le menu virus a droite et vaccin à gauche (modifier aussi la bottom bar)
-
-     * -> ajouter les boutons pour les onglets dans le menu du virus
-     * -> faire bien les boutons avec les lignes qui les relient et qui changent de couleur
+     * -> bloquer les boutons quand c'est acheté et tout
      * -> faire les boutons propre avec la description (voir le site de plague inc) et implémenter le menu de vaccin (à gauche)
      * -> changer les boutons de couleur quand on débloque la compétence et pareil pour les lignes
-     * -> commencer à implémenter le fait qu'on puisse cliquer sur les boutons que si on a le nombre suffisant de points (addapter la progress bar dans la bottom bar)
-
+     * -> addapter la progress bar dans la bottom bar quand on a des points
+     * -> belle mise en forme du menu (boutons propres + fond plus stylé)
+     * -> revoir les boutons de la bottombar
 
      * -> clarifier le code dans le chantier
-     * -> modifier un peu les classes pour que ce soit plus modulaire
-
+     * -> modifier un peu les classes pour que ce soit plus modulaire -> surtout contentVirusMenu #Maille
      * -> commencer a faire un affichage dynamique (ex: l'espace entre les boutons dans le menu n'est plus une constante mais dépend de newWidth et newHeight)
+
+     * GUS -> faire la barre des cas
      */
 
     //Game Timer
@@ -192,7 +190,13 @@ public class App extends Application {
         
         Button cureBtn = btBar.buttonCure();
         LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight);
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
+        //cureImage.setOpacity(0.9);
+
         sbCure.setBackground(new Background(new BackgroundFill(new ImagePattern(cureImage), CornerRadii.EMPTY, Insets.EMPTY)));
         
         
@@ -201,13 +205,27 @@ public class App extends Application {
         ImageView iVvirus = new ImageView(virusImage);
         iVvirus.setFitWidth(newWidth/3);
         iVvirus.setFitHeight(newHeight);
+        iVvirus.setOpacity(0.9);
         Group g = new Group();
-        g.getChildren().addAll(iVvirus, new ContentVirusMenu(buttonsPerksmap, v));
+
+        ContentVirusMenu cvm = new ContentVirusMenu(buttonsPerksmap, v);
+        g.getChildren().addAll(iVvirus, cvm);
 
         Button virusBtn = btBar.buttonVirus();
         RightSideBar sbVirus = new RightSideBar(newWidth/3, newWidth-(newWidth/3), g);
+<<<<<<< HEAD
         virusBtn.setOnAction(e -> sbVirus.animate( sbCure.isAnimating(), sbCure));
         cureBtn.setOnAction(e -> sbCure.animate(sbVirus.isAnimating(), sbVirus));
+=======
+        virusBtn.setOnAction(e -> {
+            sbVirus.animate( sbCure.isAnimating(), sbCure);
+            cvm.updateMenuContent();
+        });
+        cureBtn.setOnAction(e ->{
+            sbCure.animate(sbVirus.isAnimating(),sbVirus );
+            //cvm.updateMenuContent();
+        });
+>>>>>>> master
         sbVirus.setTranslateX(newWidth);
         
 ////////////////////////////////////////////////
@@ -226,7 +244,7 @@ public class App extends Application {
                 primaryStage.setMaximized(false);
         });*/
 
-        Rewards.addRewardCirclesToBox(box, countries, v, 4 );
+        Rewards.addRewardCirclesToBox(box, countries, v, 10 );
         
 
         //How many seconds for a day to elapse in seconds
