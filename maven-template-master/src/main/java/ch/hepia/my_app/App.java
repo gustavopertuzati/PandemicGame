@@ -86,9 +86,7 @@ public class App extends Application {
         launch(args);
     }
 
-    /* TODO CE SOIR:
-
-     * -> bloquer les boutons quand c'est acheté et tout
+    /* TODO:
      * -> faire les boutons propre avec la description (voir le site de plague inc) et implémenter le menu de vaccin (à gauche)
      * -> addapter la progress bar dans la bottom bar quand on a des points (design pattern observer)
      * -> belle mise en forme du menu (boutons propres + fond plus stylé)
@@ -192,7 +190,7 @@ public class App extends Application {
         iVvirus.setOpacity(0.9);
         Group g = new Group();
 
-        ContentVirusMenu cvm = new ContentVirusMenu(buttonsPerksmap, v);
+        ContentVirusMenu cvm = new ContentVirusMenu(buttonsPerksmap, v, newWidth/3, newHeight);
         g.getChildren().addAll(iVvirus, cvm);
 
         Button virusBtn = btBar.buttonVirus();

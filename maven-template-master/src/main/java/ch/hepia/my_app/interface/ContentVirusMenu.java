@@ -57,7 +57,7 @@ class ContentVirusMenu extends Group{
     private VBox currentMenu;
     private VBox buttonMenu;
 
-    ContentVirusMenu(LinkedHashMap<Button, Perk> map, Virus v){       
+    ContentVirusMenu(LinkedHashMap<Button, Perk> map, Virus v, int width, int height){       
         this.lines = new ArrayList<>();
         this.topSection = new HBox();
         this.currentMenu = new VBox();
@@ -69,7 +69,9 @@ class ContentVirusMenu extends Group{
         this.infos.setMinWidth(200);
         this.infos.setMinHeight(40);
         this.infos.setStyle("-fx-font-size: 2em;");
-        this.infos.setContentDisplay(ContentDisplay.BOTTOM);
+        //this.infos.setStyle("-fx-font-color: white;");   // marche pas je comprends pas pourquoi
+        this.infos.setTranslateX(width / 2 - 125);
+        this.infos.setTranslateY(height - 400);
 
         this.map = map;
         this.virus = v;
@@ -175,7 +177,6 @@ class ContentVirusMenu extends Group{
                     });
                 }
             }
-
         });        
     }
 
@@ -197,9 +198,10 @@ class ContentVirusMenu extends Group{
 
     private Button generateMenuButtons(String label, int pos){
         Button b = new Button(label);
+        // marche pas je comprends pas pourquoi
         b.setStyle("-fx-border-color: #fff;");
-        b.setStyle("-fx-border-width: 0;");
-        b.setStyle("-fx-background-radius: 0;");
+        b.setStyle("-fx-border-width: 0;");      
+        b.setStyle("-fx-background-radius: 0;"); 
         b.setStyle("-fx-background-color: transparent;");
         b.setStyle("-fx-font-size: 1.5em;");
         b.setStyle("-fx-font-color: #fff;");
