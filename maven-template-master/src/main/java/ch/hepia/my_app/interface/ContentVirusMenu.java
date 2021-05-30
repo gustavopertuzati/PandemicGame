@@ -141,9 +141,11 @@ class ContentVirusMenu extends Group{
         for(Button b: map.keySet()){
             buttons.add(b);
             b.setDisable(this.virus.hasEnoughPoints(map.get(b)));
-            b.setOnAction(e -> 
-                this.virus.upgrade(map.get(b))
-            );
+            b.setOnAction(e -> {
+                this.virus.upgrade(map.get(b));
+                this.generatePerkButtons();
+                this.updateMenuContent();
+            });
         }
         return buttons;
     }
