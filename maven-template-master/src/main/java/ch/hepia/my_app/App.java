@@ -222,6 +222,7 @@ public class App extends Application {
         newHeight += 50;
         Scene finalScene = new Scene(root, newWidth, newHeight);
         primaryStage.setScene(finalScene);
+
         /*primaryStage.setResizable(false);
         primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue)
