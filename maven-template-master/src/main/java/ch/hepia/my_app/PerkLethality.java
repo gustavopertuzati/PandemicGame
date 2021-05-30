@@ -13,4 +13,9 @@ public class PerkLethality extends Perk{
     public void update(Virus v){
         v.applyInfectivityBonus(this.lethality);
     }
+
+    @Override
+    public String toString(){
+        return this.name() + ":\n  " + this.description() + "\n  +" + this.lethality + " of lethality\n  cost: " + this.cost() + " points";
+    }
 }

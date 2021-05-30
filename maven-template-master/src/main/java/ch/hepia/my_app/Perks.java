@@ -40,7 +40,6 @@ public class Perks{
         LinkedHashMap< Button, Perk> perksMap = new LinkedHashMap<>();
         for(Perk p: this.perks){
             Button b = new Button(p.name());
-            b.setStyle("-fx-background-color: #fff;");
             b.setPrefWidth(120);
             b.setPrefHeight(60);
             perksMap.put(b, p);
