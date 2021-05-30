@@ -29,9 +29,13 @@ import javafx.stage.Stage;
 
 import java.time.LocalDate;
 
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+
 // pas très propre -> il faut amméliorer le code et revoir les imports dont on a besoin
 
-public class BottomBar extends HBox{
+public class BottomBar extends HBox implements PropertyChangeListener{
 
     private Button btnVirus;
     private Button btnCure;
@@ -88,8 +92,8 @@ public class BottomBar extends HBox{
     }
 
     private ProgressBar ProgressBarFromBottomBar(int value, String style){
-        ProgressBar pb = new ProgressBar(value);
-        pb.setProgress(0.1);
+        ProgressBar pb = new ProgressBar(value*0.01);
+        pb.setProgress(0.00);
         pb.setPrefSize(450, 40);
         pb.setStyle(style);
         return pb;
@@ -101,5 +105,14 @@ public class BottomBar extends HBox{
 
     public Button buttonVirus(){
         return this.btnVirus;
+    }
+
+
+    public void propertyChange(PropertyChangeEvent evt){
+        if(evt.getPropertyName().equals("virus")){
+            //On a gangé un point!
+            Integer inte = (Integer)evt.getNewValue();
+            this.pbVirus.setProgress(inte * 0.05);
+        }
     }
 }
