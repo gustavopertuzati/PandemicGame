@@ -102,14 +102,14 @@ public class BottomBar extends HBox implements PropertyChangeListener{
         btn.setMinWidth(width);
         btn.setMinHeight(height);
         btn.setGraphic(icon);
-        btn.setStyle("-fx-background-color: #000");
+        btn.setStyle("-fx-background-color: #000;");
         return btn;
     }
 
     private ProgressBar progressBarFromBottomBar(int value, String style){
         ProgressBar pb = new ProgressBar(value*0.01);
         pb.setProgress(value*0.05);
-        pb.setPrefSize(450, 40);
+        pb.setPrefSize(400, 60);
         pb.setStyle(style);
         return pb;
     }
@@ -136,6 +136,7 @@ public class BottomBar extends HBox implements PropertyChangeListener{
             //On a gangé un point!
             Integer inte = (Integer)evt.getNewValue();
             this.pbVirus.setProgress(inte * 0.05);
+            this.updateVirusPoints(inte);
         }
     }
 }

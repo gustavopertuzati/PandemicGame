@@ -91,12 +91,8 @@ public class App extends Application {
     /* TODO:
      * -> Changer le nom du projet maven
      * -> Faire un bon readme
-    
      * -> implémenter le menu de vaccin (à gauche)
-     * -> addapter la progress bar dans la bottom bar quand on a des points (design pattern observer)
-
      * -> fixer le bug des valeurs négatives dans le défilement des jours
-
      * -> clarifier le code dans le chantier
      * -> modifier un peu les classes pour que ce soit plus modulaire -> surtout contentVirusMenu #Maille
      * -> commencer a faire un affichage dynamique (ex: l'espace entre les boutons dans le menu n'est plus une constante mais dépend de newWidth et newHeight)
