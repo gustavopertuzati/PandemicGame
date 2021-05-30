@@ -87,10 +87,15 @@ public class App extends Application {
     }
 
     /* TODO:
+     * -> Changer le nom du projet maven
+     * -> Faire un bon readme
+    
      * -> faire les boutons propre avec la description (voir le site de plague inc) et implémenter le menu de vaccin (à gauche)
      * -> addapter la progress bar dans la bottom bar quand on a des points (design pattern observer)
      * -> belle mise en forme du menu (boutons propres + fond plus stylé)
      * -> revoir les boutons de la bottombar
+
+     * -> fixer le bug des valeurs négatives dans le défilement des jours
 
      * -> clarifier le code dans le chantier
      * -> modifier un peu les classes pour que ce soit plus modulaire -> surtout contentVirusMenu #Maille

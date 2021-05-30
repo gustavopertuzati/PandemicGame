@@ -162,7 +162,7 @@ class ContentVirusMenu extends Group{
             }
             //On a déjà le perk
             if(this.virus.hasPerk(this.map.get(b))){
-                b.setStyle("-fx-background-color: green;");
+                b.setStyle("-fx-border-color: green; -fx-border-width: 5px;");
                 b.setOnAction(e -> {
                     this.infos.setText("Perk already unlocked!");
                 });
