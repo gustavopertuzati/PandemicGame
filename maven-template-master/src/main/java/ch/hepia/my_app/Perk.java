@@ -34,9 +34,4 @@ public abstract class Perk {
     public int cost(){
         return this.costToUnlock;
     }
-
-    @Override
-    public String toString(){
-        return "Perk["+this.name +"]";
-    }
 }

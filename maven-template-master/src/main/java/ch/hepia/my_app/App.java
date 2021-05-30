@@ -80,6 +80,8 @@ import javafx.util.Duration;
 
 import java.time.LocalDate;
 
+import javafx.stage.StageStyle;
+
 public class App extends Application {
 
     public static void main(String[] args) {
@@ -90,10 +92,8 @@ public class App extends Application {
      * -> Changer le nom du projet maven
      * -> Faire un bon readme
     
-     * -> faire les boutons propre avec la description (voir le site de plague inc) et implémenter le menu de vaccin (à gauche)
+     * -> implémenter le menu de vaccin (à gauche)
      * -> addapter la progress bar dans la bottom bar quand on a des points (design pattern observer)
-     * -> belle mise en forme du menu (boutons propres + fond plus stylé)
-     * -> revoir les boutons de la bottombar
 
      * -> fixer le bug des valeurs négatives dans le défilement des jours
 
@@ -165,7 +165,6 @@ public class App extends Application {
         //game.getChildren().add("barre des cas");
 
         BottomBar btBar = new BottomBar();
-        btBar.fill();      
         btBar.setSpacing(30);        
         btBar.setAlignment(Pos.BOTTOM_CENTER);
         btBar.setPrefWidth(newWidth);
