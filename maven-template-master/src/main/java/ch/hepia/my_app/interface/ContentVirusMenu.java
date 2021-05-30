@@ -142,7 +142,7 @@ class ContentVirusMenu extends Group{
             buttons.add(b);
             b.setDisable(this.virus.hasEnoughPoints(map.get(b)));
             b.setOnAction(e -> 
-                this.virus.update(map.get(b))
+                this.virus.upgrade(map.get(b))
             );
         }
         return buttons;
