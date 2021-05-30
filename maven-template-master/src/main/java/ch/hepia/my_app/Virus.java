@@ -3,6 +3,10 @@ package ch.hepia.my_app;
 import java.util.List;
 import java.util.ArrayList;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+
 public class Virus{
 
   private double infectivity; // propagation du virus
@@ -11,6 +15,8 @@ public class Virus{
 
   //Toutes les compétences
   private List<Perk> perkLst;
+
+  private List<PropertyChangeListener> lstObservers;
 
   //currentPoints is the amount of points 
   private int currentPoints;
@@ -24,6 +30,7 @@ public class Virus{
 
     this.currentPoints = 5;
     this.perkLst = new ArrayList<>();
+    this.lstObservers = new ArrayList<>();
   }
 
   /*public void learnPerk(Perk p){
@@ -39,6 +46,9 @@ public class Virus{
 
   public void addPoint(){
     this.currentPoints += 1;
+    this.lstObservers.forEach(i->
+      i.propertyChange(new PropertyChangeEvent(this, "virus", new Integer(this.currentPoints - 1), new Integer(this.currentPoints)))
+      );
   }
 
 
@@ -102,5 +112,10 @@ public class Virus{
     output +=  "\tPerks: "+ this.perkLst + "\n}";
     return output;
   }
+
+  public void addListener(PropertyChangeListener pcl){
+    this.lstObservers.add(pcl);
+  }
+
 
 }

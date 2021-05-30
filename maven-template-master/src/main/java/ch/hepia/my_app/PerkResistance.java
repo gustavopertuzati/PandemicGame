@@ -13,4 +13,9 @@ public class PerkResistance extends Perk{
     public void update(Virus v){
         v.applyInfectivityBonus(this.resistance);
     }
+
+    @Override
+    public String toString(){
+        return this.name() + ":\n  " + this.description() + "\n  +" + this.resistance + " of resistance\n  cost: " + this.cost() + " points";
+    }
 }

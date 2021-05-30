@@ -20,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Priority;
 
-
 import javafx.scene.Group;
 
 import javafx.scene.input.MouseEvent;
@@ -39,6 +38,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javafx.util.Duration;
+
+import javafx.scene.effect.BlurType;
 
 class ContentVirusMenu extends Group{
 
@@ -68,8 +69,8 @@ class ContentVirusMenu extends Group{
         this.infos.setWrapText(true);
         this.infos.setMinWidth(200);
         this.infos.setMinHeight(40);
+        this.infos.setTextFill(Color.WHITE);
         this.infos.setStyle("-fx-font-size: 2em;");
-        //this.infos.setStyle("-fx-font-color: white;");   // marche pas je comprends pas pourquoi
         this.infos.setTranslateX(width / 2 - 125);
         this.infos.setTranslateY(height - 400);
 
@@ -77,13 +78,14 @@ class ContentVirusMenu extends Group{
         this.virus = v;
 
         for(Button b: map.keySet()){
-            Tooltip t = new Tooltip(map.get(b).description());
+            Tooltip t = new Tooltip(map.get(b).toString());
             t.setShowDelay(new Duration(500));
             t.setHideDelay(new Duration(50));
             b.setTooltip(t);
         }
 
         this.generateMenuHeader();
+        this.updateMenu();
         this.generatePerkButtons();
         this.generateLines();
 
@@ -98,7 +100,7 @@ class ContentVirusMenu extends Group{
             double x1 = (20 + 1*120);
             double x2 = (20 + 2*120);
             double x3 = (20 + 3*120);
-            double y = (125 + i*160.5);
+            double y = (140 + i*160.5);
 
             Line lineb1b2 = new Line(x1,y, x2,y);
             lineb1b2.setStrokeWidth(5);
@@ -151,7 +153,7 @@ class ContentVirusMenu extends Group{
         List<Button> buttons = generateButtonList();
         buttons.forEach(b->{
             if(this.virus.hasEnoughPoints(map.get(b))){
-                b.setStyle("-fx-background-color: white;");
+                b.setStyle("-fx-background-color: white;-fx-font-size: 1.5em;-fx-border-color: black;-fx-border-width:3px;");
                 b.setOnAction(e -> {
                     this.virus.upgrade(map.get(b));
                     this.generatePerkButtons();
@@ -160,14 +162,14 @@ class ContentVirusMenu extends Group{
                 });
             //On n'a pas assez de points
             }else{
-                b.setStyle("-fx-background-color: grey;");
+                b.setStyle("-fx-background-color: grey;-fx-font-size: 1.5em;-fx-border-color: black;-fx-border-width:3px;");
                 b.setOnAction(e -> {
                     this.infos.setText("Not enough points!");
                 });
             }
             //On a déjà le perk
             if(this.virus.hasPerk(this.map.get(b))){
-                b.setStyle("-fx-border-color: green; -fx-border-width: 5px;");
+                b.setStyle("-fx-border-color: green; -fx-border-width: 3px;-fx-font-size: 1.5em");
                 b.setOnAction(e -> {
                     this.infos.setText("Perk already unlocked!");
                 });
@@ -176,7 +178,7 @@ class ContentVirusMenu extends Group{
             //Ce n'est pas un des boutons de gauche
             if(index % 3 != 0){
                 if(!this.virus.hasPerk( map.get(buttons.get(index - 1)) ) ){
-                    b.setStyle("-fx-background-color: grey;");
+                    b.setStyle("-fx-background-color: grey;-fx-font-size: 1.5em;-fx-border-color: black;-fx-border-width:3px;");
                     b.setOnAction(e -> {
                         this.infos.setText("Need to unlock previous perk!");
                     });
@@ -203,15 +205,12 @@ class ContentVirusMenu extends Group{
 
     private Button generateMenuButtons(String label, int pos){
         Button b = new Button(label);
-        // marche pas je comprends pas pourquoi
-        b.setStyle("-fx-border-color: #fff;");
-        b.setStyle("-fx-border-width: 0;");      
-        b.setStyle("-fx-background-radius: 0;"); 
-        b.setStyle("-fx-background-color: transparent;");
-        b.setStyle("-fx-font-size: 1.5em;");
-        b.setStyle("-fx-font-color: #fff;");
-        b.setStyle("-fx-border-radius: 5px;");
-        b.setTranslateX(50 * pos);    
+        b.setTextFill(Color.WHITE);
+        b.setStyle("-fx-border-color: #fff;-fx-border-width: 3;-fx-background-color: transparent;-fx-font-size: 1.5em;-fx-border-radius: 5px;");
+        b.setTranslateX(7 * pos);
+        b.hoverProperty().addListener( e -> {
+            this.updateMenu();
+        });
         return b;
     }
 
@@ -222,6 +221,7 @@ class ContentVirusMenu extends Group{
                 this.status = 1;
                 this.generatePerkButtons();
                 this.refreshDisplay();
+                this.updateMenu();
             }
         });
         topSection.getChildren().add(this.infectivity);
@@ -232,6 +232,7 @@ class ContentVirusMenu extends Group{
                 this.status = 2;
                 this.generatePerkButtons();
                 this.refreshDisplay();
+                this.updateMenu();
             }
         });
         topSection.getChildren().add(this.lethality);
@@ -242,6 +243,7 @@ class ContentVirusMenu extends Group{
                 this.status = 3;
                 this.generatePerkButtons();
                 this.refreshDisplay();
+                this.updateMenu();
             }
         });
         topSection.getChildren().add(this.resistance);
@@ -272,5 +274,31 @@ class ContentVirusMenu extends Group{
 
     public void updateLabel(){
         this.infos.setText("");
+    }
+
+    private void updateMenu(){
+        if(this.status == 1){
+            emphasisButton(this.infectivity);
+            clearButton(this.lethality);
+            clearButton(this.resistance);
+        } else if(this.status == 2){
+            clearButton(this.infectivity);
+            emphasisButton(this.lethality);
+            clearButton(this.resistance);
+        } else if(this.status == 3){
+            clearButton(this.infectivity);
+            clearButton(this.lethality);
+            emphasisButton(this.resistance);
+        }
+    }
+
+    private void emphasisButton(Button b){
+        b.setTextFill(Color.web("0x808080"));
+        b.setStyle("-fx-border-color: #808080;-fx-border-width: 3;-fx-background-color: transparent;-fx-font-size: 1.5em;-fx-border-radius: 5px;");
+    }
+
+    private void clearButton(Button b){
+        b.setTextFill(Color.WHITE);
+        b.setStyle("-fx-border-color: #fff;-fx-border-width: 3;-fx-background-color: transparent;-fx-font-size: 1.5em;-fx-border-radius: 5px;");
     }
 }

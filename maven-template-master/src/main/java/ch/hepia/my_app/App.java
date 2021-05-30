@@ -84,6 +84,8 @@ import javafx.util.Duration;
 
 import java.time.LocalDate;
 
+import javafx.stage.StageStyle;
+
 public class App extends Application {
 
     public static void main(String[] args) {
@@ -93,14 +95,8 @@ public class App extends Application {
     /* TODO:
      * -> Changer le nom du projet maven
      * -> Faire un bon readme
-    
-     * -> faire les boutons propre avec la description (voir le site de plague inc) et implémenter le menu de vaccin (à gauche)
-     * -> addapter la progress bar dans la bottom bar quand on a des points (design pattern observer)
-     * -> belle mise en forme du menu (boutons propres + fond plus stylé)
-     * -> revoir les boutons de la bottombar
-
+     * -> implémenter le menu de vaccin (à gauche)
      * -> fixer le bug des valeurs négatives dans le défilement des jours
-
      * -> clarifier le code dans le chantier
      * -> modifier un peu les classes pour que ce soit plus modulaire -> surtout contentVirusMenu #Maille
      * -> commencer a faire un affichage dynamique (ex: l'espace entre les boutons dans le menu n'est plus une constante mais dépend de newWidth et newHeight)
@@ -206,7 +202,6 @@ public class App extends Application {
         //game.getChildren().add("barre des cas");
 
         BottomBar btBar = new BottomBar();
-        btBar.fill();      
         btBar.setSpacing(30);        
         btBar.setAlignment(Pos.BOTTOM_CENTER);
         btBar.setPrefWidth(newWidth);
@@ -266,6 +261,7 @@ public class App extends Application {
         newHeight += 50;
         Scene finalScene = new Scene(root, newWidth, newHeight);
         primaryStage.setScene(finalScene);
+
         /*primaryStage.setResizable(false);
         primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue)
@@ -285,7 +281,8 @@ public class App extends Application {
         tl.setCycleCount(Timeline.INDEFINITE);
         tl.play();
 
-
+        v.addListener(btBar);
+        
         primaryStage.show();
     }
 
