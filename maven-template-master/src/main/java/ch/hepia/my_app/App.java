@@ -90,8 +90,7 @@ public class App extends Application {
 
      * -> bloquer les boutons quand c'est acheté et tout
      * -> faire les boutons propre avec la description (voir le site de plague inc) et implémenter le menu de vaccin (à gauche)
-     * -> changer les boutons de couleur quand on débloque la compétence et pareil pour les lignes
-     * -> addapter la progress bar dans la bottom bar quand on a des points
+     * -> addapter la progress bar dans la bottom bar quand on a des points (design pattern observer)
      * -> belle mise en forme du menu (boutons propres + fond plus stylé)
      * -> revoir les boutons de la bottombar
 
@@ -102,20 +101,12 @@ public class App extends Application {
      * GUS -> faire la barre des cas
      */
 
-    //Game Timer
-    private LocalDate ld;
-
-    //Covid virus
-    private Virus v;
-
-    //Countries for the game
-    private Countries countries;
-    private BottomBar btBar;
+    LocalDate ld;
 
     @Override
     public void start(Stage primaryStage) {
         //primaryStage.setResizable(false);
-        v = new Virus();
+        Virus v = new Virus();
         ld = LocalDate.of(2020,01,22);
 
         // TEMPORAIRE : AJOUT DES PERKS ICI
@@ -125,7 +116,7 @@ public class App extends Application {
         //
 
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
-        countries = test.getCountries("summary");
+        Countries countries = test.getCountries("summary");
 
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
         int newWidth = 1420;
@@ -170,7 +161,7 @@ public class App extends Application {
         game.getChildren().add(scroller);
         //game.getChildren().add("barre des cas");
 
-        btBar = new BottomBar();
+        BottomBar btBar = new BottomBar();
         btBar.fill();      
         btBar.setSpacing(30);        
         btBar.setAlignment(Pos.BOTTOM_CENTER);
@@ -209,7 +200,9 @@ public class App extends Application {
 
         virusBtn.setOnAction(e -> {
             sbVirus.animate( sbCure.isAnimating(), sbCure);
-            cvm.updateMenuContent();
+            cvm.updateLabel();
+            cvm.refreshDisplay();
+            
         });
         cureBtn.setOnAction(e ->{
             sbCure.animate(sbVirus.isAnimating(),sbVirus );
@@ -252,7 +245,7 @@ public class App extends Application {
 
 
     public void elapseDayForGame(Countries c, BottomBar b, LocalDate ld){
-        btBar.updateDate(ld);
+        b.updateDate(ld);
         c.elapseDayForAllCountries();
     }
 

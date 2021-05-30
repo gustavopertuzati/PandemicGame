@@ -79,6 +79,34 @@ class NewStage {
         detailStage.show();
     }
 
+    NewStage(Perk p, Stage primaryStage, double x, double y){
+        Stage detailStage = new Stage();
+        detailStage.setTitle(p.name());
+
+        VBox detailRoot = new VBox();
+        detailRoot.getChildren().add(new Text("\n\n" + p.description()));
+
+        Scene detailScene = new Scene(detailRoot, 0, 0, Color.BLACK);
+
+        detailStage.setScene(detailScene);
+        detailStage.initModality(Modality.APPLICATION_MODAL);
+        detailStage.initOwner(primaryStage);
+        detailStage.setX(x);
+        detailStage.setY(y);
+        detailStage.setWidth(250);
+        detailStage.setHeight(130);
+        detailStage.initStyle(StageStyle.UNDECORATED);
+        detailStage.setOpacity(0.8);
+        
+        detailStage.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (! isNowFocused) {
+                detailStage.hide();
+            }
+        });
+
+        detailStage.show();
+    }
+
     void toggleStage(Stage detailStage){ 
         if(detailStage.getHeight() == 260){
             detailStage.setHeight(130);

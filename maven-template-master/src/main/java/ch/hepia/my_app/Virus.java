@@ -84,7 +84,7 @@ public class Virus{
   }
 
   public boolean hasEnoughPoints(Perk p){
-    return p.cost() >= this.currentPoints;
+    return p.cost() <= this.currentPoints;
   }
 
 

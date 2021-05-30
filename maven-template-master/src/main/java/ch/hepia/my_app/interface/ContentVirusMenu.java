@@ -1,15 +1,9 @@
 package ch.hepia.my_app;
 
-import java.util.Scanner;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import javafx.animation.Animation;
-import javafx.animation.Transition;
 
 import javafx.application.Application;
 
@@ -18,56 +12,25 @@ import javafx.scene.Node;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.PixelReader;
-
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
 
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.FlowPane;
+
 
 import javafx.scene.Group;
 
-
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 
 import javafx.scene.Parent;
 
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Line;
 
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-
-import javafx.geometry.Rectangle2D;
-import javafx.geometry.Point2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Bounds;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -77,79 +40,161 @@ import javafx.stage.Stage;
 
 import javafx.util.Duration;
 
-import java.time.LocalDate;
-import javafx.scene.layout.GridPane;
-
 class ContentVirusMenu extends Group{
-    
+
     private LinkedHashMap<Button, Perk> map;
+    private List<Line> lines;
 
     private Button infectivity;
     private Button lethality;
     private Button resistance;
-    
+    private Label infos;
+
     private Virus virus;
-    private int status = 1;
+    private int status;
 
-    private HBox topSection = new HBox();
-    private VBox currentMenu = new VBox();
-    private VBox buttonMenu = new VBox();
+    private HBox topSection;
+    private VBox currentMenu;
+    private VBox buttonMenu;
 
-    ContentVirusMenu(LinkedHashMap<Button, Perk> map, Virus v){        
+    ContentVirusMenu(LinkedHashMap<Button, Perk> map, Virus v){       
+        this.lines = new ArrayList<>();
+        this.topSection = new HBox();
+        this.currentMenu = new VBox();
+        this.buttonMenu = new VBox();
+        this.status = 1;
+        
+        this.infos = new Label();
+        this.infos.setWrapText(true);
+        this.infos.setMinWidth(200);
+        this.infos.setMinHeight(40);
+        this.infos.setStyle("-fx-font-size: 2em;");
+        this.infos.setContentDisplay(ContentDisplay.BOTTOM);
+
         this.map = map;
         this.virus = v;
 
-        List<Button> buttons = this.generateButtonList();
+        for(Button b: map.keySet()){
+            Tooltip t = new Tooltip(map.get(b).description());
+            t.setShowDelay(new Duration(500));
+            t.setHideDelay(new Duration(50));
+            b.setTooltip(t);
+        }
+
         this.generateMenuHeader();
-
-
         this.generatePerkButtons();
+        this.generateLines();
 
         this.currentMenu.getChildren().add(this.buttonMenu);
+        this.currentMenu.getChildren().add(this.infos);        
         this.getChildren().add(this.currentMenu);
     }
-    
-    // peut etre stocker les lignes dans une liste de ligne au début et on 
-    // aura juste à modifier la couleur au lieu de calculer les coordonnées
-    public void updateMenuContent(){
-        List<Button> buttons = this.generateButtonList();        
-        for(int i = 12*(this.status-1); i < 12*(this.status); i+=3){
-            double x1 = (20 + 1*(buttons.get(i).getWidth()) );
-            double x2 = (20 + 2*(buttons.get(i+1).getWidth()) );
-            double x3 = (20 + 3*(buttons.get(i+2).getWidth()) );
-            double y = (125 + 53.5*(i%12));
 
-            if(x1 == x2 && x2 == x3){
-                continue;
-            }
+    private void generateLines(){
+        // changer les valeurs ici -> rendre dynamique
+        for(int i = 0; i < 4; i+=1){
+            double x1 = (20 + 1*120);
+            double x2 = (20 + 2*120);
+            double x3 = (20 + 3*120);
+            double y = (125 + i*160.5);
 
             Line lineb1b2 = new Line(x1,y, x2,y);
-            lineb1b2.setStroke(Color.BLACK);
             lineb1b2.setStrokeWidth(5);
             lineb1b2.setViewOrder(10);
             
             Line lineb2b3 = new Line(x2,y,x3,y);
-            lineb2b3.setStroke(Color.WHITE);
             lineb2b3.setStrokeWidth(5);  
             lineb2b3.setViewOrder(10);
-            this.getChildren().addAll(lineb1b2, lineb2b3);
+
+            this.lines.add(lineb1b2);
+            this.lines.add(lineb2b3);
         }
     }
+
+    public void updateLines(){
+        this.getChildren().removeAll(this.lines);
+        int offset = 0;
+        //Index des boutons sur la page
+        for(int i = 0 ; i < 8 ; i+=2){
+            this.colorLines(this.lines.get(i), this.lines.get(i+1), (this.status-1)*12 + i + offset);
+            offset +=1;
+        }
+        this.getChildren().addAll(this.lines);
+    }
+
+
+    private void colorLines(Line l1, Line l2, int i){
+        List<Button> buttons = generateButtonList();
+        //Perk le plus a gauche est débloqué
+        if(this.virus.hasPerk(this.map.get(buttons.get(i)))){
+            l1.setStroke(Color.WHITE);
+        }
+        
+        if(this.virus.hasPerk(this.map.get(buttons.get(i+1)))){
+            l1.setStroke(Color.GREEN);
+            l2.setStroke(Color.WHITE);
+        }
+
+        if(this.virus.hasPerk(this.map.get(buttons.get(i+2)))){
+            l2.setStroke(Color.GREEN);
+        }
+    }
+
+    private void updateButtonStates(){
+        List<Button> buttons = generateButtonList();
+        buttons.forEach(b->{
+            if(this.virus.hasEnoughPoints(map.get(b))){
+                b.setStyle("-fx-background-color: white;");
+                b.setOnAction(e -> {
+                    this.virus.upgrade(map.get(b));
+                    this.generatePerkButtons();
+                    this.refreshDisplay();
+                    this.infos.setText("New perk purchased!");
+                });
+            //On n'a pas assez de points
+            }else{
+                b.setStyle("-fx-background-color: grey;");
+                b.setOnAction(e -> {
+                    this.infos.setText("Not enough points!");
+                });
+            }
+            //On a déjà le perk
+            if(this.virus.hasPerk(this.map.get(b))){
+                b.setStyle("-fx-background-color: green;");
+                b.setOnAction(e -> {
+                    this.infos.setText("Perk already unlocked!");
+                });
+            }
+            int index = buttons.indexOf(b);
+            //Ce n'est pas un des boutons de gauche
+            if(index % 3 != 0){
+                if(!this.virus.hasPerk( map.get(buttons.get(index - 1)) ) ){
+                    b.setStyle("-fx-background-color: grey;");
+                    b.setOnAction(e -> {
+                        this.infos.setText("Need to unlock previous perk!");
+                    });
+                }
+            }
+
+        });        
+    }
+
+    public void refreshDisplay(){
+        this.updateButtonStates();
+        this.updateLines();
+    }
+
+
 
     private List<Button> generateButtonList(){
         List<Button> buttons = new ArrayList<>();
         for(Button b: map.keySet()){
             buttons.add(b);
-            b.setDisable(this.virus.hasEnoughPoints(map.get(b)));
-            b.setOnAction(e -> {
-                this.virus.upgrade(map.get(b));
-                this.generatePerkButtons();
-                this.updateMenuContent();
-            });
         }
         return buttons;
     }
-    
+
+
     private Button generateMenuButtons(String label, int pos){
         Button b = new Button(label);
         b.setStyle("-fx-border-color: #fff;");
@@ -169,7 +214,7 @@ class ContentVirusMenu extends Group{
             if(this.status != 1){
                 this.status = 1;
                 this.generatePerkButtons();
-                this.updateMenuContent();
+                this.refreshDisplay();
             }
         });
         topSection.getChildren().add(this.infectivity);
@@ -179,7 +224,7 @@ class ContentVirusMenu extends Group{
             if(this.status != 2){
                 this.status = 2;
                 this.generatePerkButtons();
-                this.updateMenuContent();
+                this.refreshDisplay();
             }
         });
         topSection.getChildren().add(this.lethality);
@@ -189,15 +234,13 @@ class ContentVirusMenu extends Group{
             if(this.status != 3){
                 this.status = 3;
                 this.generatePerkButtons();
-                this.updateMenuContent();
+                this.refreshDisplay();
             }
         });
         topSection.getChildren().add(this.resistance);
         this.currentMenu.getChildren().add(topSection);
         this.currentMenu.setMargin(topSection, new Insets(10, 0, 60, 30));
     }
-
-
 
     private void generatePerkButtons(){
         List<Button> buttons = this.generateButtonList();
@@ -216,6 +259,11 @@ class ContentVirusMenu extends Group{
             this.buttonMenu.getChildren().add(tmp);
             this.buttonMenu.setMargin(tmp, new Insets(0, 0, 0, 30));
         }
+        this.buttonMenu.getChildren().add(this.infos);    
         this.buttonMenu.setViewOrder(0);
+    }
+
+    public void updateLabel(){
+        this.infos.setText("");
     }
 }
