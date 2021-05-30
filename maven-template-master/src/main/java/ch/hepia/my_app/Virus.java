@@ -71,7 +71,7 @@ public class Virus{
       System.out.println("Not enough points!");
       return;
     }
-    if(this.perkLst.contains(p)){
+    if(this.hasPerk(p)){
       //Déjà recu cette amélioration
       //Pareil qu'en haut, ne devrait pas rentrer ici
       System.out.println("Already have this perk!");
@@ -85,6 +85,11 @@ public class Virus{
 
   public boolean hasEnoughPoints(Perk p){
     return p.cost() >= this.currentPoints;
+  }
+
+
+  public boolean hasPerk(Perk p){
+    return this.perkLst.contains(p);
   }
 
   @Override

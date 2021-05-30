@@ -2,18 +2,15 @@ package ch.hepia.my_app;
 
 public class PerkInfectivity extends Perk{
 
-    private double[] infectivityByLevel = new double[3];
+    private double infectivity;
 
-    public PerkInfectivity(int id, String name, String description, double v1, double v2, double v3, int cost){
+    public PerkInfectivity(int id, String name, String description, double v1, int cost){
         super(id, name, description, cost);
-        this.infectivityByLevel[0] = v1;
-        this.infectivityByLevel[1] = v2;
-        this.infectivityByLevel[2] = v3;
+        this.infectivity = v1;
     }
 
     @Override
     public void update(Virus v){
-        v.applyInfectivityBonus(infectivityByLevel[this.currentLevel()]);
-        this.updateLevel();
+        v.applyInfectivityBonus(infectivity);
     }
 }
