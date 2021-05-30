@@ -86,20 +86,8 @@ public class LeftSideBar extends HBox{
                 isAnimating = !isAnimating;
             }
         });
-        
-        /*this.controlButton.setOnAction(new EventHandler<ActionEvent>(){
-            @Override public void handle(ActionEvent actionEvent){
-                if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
-                    if(isVisible()){
-                        hideSidebar.play();
-                    } else if (isOtherVisible) {
-                        setVisible(true);
-                        showSidebar.play();
-                    }
-                }
-            }
-        });*/
     }
+    
     public void animate(boolean isOtherVisible, RightSideBar rsb){
         
         

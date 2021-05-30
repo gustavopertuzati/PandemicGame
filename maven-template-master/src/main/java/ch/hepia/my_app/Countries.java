@@ -57,9 +57,9 @@ public class Countries {
         return this.countries;
     }
 
-    public int totalCases(){
+    public double totalCases(){
         return this.countries.stream()
-                   .mapToInt(c -> c.playerTotalCases())
+                   .mapToDouble(c -> c.playerTotalCases())
                    .sum();
     }
 
@@ -69,15 +69,15 @@ public class Countries {
                              .sum();
     }
 
-    public int totalDeaths(){
+    public double totalDeaths(){
         return this.countries.stream()
-                             .mapToInt(c -> c.playerTotalDeaths())
+                             .mapToDouble(c -> c.playerTotalDeaths())
                              .sum();
     }
 
-    public int totalPop(){
+    public double totalPop(){
         return this.countries.stream()
-                                .mapToInt(c -> c.totalPopulation())
+                                .mapToDouble(c -> c.totalPopulation())
                                 .sum();
     }
 
