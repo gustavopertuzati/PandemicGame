@@ -242,7 +242,8 @@ public class App extends Application {
         tl.setCycleCount(Timeline.INDEFINITE);
         tl.play();
 
-
+        v.addListener(btBar);
+        
         primaryStage.show();
     }
 
