@@ -224,7 +224,7 @@ public class App extends Application {
                 primaryStage.setMaximized(false);
         });*/
 
-        Rewards.addRewardCirclesToBox(box, countries, v, 10 );
+        Rewards.addRewardCirclesToBox(box, countries, v, 15 );
         
 
         //How many seconds for a day to elapse in seconds

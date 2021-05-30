@@ -127,19 +127,24 @@ class ContentVirusMenu extends Group{
 
     private void colorLines(Line l1, Line l2, int i){
         List<Button> buttons = generateButtonList();
-        //Perk le plus a gauche est débloqué
+        
         if(this.virus.hasPerk(this.map.get(buttons.get(i)))){
             l1.setStroke(Color.WHITE);
+        }else{
+            l1.setStroke(Color.BLACK);
         }
-        
+
         if(this.virus.hasPerk(this.map.get(buttons.get(i+1)))){
             l1.setStroke(Color.GREEN);
             l2.setStroke(Color.WHITE);
+        }else{
+            l2.setStroke(Color.BLACK);
         }
-
+        
         if(this.virus.hasPerk(this.map.get(buttons.get(i+2)))){
             l2.setStroke(Color.GREEN);
         }
+        //Perk le plus a gauche est débloqué
     }
 
     private void updateButtonStates(){
