@@ -82,6 +82,7 @@ import javafx.stage.Stage;
 
 import javafx.util.Duration;
 
+import javafx.scene.control.Label;
 import java.time.LocalDate;
 
 import javafx.stage.StageStyle;
@@ -162,12 +163,20 @@ public class App extends Application {
         vaccinatedBar.setTranslateX(2*newWidth/3 - 62.0);
         vaccinatedBar.setTranslateY(newHeight-45);
 
+        Label barName = new Label("World");
+        barName.setStyle("-fx-font-size: 1.4em;");
+        barName.setTextFill(Color.WHITE);
+        barName.setTranslateX(newWidth/2 - 25);
+        barName.setTranslateY(newHeight - 73);
 
         //On récupère pour chaque pays, le cercle qui le représente ainsi que son cercle contour noir
         Map<Country,Circle[]> countryCirclesMap = countries.getCountryCirclesMap((e, c) ->  {
             NewStage ct = new NewStage(c, primaryStage, e.getScreenX(), e.getScreenY());
             sickBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
             deathBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
+            //pk on a null dans countryName ??
+            System.out.println(c.countryName());
+            barName.setText(c.countryName());
         });
 
 
@@ -175,9 +184,7 @@ public class App extends Application {
 
         box.getChildren().add(iV);
         
-        
-        ZoomableScrollPane scroller = new ZoomableScrollPane(box, newWidth, newHeight);
-        
+        ZoomableScrollPane scroller = new ZoomableScrollPane(box, newWidth, newHeight);        
 
         //On ajoute les cercles initiaux a la carte
         adjustCircles(countryCirclesMap, scroller.getZoomWidth(),box );
@@ -253,7 +260,7 @@ public class App extends Application {
         
 ////////////////////////////////////////////////
 
-        game.getChildren().addAll(sbVirus, healthyBar, sickBar, deathBar, vaccinatedBar, sbCure);
+        game.getChildren().addAll(sbVirus, barName, healthyBar, sickBar, deathBar, vaccinatedBar, sbCure);
         scroller.setTranslateX(0);
 
         VBox root = new VBox(game,btBar);
