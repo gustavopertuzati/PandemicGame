@@ -289,6 +289,12 @@ public class App extends Application {
         tl.play();
 
         v.addListener(btBar);
+
+        v.addPoint();
+        v.addPoint();
+        v.addPoint();
+        v.addPoint();
+        v.addPoint();
         
         primaryStage.show();
     }

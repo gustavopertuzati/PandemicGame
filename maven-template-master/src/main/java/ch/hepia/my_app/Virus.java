@@ -28,7 +28,7 @@ public class Virus{
     this.resistance = 0.005;
     //this.perkLst = new ArrayList<Perk>();
 
-    this.currentPoints = 5;
+    this.currentPoints = 0;
     this.perkLst = new ArrayList<>();
     this.lstObservers = new ArrayList<>();
   }
@@ -46,11 +46,14 @@ public class Virus{
 
   public void addPoint(){
     this.currentPoints += 1;
+    this.updateObservers();
+  }
+
+  public void updateObservers(){
     this.lstObservers.forEach(i->
       i.propertyChange(new PropertyChangeEvent(this, "virus", new Integer(this.currentPoints - 1), new Integer(this.currentPoints)))
       );
   }
-
 
   public double lethality(){
     return this.lethality;
@@ -90,7 +93,7 @@ public class Virus{
     this.currentPoints -= p.cost();
     this.perkLst.add(p);
     p.update(this);
-    System.out.println(this);
+    this.updateObservers();
   }
 
   public boolean hasEnoughPoints(Perk p){
