@@ -80,6 +80,8 @@ import javafx.event.EventHandler;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.sql.ResultSet;
+
 import javafx.util.Duration;
 
 import javafx.scene.control.Label;
@@ -295,6 +297,32 @@ public class App extends Application {
         v.addPoint();
         v.addPoint();
         v.addPoint();
+
+
+
+        String driver = "com.mysql.jdbc.Driver";
+        String url = "jdbc:mysql://localhost/";
+        try{
+            DataBaseCommunicator dbc = new DataBaseCommunicator(driver, url, "root", "root");
+            System.out.println(dbc.executeQuery("USE covid"));
+            // faire un transaction si on veut insert
+            //System.out.println(dbc.executeUpdate("INSERT INTO `Country`(`slug`, `name`, `size`, `latitude`, `longitude`, `total_population`, `initial_total_cases`, `initial_total_active`, `initial_total_deaths`) VALUES ('kekistan', 'Republic of Keksitan', 3, 12, 14, 100, 1,1,0)"));
+            
+            ResultSet rs = dbc.executeQuery("SELECT * FROM Country");
+            if (rs.next()){
+                System.out.println(rs.getString(1));
+            }
+            
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+
+
+
+
+
+
+
         
         primaryStage.show();
     }

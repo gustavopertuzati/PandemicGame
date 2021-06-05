@@ -7,8 +7,6 @@ import java.util.Random;
 
 import javafx.scene.shape.Circle;
 
-
-
 public class Country {
     // données communes
     private String countryName;

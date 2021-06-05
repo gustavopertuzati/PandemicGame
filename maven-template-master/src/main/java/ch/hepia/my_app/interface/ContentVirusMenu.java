@@ -180,7 +180,7 @@ class ContentVirusMenu extends Group{
                 if(!this.virus.hasPerk( map.get(buttons.get(index - 1)) ) ){
                     b.setStyle("-fx-background-color: grey;-fx-font-size: 1.5em;-fx-border-color: black;-fx-border-width:3px;");
                     b.setOnAction(e -> {
-                        this.infos.setText("Need to unlock previous perk!");
+                        this.infos.setText("Unlock previous perk!");
                     });
                 }
             }
