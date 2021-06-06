@@ -212,9 +212,9 @@ public class Country {
         //This depends on the measures taken by the country ( i.e. confinement or remote work etc...)
         int nbPpl = 12; 
         //Chance to infect depends on whether or not masks are enforced etc...
-        double chanceToInfect = 0.15;
+        double chanceToInfect = 0.05;
 
-        int newCases = (int) Math.pow(nbPpl*chanceToInfect, this.totalActive);
+        int newCases = (int) Math.round(this.totalActive*nbPpl*chanceToInfect);
 
         if (newCases > this.totalPopulation - this.totalDeaths - this.totalActive - this.totalRecovered){
             this.dailyCases = newCases;
@@ -227,7 +227,7 @@ public class Country {
     private void newRecoveries(){
         Random rand = new Random();
         //This should be about a 5% recovery everytime this method is called
-        double randDouble =  rand.nextGaussian()*0.1;
+        double randDouble =  rand.nextGaussian()*0.01;
         int newRecov = (int)randDouble * this.totalActive;
 
         this.totalActive -= newRecov;
@@ -237,7 +237,7 @@ public class Country {
     private void newDeaths(){
         Random rand = new Random();
         //This should be about a .5% death rate everytime this method is called
-        double randDouble =  rand.nextGaussian()*0.5;
+        double randDouble =  rand.nextGaussian()*0.005;
         int newDead = (int)randDouble * this.totalActive;
 
         this.totalActive -= newDead;
@@ -253,8 +253,6 @@ public class Country {
         this.newCases();
         this.newDeaths();
     }
-
-
 
 
 

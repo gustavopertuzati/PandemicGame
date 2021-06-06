@@ -298,7 +298,7 @@ public class App extends Application {
         v.addPoint();
         v.addPoint();
 
-
+        /*
 
         String driver = "com.mysql.jdbc.Driver";
         String url = "jdbc:mysql://localhost/";
@@ -315,15 +315,8 @@ public class App extends Application {
             
         }catch(Exception e){
             throw new RuntimeException(e);
-        }
+        }*/
 
-
-
-
-
-
-
-        
         primaryStage.show();
     }
 
