@@ -112,7 +112,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         //primaryStage.setResizable(false);
-        Virus v = new Virus();
+        Virus v = Virus.getInstance();
         ld = LocalDate.of(2020,01,22);
 
         // TEMPORAIRE : AJOUT DES PERKS ICI

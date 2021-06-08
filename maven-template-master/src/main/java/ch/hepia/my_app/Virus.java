@@ -9,19 +9,31 @@ import java.beans.PropertyChangeListener;
 
 public class Virus{
 
+
+  
   private double infectivity; // propagation du virus
   private double lethality; // a quel point ca tue
   private double resistance; //solidité du virus
-
+  
   //Toutes les compétences
   private List<Perk> perkLst;
-
+  
   private List<PropertyChangeListener> lstObservers;
-
+  
   //currentPoints is the amount of points 
   private int currentPoints;
+  
+  //Design Pattern Singleton
+  private static Virus virus;
 
-  public Virus(){
+  public static Virus getInstance(){
+    if (Virus.virus == null){
+      Virus.virus = new Virus();
+    }
+    return Virus.virus;
+  }
+  
+  private Virus(){
     //Takes constants "similar" to the real covid-19's "stats"
     this.infectivity =  0.15; //Aucune idée du chiffre a mettre au début
     this.lethality = 0.005; //0.5% de mortalitlé
