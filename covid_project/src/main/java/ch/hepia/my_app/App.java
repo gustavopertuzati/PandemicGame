@@ -315,8 +315,7 @@ public class App extends Application {
             
         }catch(Exception e){
             throw new RuntimeException(e);
-        }*/
-
+        }*/ 
         primaryStage.show();
     }
 

@@ -259,16 +259,14 @@ class ContentVirusMenu extends Group{
             HBox tmp = new HBox();
             for(int j = 0; j < 3; j++){
                 Button b = buttons.get(i*3+j + 12*(this.status - 1));
-                if(b.getTranslateX() == 0.0 && b.getTranslateY() == 0){
-                    b.setTranslateX((b.getWidth() + 30 * j)+1);
-                    b.setTranslateY((b.getHeight() + 100 * i)+1);
-                }
                 tmp.getChildren().add(b);
+                tmp.setTranslateY((100 * i)+1);
+                tmp.setMargin(b, new Insets(0,30,0,0));
             }
             this.buttonMenu.getChildren().add(tmp);
             this.buttonMenu.setMargin(tmp, new Insets(0, 0, 0, 30));
         }
-        this.buttonMenu.getChildren().add(this.infos);    
+        this.buttonMenu.getChildren().add(this.infos);
         this.buttonMenu.setViewOrder(0);
     }
 
