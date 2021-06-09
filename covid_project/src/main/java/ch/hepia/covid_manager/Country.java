@@ -30,7 +30,8 @@ public class Country {
 
     public Country(String countryName, int latitude, int longitude, int totalCases, int dailyCases, int totalDeaths,
         int dailyDeaths, int totalRecovered, int dailyRecovered, int size, int totalPopulation, String slug) {
-        this.slug = countryName;
+        this.slug = slug;
+        this.countryName = countryName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.totalCases = totalCases;
@@ -159,17 +160,20 @@ public class Country {
 
     @Override
     public String toString() {
-        return this.slug + ":" +
+       
+
+        return  "INSERT INTO `Country`(`slug`, `name`, `size`, `latitude`, `longitude`, `total_population`, `initial_total_cases`, `initial_total_active`, `initial_total_deaths`)\n\tVALUES ('"+this.slug+"', '"+this.countryName+"', "+this.size+","+this.latitude+","+this.longitude+","+this.totalPopulation+","+this.totalCases+","+this.totalActive+","+this.totalDeaths+ ");";
+        /*return this.slug + ":" +
             "\n\tcases: " + this.totalCases + " (+" + this.dailyCases + ")" +
             "\n\tactive: " + this.totalActive +
             "\n\tdeaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" +
             "\n\trecovered: " + this.totalRecovered + " (+" + this.dailyRecovered + ")\n";
+            */
     }
 
     public Color getColorFromCountry() {
         double ratio = (double)this.playerTotalActive() / (double)this.totalPopulation();
         ratio += (double)this.playerDailyDeaths() / (double)this.totalPopulation();
-        //System.out.println(this.countryName() + ": " + ratio);
         if (ratio <0.0015){
             return Color.GREEN;
         } else if (ratio < 0.0065){
@@ -182,7 +186,6 @@ public class Country {
     public double getCircleWidth() {
         double ratio = (double)this.playerTotalActive() / (double)this.totalPopulation();
         ratio += (double)this.playerDailyDeaths() / (double)this.totalPopulation();
-        //System.out.println(this.countryName() + ": " + ratio);
         if (ratio <0.0015){
             return 15;
         } else if (ratio < 0.0065){
@@ -203,6 +206,13 @@ public class Country {
 
     public Map<LocalDate, Integer[]> getCountryHistory(){
         return this.countryHistory;
+    }
+
+    public void goToDate(LocalDate date){
+        Integer[] data = this.countryHistory.get(date);
+        this.totalActive =  this.getTotalActiveByDate(date);
+        this.totalCases =  this.getTotalCasesByDate(date);
+        this.totalDeaths =  this.getTotalDeathsByDate(date);
     }
 
 

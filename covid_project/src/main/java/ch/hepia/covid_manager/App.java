@@ -89,6 +89,8 @@ import java.time.LocalDate;
 
 import javafx.stage.StageStyle;
 
+import java.util.concurrent.TimeUnit;
+
 public class App extends Application {
 
     public static void main(String[] args) {
@@ -123,7 +125,25 @@ public class App extends Application {
 
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries countries = test.getCountries("summary");
+        System.out.println("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL");
+        for (Country c : countries.listOfCountries()){
+            c.updateCountryHistory();
+            c.goToDate(LocalDate.of(2020, 1, 22));
+            System.out.println(c);
+            try{ 
+                TimeUnit.SECONDS.sleep(10);
+            }catch(Exception e){
+                throw new RuntimeException(e);
+            }
+            
+        }
+        System.out.println("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL");
+
         
+
+
+        System.exit(0);
+
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
         int newWidth = 1420;
         int newHeight = (int)(worldImage.getHeight() * newWidth / worldImage.getWidth());
@@ -141,7 +161,7 @@ public class App extends Application {
         healthyBar.setArcWidth(30.0);        
         healthyBar.setArcHeight(20.0);
         
-        System.out.println("total: " + countries.totalPop() + "\nsick: " + countries.totalCases() + "\ncalculated: " + (newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCases() / 100000.0));
+        //System.out.println("total: " + countries.totalPop() + "\nsick: " + countries.totalCases() + "\ncalculated: " + (newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCases() / 100000.0));
         //Barre des cas infectés
         Region sickBar = new Region();
         sickBar.opacityProperty().set(0.75);
@@ -266,7 +286,6 @@ public class App extends Application {
         scroller.setTranslateX(0);
 
         VBox root = new VBox(game,btBar);
-
         newHeight += 50;
         Scene finalScene = new Scene(root, newWidth, newHeight);
         primaryStage.setScene(finalScene);
@@ -285,7 +304,7 @@ public class App extends Application {
 
         Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1), e ->{
                 ld = ld.plusDays(1);
-                elapseDayForGame(countries, btBar, ld);
+                //elapseDayForGame(countries, btBar, ld);
         }));
         tl.setCycleCount(Timeline.INDEFINITE);
         tl.play();
@@ -298,24 +317,19 @@ public class App extends Application {
         v.addPoint();
         v.addPoint();
 
-        /*
-
         String driver = "com.mysql.jdbc.Driver";
         String url = "jdbc:mysql://localhost/";
         try{
             DataBaseCommunicator dbc = new DataBaseCommunicator(driver, url, "root", "root");
             System.out.println(dbc.executeQuery("USE covid"));
-            // faire un transaction si on veut insert
-            //System.out.println(dbc.executeUpdate("INSERT INTO `Country`(`slug`, `name`, `size`, `latitude`, `longitude`, `total_population`, `initial_total_cases`, `initial_total_active`, `initial_total_deaths`) VALUES ('kekistan', 'Republic of Keksitan', 3, 12, 14, 100, 1,1,0)"));
-            
+            // faire une transaction si on veut insert
             ResultSet rs = dbc.executeQuery("SELECT * FROM Country");
             if (rs.next()){
                 System.out.println(rs.getString(1));
             }
-            
         }catch(Exception e){
             throw new RuntimeException(e);
-        }*/ 
+        }
         primaryStage.show();
     }
 
