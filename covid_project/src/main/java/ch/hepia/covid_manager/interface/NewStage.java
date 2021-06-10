@@ -32,6 +32,7 @@ class NewStage {
         detailStage.setTitle(c.countryName());
 
         Text countryDetail = new Text("\n\n" + c.toString());
+
         Text countryMoreDetail = new Text("\n\n" + c.toString());
 
         Boolean sw = true;
