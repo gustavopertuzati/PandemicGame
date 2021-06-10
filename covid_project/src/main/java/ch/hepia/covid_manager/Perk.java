@@ -9,6 +9,18 @@ public abstract class Perk {
     private int costToUnlock;
     // peut être des coordonnées, des images...
 
+    public static Perk perkFactory(int id, String name, String description, int costToUnlock, double val, String type){
+        switch(type){
+            case "infecicty":
+                return new PerkInfectivity(id, name, description, val, costToUnlock);
+            case "resistance":
+                return new PerkResistance(id, name, description, val, costToUnlock);
+            case "lethatlity":
+                return new PerkLethality(id, name, description, val, costToUnlock);
+            default:
+                throw new RuntimeException("Type is invalid!!");
+        }
+    }
 
     public Perk(int id, String name, String description, int costToUnlock){
         this.id = id;
@@ -34,4 +46,7 @@ public abstract class Perk {
     public int cost(){
         return this.costToUnlock;
     }
+
+
+
 }

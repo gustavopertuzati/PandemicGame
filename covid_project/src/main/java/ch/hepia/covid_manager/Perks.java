@@ -6,6 +6,8 @@ import java.util.List;
 import javafx.scene.paint.Color;
 
 import java.lang.Math;
+import java.sql.ResultSet;
+
 import javafx.scene.control.*;
 import java.util.Optional;
 
@@ -98,5 +100,25 @@ public class Perks{
         this.addPerk(new PerkResistance(33, "kek I", "kek", 1, 1));
         this.addPerk(new PerkResistance(34, "kek II", "kek", 2, 5));
         this.addPerk(new PerkResistance(35, "kek III", "kek", 3, 10));
+    }
+
+    public static List<Perk> getPerksFromDb(){
+        List<Perk> res = new ArrayList<>();
+        
+        String req = "SELECT * FROM Perk";
+
+        try{
+            DataBaseCommunicator dbc = new DataBaseCommunicator(driver, url, "root", "root");
+            dbc.executeQuery("USE covid");
+            // faire une transaction si on veut insert
+            ResultSet rs = dbc.executeQuery(req);
+            while (rs.next()){
+                //selon le type du resultat, instancier une classe diff
+                res.add(Perk.perkFactory(rs.getInt(0), rs.getString(1), rs.getString(2), rs.getInt(3), (double)rs.getFloat(4), rs.getString(5)));
+            }
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+        return res;
     }
 }
