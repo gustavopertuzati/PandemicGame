@@ -88,29 +88,66 @@ CREATE TABLE IF NOT EXISTS `covid`.`UnlockedPerk` (
     ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
+-- procédure pour trouver l'infectivité du virus en fonction de son id (différent pour chaque partie)
 DELIMITER $
 CREATE PROCEDURE covid.totalInfectivity(IN id_virus INT UNSIGNED)
 BEGIN
     SELECT SUM(Perk.value) FROM UnlockedPerk INNER JOIN Perk ON UnlockedPerk.perk_id = Perk.id WHERE Perk.type = 'infectivity' AND UnlockedPerk.virus = id_virus; 
-END$
+END
+$
 DELIMITER ;
 
+-- procédure pour trouver la léthalité du virus en fonction de son id (différent pour chaque partie)
 DELIMITER $
 CREATE PROCEDURE covid.totalLethality(IN id_virus INT UNSIGNED)
 BEGIN
     SELECT SUM(Perk.value) FROM UnlockedPerk INNER JOIN Perk ON UnlockedPerk.perk_id = Perk.id WHERE Perk.type = 'lethality' AND UnlockedPerk.virus = id_virus; 
-END$
+END
+$
 DELIMITER ;
 
+-- procédure pour trouver la résistance du virus en fonction de son id (différent pour chaque partie)
 DELIMITER $
 CREATE PROCEDURE covid.totalResitance(IN id_virus INT UNSIGNED)
 BEGIN
     SELECT SUM(Perk.value) FROM UnlockedPerk INNER JOIN Perk ON UnlockedPerk.perk_id = Perk.id WHERE Perk.type = 'resistance' AND UnlockedPerk.virus = id_virus; 
-END$
+END
+$
 DELIMITER ;
 
--- reste à faire 2 vues et 1 trigger (pour verifier que les données sont bonnes quand on insert à la sauvegarde)
+-- trigger pour vérifier lors de la sauvegarde que les valeurs insérées pour chaque pays ne dépassent pas la population du pays
+DELIMITER $
+CREATE TRIGGER trigger_state BEFORE INSERT ON covid.State 
+FOR EACH ROW 
+BEGIN 
+    DECLARE pop INTEGER; 
+    SELECT total_population FROM State INNER JOIN Country ON State.slug = Country.slug INTO pop; 
+    IF new.current_total_cases > pop 
+    THEN 
+    	signal sqlstate '45000' 
+        set message_text = 'current total cases can not be greater than the total population of the country';
+    END IF;
+    IF new.current_total_active > pop
+    THEN 
+    	signal sqlstate '45000'
+        set message_text = 'current total actives can not be greater than the total population of the country';
+    END IF;
+    IF new.current_total_deaths > pop
+    THEN 
+    	signal sqlstate '45000'
+        set message_text = 'current total deaths can not be greater than the total population of the country';
+    END IF;
+END; 
+$
+DELIMITER ;
+
+-- vue pour obtenir le nombre de cas guéris en fonction des autres paramètres du pays une fois la sauvegarde effectuée
+CREATE VIEW totalRecovered AS
+SELECT State.slug, State.current_total_cases - (State.current_total_active + State.current_total_deaths) FROM State;
+
+-- vue pour obtenir le classement des pays les plus touchés par le covid à un instant t (d'après la dernière sauvegarde)
+CREATE VIEW ranking AS
+SELECT State.slug, (State.current_total_active / Country.total_population) AS proportion FROM State INNER JOIN Country ON State.slug = Country.slug ORDER BY proportion DESC, State.slug ASC;
 
 START TRANSACTION;
 USE `covid`;
