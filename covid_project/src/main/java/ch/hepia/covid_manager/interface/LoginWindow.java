@@ -7,6 +7,10 @@ import javafx.stage.StageStyle;
 import javafx.stage.Screen;
 import javafx.stage.Modality;
 import javafx.stage.Window;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.Stop;
+
 
 import javafx.scene.text.Font;
 
@@ -77,7 +81,7 @@ public class LoginWindow extends HBox{
         loginVBox.setSpacing(30);
 
         //////// Logo à mettre ici ////////
-        
+
         Label logo = new Label("COVID");
         logo.setStyle("-fx-text-fill: #59117c; -fx-font-size: 64px;");
         logo.setAlignment(Pos.TOP_LEFT);
@@ -86,7 +90,11 @@ public class LoginWindow extends HBox{
         loginRoot.setTop(logo);
         loginRoot.setCenter(loginVBox);
         loginRoot.setPrefSize(1200, 800);
-        loginRoot.setBackground(new Background(new BackgroundFill(Color.rgb(20, 20, 20), CornerRadii.EMPTY, Insets.EMPTY)));
+        Color begin = Color.rgb(10,10,10);
+        Color end = Color.rgb(20,20,20);
+        Stop[] stops = new Stop[] { new Stop(0, begin), new Stop(1, end)};
+        LinearGradient lg1 = new LinearGradient(0, 1, 0, 0, true, CycleMethod.NO_CYCLE, stops);
+        loginRoot.setBackground(new Background(new BackgroundFill(lg1, CornerRadii.EMPTY, Insets.EMPTY)));
 
         Scene scene = new Scene(loginRoot); 
         this.secondStage.setScene(scene); 
