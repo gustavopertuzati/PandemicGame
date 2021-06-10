@@ -93,7 +93,7 @@ public class LoginWindow extends HBox{
         Color begin = Color.rgb(10,10,10);
         Color end = Color.rgb(20,20,20);
         Stop[] stops = new Stop[] { new Stop(0, begin), new Stop(1, end)};
-        LinearGradient lg1 = new LinearGradient(0, 1, 0, 0, true, CycleMethod.NO_CYCLE, stops);
+        LinearGradient lg1 = new LinearGradient(0, 1, 0, 0, true, CycleMethod.REFLECT, stops);
         loginRoot.setBackground(new Background(new BackgroundFill(lg1, CornerRadii.EMPTY, Insets.EMPTY)));
 
         Scene scene = new Scene(loginRoot); 
