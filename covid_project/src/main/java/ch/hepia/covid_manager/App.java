@@ -239,52 +239,39 @@ public class App extends Application {
         btBar.setPrefWidth(newWidth);
         btBar.setMinHeight(40);
         
-        /////////////////////////////////////////////////
-        
-        
         
         // Sidebar left
-        
         // on va avoir besoin de ca pour les labels et tout dans cure
         //BorderPane virusContentPane = new BorderPane();
         //virusContentPane.getChildren().add();
-        
         Button cureBtn = btBar.buttonCure();
         LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight);
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
-        //cureImage.setOpacity(0.9);
-
         sbCure.setBackground(new Background(new BackgroundFill(new ImagePattern(cureImage), CornerRadii.EMPTY, Insets.EMPTY)));
-        
+        cureBtn.setOnAction(e ->{
+            sbCure.animate(sbVirus.isAnimating(),sbVirus );
+            //cvm.updateMenuContent();
+        });
         
         // Sidebar right
+        ContentVirusMenu cvm = new ContentVirusMenu(buttonsPerksmap, v, newWidth/3, newHeight);
         Image virusImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuVirus.png"));        
         ImageView iVvirus = new ImageView(virusImage);
         iVvirus.setFitWidth(newWidth/3);
         iVvirus.setFitHeight(newHeight);
         iVvirus.setOpacity(0.9);
         Group g = new Group();
-
-        ContentVirusMenu cvm = new ContentVirusMenu(buttonsPerksmap, v, newWidth/3, newHeight);
         g.getChildren().addAll(iVvirus, cvm);
-
         Button virusBtn = btBar.buttonVirus();
         RightSideBar sbVirus = new RightSideBar(newWidth/3, newWidth-(newWidth/3), g);
-
         virusBtn.setOnAction(e -> {
             sbVirus.animate( sbCure.isAnimating(), sbCure);
             cvm.updateLabel();
             cvm.refreshDisplay();
             
         });
-        cureBtn.setOnAction(e ->{
-            sbCure.animate(sbVirus.isAnimating(),sbVirus );
-            //cvm.updateMenuContent();
-        });
         sbVirus.setTranslateX(newWidth);
         
-////////////////////////////////////////////////
-
         game.getChildren().addAll(sbVirus, barName, healthyBar, sickBar, deathBar, vaccinatedBar, sbCure);
         scroller.setTranslateX(0);
 
@@ -293,11 +280,11 @@ public class App extends Application {
         Scene finalScene = new Scene(root, newWidth, newHeight);
         primaryStage.setScene(finalScene);
 
-        /*primaryStage.setResizable(false);
+        primaryStage.setResizable(false);
         primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue)
                 primaryStage.setMaximized(false);
-        });*/
+        });
 
         Rewards.addRewardCirclesToBox(box, countries, v, 15 );
         
@@ -341,7 +328,6 @@ public class App extends Application {
         b.updateDate(ld);
         c.elapseDayForAllCountries();
     }
-
 
     public void adjustCircles(Map<Country, Circle[]> map, double zoomWidth, Group container){
         for(Country c : map.keySet()){

@@ -1,7 +1,14 @@
 # Projet d'orientation
 ## Description du projet
-Ce projet a pour but de réaliser un jeu similaire à [Plage Inc.](https://fr.wikipedia.org/wiki/Plague_Inc.) basé sur le COVID-19. Le but du jeu étant d'erradiquer l'espèce humaine, ou de la sauver en fonction du mode de jeu.
-Ce projet utilise une/des API(s) pour récupérer des données sur l'avancement du virus dans le monde, afin de comparer l'avancement du joueur à celui de la "vraie vie".
+
+Travail de semestre réalisé par Thomas Dagier, Antoine Blancy et Gustavo Pertuzati dans le cadre du module "projet d'orientation". Ce projet a pour but de réaliser un jeu similaire à [Plage Inc.](https://fr.wikipedia.org/wiki/Plague_Inc.) basé sur le COVID-19. 
+
+## Le jeu 
+Vous commencez votre aventure au moment où le monde entend parler du covid. Votre objectif est simple: erradiquer l'espèce humaine. Pour cela, vous devrez faire progresser votre virus à travers le temps en le faisant évoluer grâce à des points de compétences gagnés au cours de la partie.
+
+Mais la tâche ne sera pas simple puisque les pays du monde entier se défendent contre votre virus. Il vous faudra donc faire des choix dificiles afin de privilègier certains asepcts de votre virus comme le taux de mortalité ou celui de propagation.
+
+En fin de partie, vous pourrez comparer votre progression avec celle du vrai covid-19 et ainsi determiner qui de vous ou du covid-19 est le meilleur.
 
 ## Prérequis 
 Ce projet utilise
@@ -13,11 +20,14 @@ Ce projet utilise
 ## Récupérer le projet
 Le projet est disponnible sur gitedu.hesge.ch, pour le récupérer localement il faut cloner le projet avec la commande suivante:
 ```
-git clone ssh://git@ssh.hesge.ch:10572/antoine.blancy/app-et-archi-web-tp-2020.git
+git clone https://gitedu.hesge.ch/thomas.dagierjo/covid-manager.git
 ```
 
+## La base de données
+parler de la base de données
+
 ## Compiler le projet
-Pour compiler le projet, il faut se rendre dans le dossier maven-template-master (nom à changer dans le futur), et utiliser la commande:
+(compilation à voir):
 ```
 mvn package
 ```
