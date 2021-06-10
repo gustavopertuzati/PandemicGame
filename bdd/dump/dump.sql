@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `covid`.`Perk` (
   `name` VARCHAR(127) NOT NULL,
   `description` VARCHAR(1023) NOT NULL,
   `price` INT UNSIGNED NOT NULL,
+  `value` INT UNSIGNED NOT NULL,
   `type` VARCHAR(127) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `perk_constraint`
@@ -54,7 +55,6 @@ CREATE TABLE IF NOT EXISTS `covid`.`Game` (
     ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-/* cette table n'est pas générée */
 CREATE TABLE IF NOT EXISTS `covid`.`State` (
   `game_id` INT UNSIGNED NOT NULL,
   `slug` VARCHAR(127) NOT NULL,
@@ -88,6 +88,29 @@ CREATE TABLE IF NOT EXISTS `covid`.`UnlockedPerk` (
     ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+DELIMITER $
+CREATE PROCEDURE covid.totalInfectivity(IN id_virus INT UNSIGNED)
+BEGIN
+    SELECT SUM(Perk.value) FROM UnlockedPerk INNER JOIN Perk ON UnlockedPerk.perk_id = Perk.id WHERE Perk.type = 'infectivity' AND UnlockedPerk.virus = id_virus; 
+END$
+DELIMITER ;
+
+DELIMITER $
+CREATE PROCEDURE covid.totalLethality(IN id_virus INT UNSIGNED)
+BEGIN
+    SELECT SUM(Perk.value) FROM UnlockedPerk INNER JOIN Perk ON UnlockedPerk.perk_id = Perk.id WHERE Perk.type = 'lethality' AND UnlockedPerk.virus = id_virus; 
+END$
+DELIMITER ;
+
+DELIMITER $
+CREATE PROCEDURE covid.totalResitance(IN id_virus INT UNSIGNED)
+BEGIN
+    SELECT SUM(Perk.value) FROM UnlockedPerk INNER JOIN Perk ON UnlockedPerk.perk_id = Perk.id WHERE Perk.type = 'resistance' AND UnlockedPerk.virus = id_virus; 
+END$
+DELIMITER ;
+
+-- reste à faire 2 vues et 1 trigger (pour verifier que les données sont bonnes quand on insert à la sauvegarde)
 
 START TRANSACTION;
 USE `covid`;
@@ -402,3 +425,90 @@ INSERT INTO `Country`(`slug`, `name`, `size`, `latitude`, `longitude`, `total_po
         VALUES ('zimbabwe', 'Zimbabwe', 1,2240,1561,15790716,0,0,0);
 COMMIT;
 
+-- TYPE
+START TRANSACTION;
+USE `covid`;
+INSERT INTO `Type`(`name`) VALUES ('infectivity');
+INSERT INTO `Type`(`name`) VALUES ('lethality');
+INSERT INTO `Type`(`name`) VALUES ('resistance');
+COMMIT;
+
+-- PERKS
+START TRANSACTION;
+USE `covid`;
+-- infectivity
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (0,'Blood I','Covid spreads through the blood',1,1,'infectivity');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (1,'Blood II','Covid causes hemophilia',1,1,'infectivity');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (2,'Blood III','Covid causes heavy internal damage',1,1,'infectivity');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (3,'Animal I','Covid is spread by birds',1,1,'infectivity');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (4,'Animal II','Covid spreads through livestock',1,1,'infectivity');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (5,'Animal III','Covid is spread by mosquitoes',1,1,'infectivity');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (6,'Air I','low transmission radius',1,1,'infectivity');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (7,'Air II','medium transmission radius',1,1,'infectivity');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (8,'Air III','high transmission radius',1,1,'infectivity');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (9,'Water I','Covid adapts partialy to tropical environments',1,1,'infectivity');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (10,'Water II','Covid easily adapts to tropical environments',1,1,'infectivity');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (11,'Water III','Covid spreads in drinking water',1,1,'infectivity');
+-- lethality
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (12,'Nausea I','Vomiting increased',1,1,'lethality');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (13,'Nausea II','Dehydration increased (more efficient in arid countries)',1,1,'lethality');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (14,'Nausea III','Fatal infections',1,1,'lethality');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (15,'Cough I','More efficient if air transmission increased',1,1,'lethality');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (16,'Cough II','Population in cold countries very susceptible to pneumonia',1,1,'lethality');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (17,'Cough III','Immune suppression and pulmonary edema',1,1,'lethality');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (18,'Anemia I','More efficient if blood transmission increased',1,1,'lethality');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (19,'Anemia II','Cells break down',1,1,'lethality');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (20,'Anemia III','The body is deprived of oxygen, causing unconsciousness and death',1,1,'lethality');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (21,'Insomnia I','Paranoia: Humans are less likely to receive the cure',1,1,'lethality');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (22,'Insomnia II','Humans behave irrationally',1,1,'lethality');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (23,'Insomnia III','Humans sink into madness',1,1,'lethality');
+-- restitance
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (24,'Bacterial resistance I','Covid is more resistant to other bacteria',1,1,'resistance');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (25,'Bacterial resistance II','Covid is more resistant in all environments',1,1,'resistance');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (26,'Bacterial resistance III','Covid is powerfull',1,1,'resistance');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (27,'Drug resistance I','Covid is more resistant to simple drugs',1,1,'resistance');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (28,'Drug resistance II','Simple drugs no longer have an effect on covid',1,1,'resistance');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (29,'Drug resistance III','Covids effct are only reduced with morphine',1,1,'resistance');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (30,'Vaccine resistance I','Vaccine is difficult to create',1,1,'resistance');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (31,'Vaccine resistance II','Vaccine becomes harder to create',1,1,'resistance');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (32,'Vaccine resistance III','Vaccine becomes very hard to create',1,1,'resistance');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (33,'Mutation I','Covid can mutate',1,1,'resistance');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (34,'Mutation II','Frequent mutations',1,1,'resistance');
+INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
+        VALUES (35,'Mutation III','Mutations prevent an effective vaccine from being found',1,1,'resistance');
+COMMIT;
