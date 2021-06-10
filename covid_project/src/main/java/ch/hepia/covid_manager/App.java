@@ -98,15 +98,18 @@ public class App extends Application {
     }
 
     /* TODO:
-     * -> Changer le nom du projet maven
      * -> Faire un bon readme
      * -> implémenter le menu de vaccin (à gauche)
-     * -> fixer le bug des valeurs négatives dans le défilement des jours
      * -> clarifier le code dans le chantier
      * -> modifier un peu les classes pour que ce soit plus modulaire -> surtout contentVirusMenu #Maille
      * -> commencer a faire un affichage dynamique (ex: l'espace entre les boutons dans le menu n'est plus une constante mais dépend de newWidth et newHeight)
 
-     * GUS -> faire la barre des cas
+
+     * -> Chargement + sauvegarde dans BDD
+     * -> Vues, Triggers, et Procedures pour la BDD
+     * -> Fix les chiffres incohérents dans le calcul de l'evolution
+     * -> Implémenter la comparaison avec la vraie vie pour la date actuelle du jeu
+
      */
 
     LocalDate ld;
