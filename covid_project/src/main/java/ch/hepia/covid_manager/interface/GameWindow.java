@@ -201,11 +201,30 @@ public class GameWindow extends Stage{
 
         //String options[] = {"Save", "Save and exit", "Exit"};
         MenuItem menuItem1 = new MenuItem("Save");
-        menuItem1.setStyle("-fx-background-color: transparent;");
+        menuItem1.setStyle("-fx-background-color: transparent; padding:100%;");
+        menuItem1.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                //DataBaseCommunicator.save(v, countries, idPlayer);
+            }
+        });
+
         MenuItem menuItem2 = new MenuItem("Save and exit");
         menuItem2.setStyle("-fx-background-color: transparent;");
+        menuItem2.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                //DataBaseCommunicator.save(v, countries, idPlayer);
+                System.exit(0);
+            }
+        });
+
         MenuItem menuItem3 = new MenuItem("Exit");
         menuItem3.setStyle("-fx-background-color: transparent;");
+        menuItem3.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                System.exit(0);
+            }
+        });
+
         MenuButton optionBox = new MenuButton("", null, menuItem1, menuItem2, menuItem3);
         Image img = new Image(this.getClass().getClassLoader().getResourceAsStream("images/bars.png"));
         ImageView menuIcon = new ImageView(img);
