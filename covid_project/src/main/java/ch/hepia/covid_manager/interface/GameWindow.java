@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.scene.control.ComboBox;
+
 
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
@@ -68,7 +70,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Point2D;
 import javafx.geometry.Insets;
@@ -91,33 +92,16 @@ import javafx.stage.StageStyle;
 
 import java.util.concurrent.TimeUnit;
 
-public class App extends Application {
-
-    public static void main(String[] args) {
-        launch(args);
+import javafx.collections.FXCollections;
 
 
-    }
+public class GameWindow extends Stage{
 
-    /* TODO:
-     * -> Faire un bon readme
-     * -> implémenter le menu de vaccin (à gauche)
-     * -> clarifier le code dans le chantier
-     * -> modifier un peu les classes pour que ce soit plus modulaire -> surtout contentVirusMenu #Maille
-     * -> commencer a faire un affichage dynamique (ex: l'espace entre les boutons dans le menu n'est plus une constante mais dépend de newWidth et newHeight)
-
-
-     * -> Chargement + sauvegarde dans BDD
-     * -> Vues, Triggers, et Procedures pour la BDD
-     * -> Fix les chiffres incohérents dans le calcul de l'evolution
-     * -> Implémenter la comparaison avec la vraie vie pour la date actuelle du jeu
-
-     */
-
-    @Override
-<<<<<<< HEAD
-    public void start(Stage primaryStage) {
-        //primaryStage.setResizable(false);
+    LocalDate ld;
+    
+    public GameWindow(int idPlayer){
+        System.out.println("\n\n\n=======\n" + idPlayer + "\n=======\n\n\n");
+        //this.setResizable(false);
         Virus v = Virus.getInstance();
         ld = LocalDate.of(2020,01,22);
 
@@ -129,25 +113,6 @@ public class App extends Application {
 
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries countries = test.getCountries("summary");
-        /*System.out.println("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL");
-        for (Country c : countries.listOfCountries()){
-            c.updateCountryHistory();
-            c.goToDate(LocalDate.of(2020, 1, 22));
-            System.out.println(c);
-            try{ 
-                TimeUnit.SECONDS.sleep(10);
-            }catch(Exception e){
-                throw new RuntimeException(e);
-            }
-            
-        }
-        System.out.println("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL");
-
-        
-
-
-        System.exit(0);*/
-
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
         int newWidth = 1420;
         int newHeight = (int)(worldImage.getHeight() * newWidth / worldImage.getWidth());
@@ -165,7 +130,6 @@ public class App extends Application {
         healthyBar.setArcWidth(30.0);        
         healthyBar.setArcHeight(20.0);
         
-        //System.out.println("total: " + countries.totalPop() + "\nsick: " + countries.totalCases() + "\ncalculated: " + (newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCases() / 100000.0));
         //Barre des cas infectés
         Region sickBar = new Region();
         sickBar.opacityProperty().set(0.75);
@@ -192,16 +156,14 @@ public class App extends Application {
         Label barName = new Label("World");
         barName.setStyle("-fx-font-size: 1.4em;");
         barName.setTextFill(Color.WHITE);
-        barName.setTranslateX(newWidth/2 - 25);
+        barName.setTranslateX(newWidth/3 + 10);
         barName.setTranslateY(newHeight - 73);
 
         //On récupère pour chaque pays, le cercle qui le représente ainsi que son cercle contour noir
         Map<Country,Circle[]> countryCirclesMap = countries.getCountryCirclesMap((e, c) ->  {
-            NewStage ct = new NewStage(c, primaryStage, e.getScreenX(), e.getScreenY());
+            NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY());
             sickBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
             deathBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
-            //pk on a null dans countryName ??
-            System.out.println(c.countryName());
             barName.setText(c.countryName());
         });
 
@@ -231,8 +193,28 @@ public class App extends Application {
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         
         Group game = new Group();
-        game.getChildren().add(scroller);
-        //game.getChildren().add("barre des cas");
+
+        String options[] = {"Save", "Save and exit", "Exit"};
+        ComboBox optionBox = new ComboBox(FXCollections.observableArrayList(options));
+        EventHandler<ActionEvent> event =
+                  new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+                switch(optionBox.getValue()){
+                    case "Save":
+                        Save();
+                        break;
+                }
+            }
+        };
+        optionBox.setOnAction(event);
+
+
+
+
+        game.getChildren().addAll(scroller, optionBox);
+        optionBox.setTranslateX(newWidth- 30);
+        
 
         BottomBar btBar = new BottomBar();
         btBar.setSpacing(30);        
@@ -279,12 +261,12 @@ public class App extends Application {
         VBox root = new VBox(game,btBar);
         newHeight += 50;
         Scene finalScene = new Scene(root, newWidth, newHeight);
-        primaryStage.setScene(finalScene);
+        this.setScene(finalScene);
 
-        primaryStage.setResizable(false);
-        primaryStage.maximizedProperty().addListener((observable, oldValue, newValue) -> {
+        this.setResizable(false);
+        this.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue)
-                primaryStage.setMaximized(false);
+                this.setMaximized(false);
         });
 
         Rewards.addRewardCirclesToBox(box, countries, v, 15 );
@@ -308,6 +290,7 @@ public class App extends Application {
         v.addPoint();
         v.addPoint();
 
+        /*
         String driver = "com.mysql.jdbc.Driver";
         String url = "jdbc:mysql://localhost/";
         try{
@@ -321,11 +304,29 @@ public class App extends Application {
         }catch(Exception e){
             throw new RuntimeException(e);
         }
-        primaryStage.show();
-=======
-    public void start(Stage primaryStage) throws Exception {
-        LoginWindow login = new LoginWindow();
-        login.loginScene();
->>>>>>> 78b36bf92ad2450abb724ddd1c89c52cc85d898d
+        */
+        this.initStyle(StageStyle.UNDECORATED);
+
+        this.show();
+    }
+
+    public void elapseDayForGame(Countries c, BottomBar b, LocalDate ld){
+        b.updateDate(ld);
+        c.elapseDayForAllCountries();
+    }
+
+    public void adjustCircles(Map<Country, Circle[]> map, double zoomWidth, Group container){
+        for(Country c : map.keySet()){
+            if(zoomWidth/400 < 1/(0.1*c.size())){
+                //Si le pays n'est pas assez grand pour etre affiché, et qu'on l'affiche, on l'enlève
+                if(container.getChildren().contains(map.get(c)[1]))
+                    container.getChildren().removeAll(map.get(c)[0], map.get(c)[1]);
+            }else{
+                //Si le pays est assez grand pour etre affiché, et qu'il n'est pas déjà affiché, on l'affiche
+                if(!container.getChildren().contains(map.get(c)[1])){
+                    container.getChildren().addAll(map.get(c)[0], map.get(c)[1]);
+                }
+            }
+        }
     }
 }
