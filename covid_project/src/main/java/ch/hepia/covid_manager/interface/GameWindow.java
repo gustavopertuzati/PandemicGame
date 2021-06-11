@@ -206,7 +206,7 @@ public class GameWindow extends Stage{
         menuItem2.setStyle("-fx-background-color: transparent;");
         MenuItem menuItem3 = new MenuItem("Exit");
         menuItem3.setStyle("-fx-background-color: transparent;");
-        MenuButton optionBox = new MenuButton("", null, menuItem1, menuItem2, menuItem3);//new ComboBox(FXCollections.observableArrayList(options));
+        MenuButton optionBox = new MenuButton("", null, menuItem1, menuItem2, menuItem3);
         Image img = new Image(this.getClass().getClassLoader().getResourceAsStream("images/bars.png"));
         ImageView menuIcon = new ImageView(img);
         menuIcon.setFitWidth(75);
