@@ -80,11 +80,11 @@ public class LoginWindow extends HBox{
         loginVBox.setAlignment(Pos.CENTER);
         loginVBox.setSpacing(30);
 
-        //////// Logo à mettre ici ////////
-
-        Label logo = new Label("COVID");
-        logo.setStyle("-fx-text-fill: #59117c; -fx-font-size: 64px;");
-        logo.setAlignment(Pos.TOP_LEFT);
+        Image img = new Image(this.getClass().getClassLoader().getResourceAsStream("images/logo.png"));
+        ImageView logo = new ImageView(img);
+        logo.setFitWidth(175);
+        logo.setFitHeight(155);
+        logo.setOpacity(0.85);
 
         BorderPane loginRoot = new BorderPane();
         loginRoot.setTop(logo);

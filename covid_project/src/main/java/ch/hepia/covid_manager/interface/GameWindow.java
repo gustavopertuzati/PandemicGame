@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.scene.control.ComboBox;
+
 
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
@@ -68,7 +70,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Point2D;
 import javafx.geometry.Insets;
@@ -90,6 +91,8 @@ import java.time.LocalDate;
 import javafx.stage.StageStyle;
 
 import java.util.concurrent.TimeUnit;
+
+import javafx.collections.FXCollections;
 
 
 public class GameWindow extends Stage{
@@ -190,8 +193,28 @@ public class GameWindow extends Stage{
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         
         Group game = new Group();
-        game.getChildren().add(scroller);
-        //game.getChildren().add("barre des cas");
+
+        String options[] = {"Save", "Save and exit", "Exit"};
+        ComboBox optionBox = new ComboBox(FXCollections.observableArrayList(options));
+        EventHandler<ActionEvent> event =
+                  new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+                switch(optionBox.getValue()){
+                    case "Save":
+                        Save();
+                        break;
+                }
+            }
+        };
+        optionBox.setOnAction(event);
+
+
+
+
+        game.getChildren().addAll(scroller, optionBox);
+        optionBox.setTranslateX(newWidth- 30);
+        
 
         BottomBar btBar = new BottomBar();
         btBar.setSpacing(30);        
