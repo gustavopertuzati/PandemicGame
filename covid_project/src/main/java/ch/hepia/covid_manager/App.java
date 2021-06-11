@@ -128,7 +128,7 @@ public class App extends Application {
 
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Countries countries = test.getCountries("summary");
-        System.out.println("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL");
+        /*System.out.println("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL");
         for (Country c : countries.listOfCountries()){
             c.updateCountryHistory();
             c.goToDate(LocalDate.of(2020, 1, 22));
@@ -145,7 +145,7 @@ public class App extends Application {
         
 
 
-        System.exit(0);
+        System.exit(0);*/
 
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
         int newWidth = 1420;
@@ -248,10 +248,6 @@ public class App extends Application {
         LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight);
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
         sbCure.setBackground(new Background(new BackgroundFill(new ImagePattern(cureImage), CornerRadii.EMPTY, Insets.EMPTY)));
-        cureBtn.setOnAction(e ->{
-            sbCure.animate(sbVirus.isAnimating(),sbVirus );
-            //cvm.updateMenuContent();
-        });
         
         // Sidebar right
         ContentVirusMenu cvm = new ContentVirusMenu(buttonsPerksmap, v, newWidth/3, newHeight);
@@ -269,6 +265,10 @@ public class App extends Application {
             cvm.updateLabel();
             cvm.refreshDisplay();
             
+        });
+        cureBtn.setOnAction(e ->{
+            sbCure.animate(sbVirus.isAnimating(),sbVirus );
+            //cvm.updateMenuContent();
         });
         sbVirus.setTranslateX(newWidth);
         
