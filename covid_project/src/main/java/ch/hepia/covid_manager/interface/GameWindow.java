@@ -3,6 +3,7 @@ package ch.hepia.covid_manager;
 import java.util.Scanner;
 
 import java.util.Map;
+import java.util.Observable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 import javafx.scene.control.ComboBox;
+import javafx.geometry.NodeOrientation;
+import javafx.scene.control.skin.ComboBoxListViewSkin;
 
 
 import javafx.animation.Timeline;
@@ -37,6 +40,7 @@ import javafx.scene.image.PixelReader;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ListView;
 
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
@@ -58,6 +62,8 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
+
+import javafx.scene.control.MenuButton;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -193,10 +199,43 @@ public class GameWindow extends Stage{
         
         Group game = new Group();
 
-        String options[] = {"Save", "Save and exit", "Exit"};
-        ComboBox optionBox = new ComboBox(FXCollections.observableArrayList(options));
-        System.out.println(optionBox.getValue());
-        EventHandler<ActionEvent> event =
+        //String options[] = {"Save", "Save and exit", "Exit"};
+        MenuItem menuItem1 = new MenuItem("Save");
+        menuItem1.setStyle("-fx-background-color: transparent; padding:100%;");
+        menuItem1.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                //DataBaseCommunicator.save(v, countries, idPlayer);
+            }
+        });
+
+        MenuItem menuItem2 = new MenuItem("Save and exit");
+        menuItem2.setStyle("-fx-background-color: transparent;");
+        menuItem2.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                //DataBaseCommunicator.save(v, countries, idPlayer);
+                System.exit(0);
+            }
+        });
+
+        MenuItem menuItem3 = new MenuItem("Exit");
+        menuItem3.setStyle("-fx-background-color: transparent;");
+        menuItem3.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                System.exit(0);
+            }
+        });
+
+        MenuButton optionBox = new MenuButton("", null, menuItem1, menuItem2, menuItem3);
+        Image img = new Image(this.getClass().getClassLoader().getResourceAsStream("images/bars.png"));
+        ImageView menuIcon = new ImageView(img);
+        menuIcon.setFitWidth(75);
+        menuIcon.setFitHeight(75);
+        optionBox.setWrapText(true);
+        optionBox.setMinWidth(75);
+        optionBox.setMinHeight(75);
+        optionBox.setGraphic(menuIcon);
+        optionBox.setStyle("-fx-background-color: transparent;");
+        /*EventHandler<ActionEvent> event =
                   new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e)
             {
@@ -214,10 +253,12 @@ public class GameWindow extends Stage{
                 }
             }
         };
-        optionBox.setOnAction(event);
+        optionBox.setOnAction(event);*/
 
         game.getChildren().addAll(scroller, optionBox);
-        optionBox.setTranslateX(newWidth- 30);
+        //optionBox.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+        //optionBox.getEditor().setStyle("-fx-alignment: baseline-left");
+
         
 
         BottomBar btBar = new BottomBar();
@@ -334,4 +375,5 @@ public class GameWindow extends Stage{
             }
         }
     }
+
 }

@@ -11,6 +11,10 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.Stop;
 
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+
 
 import javafx.scene.text.Font;
 
@@ -41,6 +45,7 @@ import javafx.geometry.Insets;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderWidths;
 
 
 public class LoginWindow extends HBox{
@@ -111,9 +116,35 @@ public class LoginWindow extends HBox{
         ImageView icon = new ImageView(img);
         icon.setFitWidth(135);
         icon.setFitHeight(135);
+        icon.addEventHandler(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                vbox.setBorder(new Border(new BorderStroke(Color.valueOf("#9E9E9E"),
+                BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY,
+                BorderWidths.DEFAULT)));
+                event.consume();
+            }
+        });
+
+        icon.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                vbox.setBorder(new Border(new BorderStroke(Color.valueOf("#9E9E9E"),
+                BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY,
+                BorderWidths.EMPTY)));
+                event.consume();
+            }
+        });
+
         icon.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                vbox.setBorder(new Border(new BorderStroke(Color.valueOf("#9E9E9E"),
+                BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY,
+                BorderWidths.DEFAULT)));
                 secondStage.close();
                 event.consume();
                 GameWindow game = new GameWindow(user.getUserId());
