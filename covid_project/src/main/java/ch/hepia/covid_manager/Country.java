@@ -160,15 +160,19 @@ public class Country {
 
     @Override
     public String toString() {
-       
-
-        return  "INSERT INTO `Country`(`slug`, `name`, `size`, `latitude`, `longitude`, `total_population`, `initial_total_cases`, `initial_total_active`, `initial_total_deaths`)\n\tVALUES ('"+this.slug+"', '"+this.countryName+"', "+this.size+","+this.latitude+","+this.longitude+","+this.totalPopulation+","+this.totalCases+","+this.totalActive+","+this.totalDeaths+ ");";
-        /*return this.slug + ":" +
+        return this.slug + ":" +
             "\n\tcases: " + this.totalCases + " (+" + this.dailyCases + ")" +
             "\n\tactive: " + this.totalActive +
             "\n\tdeaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" +
             "\n\trecovered: " + this.totalRecovered + " (+" + this.dailyRecovered + ")\n";
-            */
+    }
+
+    public String realData(LocalDate date){
+        return "Real data for " + date.toString() + ":" +
+            "\n\tcases: " + this.getTotalCasesByDate(date) + " (+" + this.getDailyCasesByDate(date) + ")" +
+            "\n\tactive: " + this.getTotalActiveByDate(date) +
+            "\n\tdeaths: " + this.getTotalDeathsByDate(date) + " (+" + this.getDailyDeathsByDate(date) + ")" +
+            "\n\trecovered: " + this.getTotalRecoveredByDate(date) + " (+" + this.getDailyRecoveredByDate(date) + ")\n";
     }
 
     public Color getColorFromCountry() {
