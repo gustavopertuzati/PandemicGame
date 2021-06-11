@@ -117,8 +117,7 @@ public class GameWindow extends Stage{
         int newWidth = 1420;
         int newHeight = (int)(worldImage.getHeight() * newWidth / worldImage.getWidth());
         
-        ImageView iV = new ImageView(worldImage);
-        
+        ImageView iV = new ImageView(worldImage);        
         
         //Barre des cas sains
         Rectangle healthyBar = new Rectangle(newWidth/3, 20.0, Color.GREEN);
@@ -161,7 +160,7 @@ public class GameWindow extends Stage{
 
         //On récupère pour chaque pays, le cercle qui le représente ainsi que son cercle contour noir
         Map<Country,Circle[]> countryCirclesMap = countries.getCountryCirclesMap((e, c) ->  {
-            NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY());
+            NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY(), ld);
             sickBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
             deathBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
             barName.setText(c.countryName());
@@ -196,21 +195,26 @@ public class GameWindow extends Stage{
 
         String options[] = {"Save", "Save and exit", "Exit"};
         ComboBox optionBox = new ComboBox(FXCollections.observableArrayList(options));
+        System.out.println(optionBox.getValue());
         EventHandler<ActionEvent> event =
                   new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e)
             {
-                switch(optionBox.getValue()){
-                    case "Save":
-                        Save();
+                switch((int)optionBox.getValue()){
+                    case 0://"Save":
+                        //DataBaseCommunicator.save(v, countries, idPlayer);
                         break;
+                    case 1://"Save and exit":
+                        System.out.println(optionBox.getValue());
+                        //DataBaseCommunicator.save(v, countries, idPlayer);
+                        System.exit(0);
+                    case 2://"Exit":
+                        System.out.println(optionBox.getValue());
+                        System.exit(0);
                 }
             }
         };
         optionBox.setOnAction(event);
-
-
-
 
         game.getChildren().addAll(scroller, optionBox);
         optionBox.setTranslateX(newWidth- 30);
@@ -230,6 +234,7 @@ public class GameWindow extends Stage{
         Button cureBtn = btBar.buttonCure();
         LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight);
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
+        //cureImage.setOpacity(0.9);
         sbCure.setBackground(new Background(new BackgroundFill(new ImagePattern(cureImage), CornerRadii.EMPTY, Insets.EMPTY)));
         
         // Sidebar right
@@ -277,7 +282,7 @@ public class GameWindow extends Stage{
 
         Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1), e ->{
                 ld = ld.plusDays(1);
-                //elapseDayForGame(countries, btBar, ld);
+                elapseDayForGame(countries, btBar, ld);
         }));
         tl.setCycleCount(Timeline.INDEFINITE);
         tl.play();

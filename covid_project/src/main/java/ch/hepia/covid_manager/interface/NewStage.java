@@ -25,14 +25,17 @@ import javafx.geometry.Insets;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
+import java.time.LocalDate;
+
 class NewStage {
 
-    NewStage(Country c, Stage primaryStage, double x, double y){
+    NewStage(Country c, Stage primaryStage, double x, double y, LocalDate date){
         Stage detailStage = new Stage();
         detailStage.setTitle(c.countryName());
 
         Text countryDetail = new Text("\n\n" + c.toString());
-        Text countryMoreDetail = new Text("\n\n" + c.toString());
+        c.updateCountryHistory();
+        Text countryMoreDetail = new Text("\n\n" + c.realData(date));
 
         Boolean sw = true;
         Button btn1 = new Button();
