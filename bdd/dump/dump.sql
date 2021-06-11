@@ -549,3 +549,16 @@ INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
 INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
         VALUES (35,'Mutation III','Mutations prevent an effective vaccine from being found',1,1,'resistance');
 COMMIT;
+
+
+
+START TRANSACTION;
+USE `covid`;
+
+INSERT INTO `Virus`(`id`, `infectivity`, `lethality`, `resistance`, `player_name`) 
+        VALUES (0, 0.15,0.05,0.005, "ThomasKek");
+INSERT INTO `Virus`(`id`, `infectivity`, `lethality`, `resistance`, `player_name`) 
+        VALUES (0, 0.15,0.05,0.005, "Banatwan");
+INSERT INTO `Virus`(`id`, `infectivity`, `lethality`, `resistance`, `player_name`) 
+        VALUES (0, 0.15,0.05,0.005, "Amon-Gus");
+

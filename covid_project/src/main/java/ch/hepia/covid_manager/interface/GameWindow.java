@@ -100,6 +100,11 @@ public class GameWindow extends Stage{
         System.out.println("\n\n\n=======\n" + idPlayer + "\n=======\n\n\n");
         //this.setResizable(false);
         Virus v = Virus.getInstance();
+        
+        
+
+
+
         ld = LocalDate.of(2020,01,22);
 
         // TEMPORAIRE : AJOUT DES PERKS ICI
@@ -266,27 +271,23 @@ public class GameWindow extends Stage{
         v.addPoint();
         v.addPoint();
         v.addPoint();
-
-        /*
+        
         String driver = "com.mysql.jdbc.Driver";
         String url = "jdbc:mysql://localhost/";
         try{
             DataBaseCommunicator dbc = new DataBaseCommunicator(driver, url, "root", "root");
             System.out.println(dbc.executeQuery("USE covid"));
             // faire une transaction si on veut insert
-            ResultSet rs = dbc.executeQuery("SELECT * FROM Country");
-            if (rs.next()){
-                System.out.println(rs.getString(1));
-            }
+            dbc.save(v, countries, new User(idPlayer, "ThomasKek"));
         }catch(Exception e){
             throw new RuntimeException(e);
         }
-        */
+        
         this.initStyle(StageStyle.UNDECORATED);
-
+        
         this.show();
     }
-
+    
     public void elapseDayForGame(Countries c, BottomBar b, LocalDate ld){
         b.updateDate(ld);
         c.elapseDayForAllCountries();
@@ -297,7 +298,7 @@ public class GameWindow extends Stage{
             if(zoomWidth/400 < 1/(0.1*c.size())){
                 //Si le pays n'est pas assez grand pour etre affiché, et qu'on l'affiche, on l'enlève
                 if(container.getChildren().contains(map.get(c)[1]))
-                    container.getChildren().removeAll(map.get(c)[0], map.get(c)[1]);
+                container.getChildren().removeAll(map.get(c)[0], map.get(c)[1]);
             }else{
                 //Si le pays est assez grand pour etre affiché, et qu'il n'est pas déjà affiché, on l'affiche
                 if(!container.getChildren().contains(map.get(c)[1])){
