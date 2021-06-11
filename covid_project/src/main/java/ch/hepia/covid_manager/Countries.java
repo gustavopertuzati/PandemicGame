@@ -20,8 +20,7 @@ import java.util.HashMap;
 
 import java.time.LocalDate;
 
-
-public class Countries {
+public class Countries{
 
     private List < Country > countries = new ArrayList < > ();
 

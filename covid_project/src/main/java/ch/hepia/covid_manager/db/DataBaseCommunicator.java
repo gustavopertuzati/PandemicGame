@@ -7,8 +7,6 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-
-
 public class DataBaseCommunicator{
   private String dbDriver;
   private String url;
@@ -24,8 +22,6 @@ public class DataBaseCommunicator{
     this.co = DriverManager.getConnection(this.url, this.user, this.pass);
   }
 
-  //Class.forName("com.mysql.jdbc.Driver");
-
   public ResultSet executeQuery(String query) throws SQLException, ClassNotFoundException{
     Class.forName(this.dbDriver);
     PreparedStatement pSt = this.co.prepareStatement(query);
@@ -40,9 +36,6 @@ public class DataBaseCommunicator{
     return rs;
   }
 
-
-
-  
   public void closeConnection() throws SQLException, ClassNotFoundException{
     this.co.close();
   }
