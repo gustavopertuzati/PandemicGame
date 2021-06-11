@@ -68,12 +68,19 @@ public class Countries{
                              .sum();
     }
 
+    public int totalRecovered(){
+        return this.countries.stream()
+                             .mapToInt(c -> c.playerTotalRecovered())
+                             .sum();
+    }
+
     public double totalDeaths(){
         return this.countries.stream()
                              .mapToDouble(c -> c.playerTotalDeaths())
                              .sum();
     }
 
+    // enlever au fur et a mesure les personnes qui sont mortes
     public double totalPop(){
         return this.countries.stream()
                                 .mapToDouble(c -> c.totalPopulation())

@@ -231,10 +231,10 @@ public class GameWindow extends Stage{
         // on va avoir besoin de ca pour les labels et tout dans cure
         //BorderPane virusContentPane = new BorderPane();
         //virusContentPane.getChildren().add();
+        ContentCureMenu ccm = new ContentCureMenu(countries, v, newWidth/3, newHeight);
         Button cureBtn = btBar.buttonCure();
-        LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight);
+        LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight, ccm);
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
-        //cureImage.setOpacity(0.9);
         sbCure.setBackground(new Background(new BackgroundFill(new ImagePattern(cureImage), CornerRadii.EMPTY, Insets.EMPTY)));
         
         // Sidebar right
