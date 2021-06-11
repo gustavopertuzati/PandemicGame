@@ -153,7 +153,7 @@ public class GameWindow extends Stage{
         Label barName = new Label("World");
         barName.setStyle("-fx-font-size: 1.4em;");
         barName.setTextFill(Color.WHITE);
-        barName.setTranslateX(newWidth/2 - 25);
+        barName.setTranslateX(newWidth/3 + 10);
         barName.setTranslateY(newHeight - 73);
 
         //On récupère pour chaque pays, le cercle qui le représente ainsi que son cercle contour noir
@@ -161,8 +161,6 @@ public class GameWindow extends Stage{
             NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY());
             sickBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
             deathBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
-            //pk on a null dans countryName ??
-            System.out.println(c.countryName());
             barName.setText(c.countryName());
         });
 
@@ -284,6 +282,8 @@ public class GameWindow extends Stage{
             throw new RuntimeException(e);
         }
         */
+        this.initStyle(StageStyle.UNDECORATED);
+
         this.show();
     }
 

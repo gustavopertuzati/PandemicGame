@@ -98,7 +98,7 @@ public class LoginWindow extends HBox{
 
         Scene scene = new Scene(loginRoot); 
         this.secondStage.setScene(scene); 
-        this.secondStage.setTitle("login page");
+        this.secondStage.initStyle(StageStyle.UNDECORATED);
         this.secondStage.show();
 
     }

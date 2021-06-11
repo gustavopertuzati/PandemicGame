@@ -33,11 +33,10 @@ public class User{
     private String username;
     private Button button = new Button();
 
-    public User(int id, String username){//, Button button){
+    public User(int id, String username){
 
         this.id = id;
         this.username = username;
-        //this.button = button;
 
     }
 
@@ -51,10 +50,6 @@ public class User{
 
     public int getUserId(){
         return this.id;
-    }
-
-    public Button getButton(){
-        return this.button;
     }
 
 }
