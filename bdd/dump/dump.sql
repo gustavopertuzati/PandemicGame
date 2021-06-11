@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `covid`.`Virus` (
 CREATE TABLE IF NOT EXISTS `covid`.`Game` (
   `virus_id` INT UNSIGNED NOT NULL,
   `start_date` VARCHAR(1023) NOT NULL,
-  `current_date` INT UNSIGNED NOT NULL,
+  `current_date` VARCHAR(1023) NOT NULL,
   PRIMARY KEY (`virus_id`),
   CONSTRAINT `virus_constraint`
     FOREIGN KEY (`virus_id`) REFERENCES `covid`.`Virus` (`id`)
@@ -148,6 +148,30 @@ SELECT State.slug, State.current_total_cases - (State.current_total_active + Sta
 -- vue pour obtenir le classement des pays les plus touchés par le covid à un instant t (d'après la dernière sauvegarde)
 CREATE VIEW ranking AS
 SELECT State.slug, (State.current_total_active / Country.total_population) AS proportion FROM State INNER JOIN Country ON State.slug = Country.slug ORDER BY proportion DESC, State.slug ASC;
+
+
+START TRANSACTION;
+USE `covid`;
+INSERT INTO `Virus`(`id`, `infectivity`, `lethality`, `resistance`, `player_name`) 
+        VALUES (0, 0.15,0.05,0.005, "ThomasKek");
+INSERT INTO `Virus`(`id`, `infectivity`, `lethality`, `resistance`, `player_name`) 
+        VALUES (1, 0.15,0.05,0.005, "Banatwan");
+INSERT INTO `Virus`(`id`, `infectivity`, `lethality`, `resistance`, `player_name`) 
+        VALUES (2, 0.15,0.05,0.005, "Amon-Gus");
+COMMIT;
+
+
+START TRANSACTION;
+USE `covid`;
+
+INSERT INTO `Game`(`virus_id`, `start_date`, `current_date`) 
+        VALUES (0,"2020-01-22","2020-01-22");
+INSERT INTO `Game`(`virus_id`, `start_date`, `current_date`) 
+        VALUES (1,"2020-01-22","2020-01-22");
+INSERT INTO `Game`(`virus_id`, `start_date`, `current_date`) 
+        VALUES (2,"2020-01-22","2020-01-22");
+COMMIT;
+
 
 START TRANSACTION;
 USE `covid`;
@@ -550,15 +574,4 @@ INSERT INTO `Perk`(`id`, `name`, `description`, `price`, `value`, `type`)
         VALUES (35,'Mutation III','Mutations prevent an effective vaccine from being found',1,1,'resistance');
 COMMIT;
 
-
-
-START TRANSACTION;
-USE `covid`;
-
-INSERT INTO `Virus`(`id`, `infectivity`, `lethality`, `resistance`, `player_name`) 
-        VALUES (0, 0.15,0.05,0.005, "ThomasKek");
-INSERT INTO `Virus`(`id`, `infectivity`, `lethality`, `resistance`, `player_name`) 
-        VALUES (0, 0.15,0.05,0.005, "Banatwan");
-INSERT INTO `Virus`(`id`, `infectivity`, `lethality`, `resistance`, `player_name`) 
-        VALUES (0, 0.15,0.05,0.005, "Amon-Gus");
 
