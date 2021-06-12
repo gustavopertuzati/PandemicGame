@@ -102,7 +102,7 @@ import javafx.collections.FXCollections;
 
 
 public class GameWindow extends Stage{
-
+    
     LocalDate ld;
     
     public GameWindow(int idPlayer){
@@ -110,20 +110,38 @@ public class GameWindow extends Stage{
         //this.setResizable(false);
         Virus v = Virus.getInstance();
         ld = LocalDate.of(2020,01,22);
-
+        
         // TEMPORAIRE : AJOUT DES PERKS ICI
         Perks perks = new Perks();
         perks.init();
         LinkedHashMap buttonsPerksmap = perks.buttonsPerksMap();
         //
-
+        
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
-        Countries countries = test.getCountries("summary");
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
         int newWidth = 1420;
         int newHeight = (int)(worldImage.getHeight() * newWidth / worldImage.getWidth());
         
         ImageView iV = new ImageView(worldImage);        
+        
+        String driver = "com.mysql.cj.jdbc.Driver";
+        String url = "jdbc:mysql://localhost/covid";
+        DataBaseCommunicator dbc;
+        try{
+            dbc = new DataBaseCommunicator(driver, url, "root", "root");
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+        
+        Countries countries = new Countries();
+        
+        dbc.loadCountries().thenAccept(c ->{
+            c.listOfCountries().forEach(i -> {
+                countries.addCountry(i);
+                System.out.println(i);
+            });
+        });
+        
         
         //Barre des cas sains
         Rectangle healthyBar = new Rectangle(newWidth/3, 20.0, Color.GREEN);
@@ -149,7 +167,7 @@ public class GameWindow extends Stage{
         deathBar.setStyle("-fx-background-color: black; -fx-background-radius: 10 0 0 10");
         deathBar.setTranslateX(newWidth/3 + 2);
         deathBar.setTranslateY(newHeight-45);
-
+        
         //Barre des cas vaccinés
         Region vaccinatedBar = new Region();
         vaccinatedBar.opacityProperty().set(0.75);
@@ -157,22 +175,22 @@ public class GameWindow extends Stage{
         vaccinatedBar.setStyle("-fx-background-color: blue; -fx-background-radius: 0 10 10 0");
         vaccinatedBar.setTranslateX(2*newWidth/3 - 62.0);
         vaccinatedBar.setTranslateY(newHeight-45);
-
+        
         Label barName = new Label("World");
         barName.setStyle("-fx-font-size: 1.4em;");
         barName.setTextFill(Color.WHITE);
         barName.setTranslateX(newWidth/3 + 10);
         barName.setTranslateY(newHeight - 73);
-
-        //On récupère pour chaque pays, le cercle qui le représente ainsi que son cercle contour noir
+        
+        
         Map<Country,Circle[]> countryCirclesMap = countries.getCountryCirclesMap((e, c) ->  {
             NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY(), ld);
             sickBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
             deathBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
             barName.setText(c.countryName());
         });
-
-
+        
+        
         Group box = new Group();
 
         box.getChildren().add(iV);
@@ -336,21 +354,7 @@ public class GameWindow extends Stage{
         v.addPoint();
         v.addPoint();
 
-        /*
-        String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost/";
-        try{
-            DataBaseCommunicator dbc = new DataBaseCommunicator(driver, url, "root", "root");
-            System.out.println(dbc.executeQuery("USE covid"));
-            // faire une transaction si on veut insert
-            ResultSet rs = dbc.executeQuery("SELECT * FROM Country");
-            if (rs.next()){
-                System.out.println(rs.getString(1));
-            }
-        }catch(Exception e){
-            throw new RuntimeException(e);
-        }
-        */
+    
         this.initStyle(StageStyle.UNDECORATED);
 
         this.show();
@@ -374,6 +378,11 @@ public class GameWindow extends Stage{
                 }
             }
         }
+    }
+
+
+    public void setCountryCircles(Map<Country,Circle[]> countryCirclesMap, Countries countries){
+
     }
 
 }

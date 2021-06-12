@@ -4,6 +4,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.HttpURLConnection;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -37,68 +38,6 @@ public class APICountryManager {
             apiLink = apiLink.substring(0, apiLink.length() - 1);
         }
         this.apiLink = apiLink;
-    }
-
-    public Countries getCountries(String request) {
-        if (apiLink.charAt(0) == '/') {
-            apiLink = apiLink.substring(1, apiLink.length());
-        }
-
-        Map < String, Country > map = new HashMap < > ();
-        Countries countries = new Countries();
-
-        try {
-            Map < String, Integer[] > coords = readFile("countrycoords.txt");
-
-            URL url = new URL(this.apiLink + "/" + request);
-            HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
-            connexion.setRequestMethod("GET");
-
-            int response = connexion.getResponseCode();
-            if (response != 200) {
-                System.out.println("HTTP Request failed with response code: " + response + "\n Data will be taken form contrycords.txt");
-                coords.forEach((k, v) -> countries.addCountry(new Country(k, v[0], v[1], 0, 0, 0, 0, 0, 0, v[2], 0, k)));
-                return countries;
-            }
-
-            String content = "";
-            Scanner sc = new Scanner(url.openStream());
-            while (sc.hasNext()) {
-                content += sc.nextLine();
-            }
-            sc.close();
-
-            JSONParser parser = new JSONParser();
-            JSONObject data_obj = (JSONObject) parser.parse(content);
-            JSONArray jsonArrayCountries = (JSONArray) data_obj.get("Countries");
-
-            for (int crt = 0; crt < jsonArrayCountries.size(); crt += 1) {
-                JSONObject i = (JSONObject) jsonArrayCountries.get(crt);
-                if (!coords.keySet().contains(i.get("Slug").toString())) {
-                    continue;
-                }
-                String countryName = i.get("Country").toString();
-                String countrySlug = i.get("Slug").toString();
-                int totalCases = Integer.parseInt(i.get("TotalConfirmed").toString());
-                int dailyCases = Integer.parseInt(i.get("NewConfirmed").toString());
-                int totalDeaths = Integer.parseInt(i.get("TotalDeaths").toString());
-                int dailyDeaths = Integer.parseInt(i.get("NewDeaths").toString());
-                int totalRecovered = Integer.parseInt(i.get("TotalRecovered").toString());
-                int dailyRecovered = Integer.parseInt(i.get("NewRecovered").toString());
-                Integer[] tmp = coords.get(countrySlug);
-                Integer latitude = tmp[0];
-                Integer longitude = tmp[1];
-                int size = tmp[2];
-                int totalPopulation = tmp[3];
-                Country currentCountry = new Country(countryName, latitude,
-                    longitude, totalCases, dailyCases, totalDeaths, dailyDeaths,
-                    totalRecovered, dailyRecovered, size, totalPopulation, countrySlug);
-                countries.addCountry(currentCountry);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return countries;
     }
 
     private Map < String, Integer[] > readFile(String path) {
