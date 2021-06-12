@@ -31,7 +31,7 @@ class NewStage {
 
     NewStage(Country c, Stage primaryStage, double x, double y, LocalDate date, CasesBar cb, Countries countries, int newWidth, int newHeight){
         Stage detailStage = new Stage();
-        detailStage.setTitle(c.countryName());
+        detailStage.setTitle(c.name());
 
         Text countryDetail = new Text("\n\n" + c.toString());
         c.updateCountryHistory();

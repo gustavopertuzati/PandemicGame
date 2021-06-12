@@ -20,7 +20,7 @@ public class Perks{
     public Perks() {}
 
     public Perks(List < Perk > listOfPerks) {
-        perks = listOfPerks;
+        this.perks = listOfPerks;
     }
 
     public void addPerk(Perk p) {
@@ -40,6 +40,8 @@ public class Perks{
         return this.perks;
     }
 
+    // return a liste of buttons assigned to each perks from the db
+    // used in the right side bar bar menu to unlock perks
     public LinkedHashMap < Button, Perk > buttonsPerksMap() {
         LinkedHashMap< Button, Perk> perksMap = new LinkedHashMap<>();
         for(Perk p: this.perks){
@@ -51,7 +53,7 @@ public class Perks{
         return perksMap;
     }
 
-    // méthode à remplacer par la bdd
+    // init perks from the database
     public void init(){
         try{
             this.perks = this.getPerksFromDb().get();
@@ -71,10 +73,9 @@ public class Perks{
             try{
                 DataBaseCommunicator dbc = new DataBaseCommunicator(driver, url, "root", "root");
                 dbc.executeQuery("USE covid");
-                // faire une transaction si on veut insert
+                // add transaction
                 ResultSet rs = dbc.executeQuery(req);
                 while (rs.next()){
-                    //selon le type du resultat, instancier une classe diff
                     res.add(Perk.perkFactory(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), (double)rs.getFloat(5), rs.getString(6)));
                 }
                 dbc.closeConnection();

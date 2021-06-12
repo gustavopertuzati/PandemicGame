@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-
 public class Cure{
-  
-    private double impact; // impact of the cure on the virus -> 0 at first, then when progression == 100% -> grows
-    private double progression; // current state of cure developpement
+    // impact of the cure on the virus -> 0 at first, then when progression == 100% -> grows
+    private double impact;
+    // current state of cure developpement
+    private double progression;
   
     private List<PropertyChangeListener> lstObservers;
 
@@ -47,9 +47,10 @@ public class Cure{
         this.updateObservers();
     }
 
+    // Design pattern observer
     public void updateObservers(){
         this.lstObservers.forEach(i->
-            i.propertyChange(new PropertyChangeEvent(this, "cure", new Double(this.progression - 0.05), new Double(this.progression)))
+            i.propertyChange(new PropertyChangeEvent(this, "cure", Double.valueOf(this.progression - 0.05), Double.valueOf(this.progression)))
         );
     }
 

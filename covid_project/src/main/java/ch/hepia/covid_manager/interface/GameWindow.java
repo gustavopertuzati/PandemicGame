@@ -100,6 +100,13 @@ import java.lang.Thread;
 
 import javafx.collections.FXCollections;
 
+/*
+    verifier que les updates des pays se font bien (cases, cured, deaths, actives, recovered) -> verifier que le ratio est ok
+    modifier un peut la manière dont on determine la couleur du cercle pour le pays
+    faire en sorte que le vaccin fonctionne (modifier le constructeur Cure() + gerer les updates des champs)
+
+*/
+
 public class GameWindow extends Stage{
     
     LocalDate ld;
@@ -155,6 +162,7 @@ public class GameWindow extends Stage{
         iV.setOnMouseClicked(e ->{
             cb.setSickBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCases() / 10000.0), 16.0);
             cb.setDeathBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalDeaths() / 10000.0), 16.0 );
+            cb.setVaccinatedBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCured() / 10000.0), 16.0 );
             cb.setBarName("World");
             optionBox.removeItems();
         });
@@ -163,7 +171,8 @@ public class GameWindow extends Stage{
                 NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY(), ld, cb, countries, newWidth, newHeight);
                 cb.setSickBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
                 cb.setDeathBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
-                cb.setBarName(c.countryName());
+                cb.setVaccinatedBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCured() / 10000.0), 16.0 );
+                cb.setBarName(c.name());
                 optionBox.removeItems();
             });;
         

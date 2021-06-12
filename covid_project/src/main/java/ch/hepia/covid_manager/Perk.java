@@ -1,14 +1,10 @@
 package ch.hepia.covid_manager;
 
-// classe bidon à mettre dans la bdd plus tard
-
 public abstract class Perk {
     private int id;
     private String name;
     private String description;
     private int costToUnlock;
-    // peut être des coordonnées, des images...
-
 
     //Design pattern FactoryMethod
     public static Perk perkFactory(int id, String name, String description, int costToUnlock, double val, String type){
@@ -48,7 +44,4 @@ public abstract class Perk {
     public int cost(){
         return this.costToUnlock;
     }
-
-
-
 }

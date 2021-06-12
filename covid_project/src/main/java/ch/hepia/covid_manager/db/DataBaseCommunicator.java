@@ -72,7 +72,7 @@ public class DataBaseCommunicator{
           int lat = rs.getInt(4);
           int longi = rs.getInt(5);
           countries.addCountry(new Country(rs.getString(2), lat, longi, totalCases,0, 
-                                                  totalDeaths, 0, totalRecovered, 0, size, 
+                                                  totalDeaths, 0, totalRecovered,0,0, 0, size, // added 0,0 -> totalCured / dailyCured
                                                   totalPop ,rs.getString(1)));
         }
       }catch(Exception e){

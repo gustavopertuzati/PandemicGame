@@ -19,14 +19,12 @@ import java.time.LocalDate;
 public class Countries{
 
     private List < Country > countries = new ArrayList < > ();
-
     private LinkedHashMap < LocalDate, int[] > worldHistory = new LinkedHashMap < > ();
-
 
     public Countries() {}
 
     public Countries(List < Country > listOfCountries) {
-        countries = listOfCountries;
+        this.countries = listOfCountries;
     }
 
     public void addCountry(Country c) {
@@ -44,7 +42,7 @@ public class Countries{
 
     public Country getCountryDataByName(String name) {
         for (Country c: this.countries) {
-            if (c.countryName().equals(name)) {
+            if (c.name().equals(name)) {
                 return c;
             }
         }
@@ -57,8 +55,8 @@ public class Countries{
 
     public double totalCases(){
         return this.countries.stream()
-                   .mapToDouble(c -> c.playerTotalCases())
-                   .sum();
+                             .mapToDouble(c -> c.playerTotalCases())
+                             .sum();
     }
 
     public int totalActive(){
@@ -79,11 +77,16 @@ public class Countries{
                              .sum();
     }
 
-    // enlever au fur et a mesure les personnes qui sont mortes
+    public int totalCured(){
+        return this.countries.stream()
+                             .mapToInt(c -> c.playerTotalCured())
+                             .sum();    
+    }
+
     public double totalPop(){
         return this.countries.stream()
-                                .mapToDouble(c -> c.totalPopulation())
-                                .sum();
+                             .mapToDouble(c -> c.totalPopulation())
+                             .sum();
     }
 
     public int totalDailyActive(){
@@ -94,20 +97,30 @@ public class Countries{
 
     public int totalDailyDeaths(){
         return this.countries.stream()
-                                .mapToInt(c -> c.playerDailyDeaths())
-                                .sum();        
+                             .mapToInt(c -> c.playerDailyDeaths())
+                             .sum();        
     }
 
     public int totalDailyRecovered(){
         return this.countries.stream()
-                                .mapToInt(c -> c.playerDailyRecovered())
-                                .sum();        
+                             .mapToInt(c -> c.playerDailyRecovered())
+                             .sum();    
     }
 
+    public int totalDailyCured(){
+        return this.countries.stream()
+                             .mapToInt(c -> c.playerDailyCured())
+                             .sum();    
+    }
+
+    // return the amount of points won by the player at the end of the day
+    // depends on the new cases, the new deaths and the minimum to earn points
     public int getTotalDailyPoints(){
         return (this.totalDailyActive() + this.totalDailyDeaths()) / 5000000;
     }
     
+    // return a list of coordinates for "num" country(s) as they will be used to
+    // place a reward circle that will be earned by the player
     public List<int[]> getRandomCountryCoordinates(int num){
         List<int[]> lstCoords = new ArrayList<>();
         for(int i = 0; i < num; i+=1){
@@ -121,22 +134,22 @@ public class Countries{
         return lstCoords;
     }
 
-    //Function that is called for 
+    // update fields for each country at the end of the day
     public void elapseDayForAllCountries(){
         this.countries.forEach(c->c.elapseDay());
     }
 
+    // global data for the world fields for each new day 
+    // (store actives, deaths, recovered and cured that will be displayed on the left side bar)
     public void updateWorldHistory(LocalDate date){
-        // remplacer 0 par totalDailyCured()
-        this.worldHistory.put(date, new int[] {this.totalDailyActive(), this.totalDailyDeaths(), this.totalDailyRecovered(),0});
+        this.worldHistory.put(date, new int[] {this.totalDailyActive(), this.totalDailyDeaths(), this.totalDailyRecovered(), this.totalDailyCured()});
     }
 
     public LinkedHashMap<LocalDate, int[]> worldHistory(){
         return this.worldHistory;
     }
 
-    
-
+    // return a map that contains two circles for each country (one for the color and one for the outline)
     public Map<Country, Circle[]> getCountryCirclesMap(BiConsumer<MouseEvent,Country> cons){
         Map<Country, Circle[]> map = new HashMap<>();
         this.countries.forEach(c->{

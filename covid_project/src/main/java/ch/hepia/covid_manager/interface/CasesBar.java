@@ -138,7 +138,7 @@ public class CasesBar{
         
         //Barre des cas vaccinés
         this.vaccinatedBar.opacityProperty().set(0.75);
-        this.vaccinatedBar.setPrefSize(0.0, 16.0); //je mets 0 parce qu'on a pas de données
+        this.vaccinatedBar.setPrefSize((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCured() / 100000.0), 16.0); //je mets 0 parce qu'on a pas de données
         this.vaccinatedBar.setStyle("-fx-background-color: blue; -fx-background-radius: 0 10 10 0");
         this.vaccinatedBar.setTranslateX(2*newWidth/3 - 62.0);
         this.vaccinatedBar.setTranslateY(newHeight-45);

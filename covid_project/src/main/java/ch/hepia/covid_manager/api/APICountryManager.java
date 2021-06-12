@@ -69,7 +69,8 @@ public class APICountryManager {
                         Integer.parseInt(a.get("Confirmed").toString()),
                         Integer.parseInt(a.get("Deaths").toString()),
                         Integer.parseInt(a.get("Recovered").toString()),
-                        Integer.parseInt(a.get("Active").toString())
+                        Integer.parseInt(a.get("Active").toString()),
+                        0
                         };
                         map.put(LocalDate.parse(dateString.substring(0, 10)), data);
                     }
