@@ -204,7 +204,11 @@ public class Country {
         //Use API to read history
         if(this.countryHistory.keySet().size() == 0){
             APICountryManager ap = new APICountryManager("https://api.covid19api.com");
-            this.countryHistory = ap.getCountryHistory(this);
+            try{
+                this.countryHistory = ap.getCountryHistory(this).get();
+            }catch(Exception e){
+                throw new RuntimeException(e);
+            }
         }
     }
 

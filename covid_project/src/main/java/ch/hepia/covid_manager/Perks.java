@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import javafx.scene.control.*;
 import java.util.Optional;
 
+import java.util.concurrent.CompletableFuture;
+
 public class Perks{
 
     private List < Perk > perks = new ArrayList < > ();
@@ -34,7 +36,7 @@ public class Perks{
         return Optional.empty();
     }
 
-    public List < Perk > listOfPerks() {
+    public List<Perk> listOfPerks() {
         return this.perks;
     }
 
@@ -51,29 +53,35 @@ public class Perks{
 
     // méthode à remplacer par la bdd
     public void init(){
-        this.perks = getPerksFromDb();
-    }
-
-    public static List<Perk> getPerksFromDb(){
-        List<Perk> res = new ArrayList<>();
-
-        String driver = "com.mysql.cj.jdbc.Driver";
-        String url = "jdbc:mysql://localhost/";
-        String req = "SELECT * FROM Perk";
-
         try{
-            DataBaseCommunicator dbc = new DataBaseCommunicator(driver, url, "root", "root");
-            dbc.executeQuery("USE covid");
-            // faire une transaction si on veut insert
-            ResultSet rs = dbc.executeQuery(req);
-            System.out.println(rs);
-            while (rs.next()){
-                //selon le type du resultat, instancier une classe diff
-                res.add(Perk.perkFactory(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), (double)rs.getFloat(5), rs.getString(6)));
-            }
+            this.perks = this.getPerksFromDb().get();
         }catch(Exception e){
             throw new RuntimeException(e);
         }
-        return res;
+    }
+
+    public static CompletableFuture<List<Perk>> getPerksFromDb(){
+        return CompletableFuture.supplyAsync( () ->{
+            List<Perk> res = new ArrayList<>();
+
+            String driver = "com.mysql.cj.jdbc.Driver";
+            String url = "jdbc:mysql://localhost/";
+            String req = "SELECT * FROM Perk";
+
+            try{
+                DataBaseCommunicator dbc = new DataBaseCommunicator(driver, url, "root", "root");
+                dbc.executeQuery("USE covid");
+                // faire une transaction si on veut insert
+                ResultSet rs = dbc.executeQuery(req);
+                while (rs.next()){
+                    //selon le type du resultat, instancier une classe diff
+                    res.add(Perk.perkFactory(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), (double)rs.getFloat(5), rs.getString(6)));
+                }
+                dbc.closeConnection();
+            }catch(Exception e){
+                throw new RuntimeException(e);
+            }
+            return res;
+        });
     }
 }
