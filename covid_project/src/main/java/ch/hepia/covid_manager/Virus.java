@@ -132,5 +132,7 @@ public class Virus{
     this.lstObservers.add(pcl);
   }
 
-
+  public List<Perk> getUnlockedPerks(){
+    return this.perkLst;
+  }
 }

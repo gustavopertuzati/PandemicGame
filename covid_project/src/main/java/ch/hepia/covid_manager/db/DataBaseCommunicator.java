@@ -11,6 +11,8 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+import java.time.LocalDate;
+
 
 
 public class DataBaseCommunicator{
@@ -52,18 +54,31 @@ public class DataBaseCommunicator{
   }
 
 
-  public void save(Virus v, Countries c, User user){
+  public void save(Virus v, Countries c, User user, LocalDate ld){
     String req = "UPDATE `Virus` SET `infectivity`="+ v.infectivity() +",`lethality`=" + v.lethality() + ",`resistance`=" + v.resistance() + "WHERE `id`="+user.getUserId();
-    System.out.println(req);
     try{
       this.executeUpdate(req);
     }catch (Exception e){
       throw new RuntimeException(e);
     }
+    req = "UPDATE `Game` SET `current_date`= '"+ ld.toString() + "' WHERE `virus_id`="+user.getUserId();
+    
+    try{
+      this.executeUpdate(req);
+    }catch (Exception e){
+      throw new RuntimeException(e);
+    }
+    v.getUnlockedPerks().forEach((Perk p) -> {
+      try{
+        this.executeUpdate("INSERT INTO `UnlockedPerk`(`perk_id`, `virus`) VALUES ("+ p.id() +"," + user.getUserId() + ") ON DUPLICATE KEY UPDATE `perk_id`=`perk_id`");
+      }catch(Exception e){
+        throw new RuntimeException(e);
+      }
+    });
     
     c.listOfCountries().forEach((Country co) ->{
         try{
-          this.executeQuery("UPDATE `State` SET `game_id`="+user.getUserId()+",`slug`=" + co.slug() + ",`current_total_cases`=" + co.playerTotalCases() + ",`current_total_active`=" + co.playerTotalActive() + ",`current_total_deaths`=" + co.playerTotalDeaths() +")");
+          this.executeUpdate("INSERT INTO `State`(`game_id`, `slug`, `current_total_cases`, `current_total_active`, `current_total_deaths`) VALUES ("+user.getUserId()+",'"+ co.slug()+"',"+co.playerTotalCases()+"," + co.playerTotalActive() + ", "+ co.playerTotalDeaths() +") ON DUPLICATE KEY UPDATE `current_total_cases` = "+co.playerTotalCases()+", `current_total_active` = " + co.playerTotalActive() +", `current_total_deaths` = " + co.playerTotalDeaths());
         }catch(Exception e){
           throw new RuntimeException(e);
         }

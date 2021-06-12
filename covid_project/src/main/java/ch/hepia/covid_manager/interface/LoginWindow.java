@@ -45,9 +45,9 @@ import javafx.scene.input.MouseEvent;
 
 public class LoginWindow extends HBox{
 
-    private User userT = new User(0, "ThomasKek");
-    private User userA = new User(1, "Banantwan");
-    private User userG = new User(2, "Amon-Gus");
+    private User userT = new User(1, "ThomasKek");
+    private User userA = new User(2, "Banantwan");
+    private User userG = new User(3, "Amon-Gus");
 
     private Stage secondStage = new Stage();
     

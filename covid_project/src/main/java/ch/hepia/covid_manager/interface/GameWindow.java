@@ -271,14 +271,14 @@ public class GameWindow extends Stage{
         v.addPoint();
         v.addPoint();
         v.addPoint();
-        
+        v.upgrade(perks.listOfPerks().get(0));
         String driver = "com.mysql.jdbc.Driver";
         String url = "jdbc:mysql://localhost/";
         try{
             DataBaseCommunicator dbc = new DataBaseCommunicator(driver, url, "root", "root");
             System.out.println(dbc.executeQuery("USE covid"));
             // faire une transaction si on veut insert
-            dbc.save(v, countries, new User(idPlayer, "ThomasKek"));
+            dbc.save(v, countries, new User(idPlayer, "ThomasKek"), ld);
         }catch(Exception e){
             throw new RuntimeException(e);
         }
