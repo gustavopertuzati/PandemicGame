@@ -130,18 +130,13 @@ public class GameWindow extends Stage{
         Region deathBar = new Region();
 
         Countries countries = new Countries();
-        Map<Country,Circle[]> countryCirclesMap;
         dbc.loadCountries().thenAccept(c ->{
             c.listOfCountries().forEach(i -> {
                 countries.addCountry(i);
             });
-            countryCirclesMap = c.getCountryCirclesMap((e, c) ->  {
-                NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY(), ld);
-                sickBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
-                deathBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
-                barName.setText(c.countryName());
-            });
+
         });
+        
 
 
         LinkedHashMap buttonsPerksmap = perks.buttonsPerksMap();
@@ -194,6 +189,12 @@ public class GameWindow extends Stage{
         
         
 
+        Map<Country,Circle[]> countryCirclesMap = countries.getCountryCirclesMap((e, c) ->  {
+                NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY(), ld);
+                sickBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
+                deathBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
+                barName.setText(c.countryName());
+            });;
         
         
         Group box = new Group();
