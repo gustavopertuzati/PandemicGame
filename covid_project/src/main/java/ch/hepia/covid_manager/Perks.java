@@ -6,8 +6,12 @@ import java.util.List;
 import javafx.scene.paint.Color;
 
 import java.lang.Math;
+import java.sql.ResultSet;
+
 import javafx.scene.control.*;
 import java.util.Optional;
+
+import java.util.concurrent.CompletableFuture;
 
 public class Perks{
 
@@ -16,7 +20,7 @@ public class Perks{
     public Perks() {}
 
     public Perks(List < Perk > listOfPerks) {
-        perks = listOfPerks;
+        this.perks = listOfPerks;
     }
 
     public void addPerk(Perk p) {
@@ -32,10 +36,12 @@ public class Perks{
         return Optional.empty();
     }
 
-    public List < Perk > listOfPerks() {
+    public List<Perk> listOfPerks() {
         return this.perks;
     }
 
+    // return a liste of buttons assigned to each perks from the db
+    // used in the right side bar bar menu to unlock perks
     public LinkedHashMap < Button, Perk > buttonsPerksMap() {
         LinkedHashMap< Button, Perk> perksMap = new LinkedHashMap<>();
         for(Perk p: this.perks){
@@ -47,56 +53,36 @@ public class Perks{
         return perksMap;
     }
 
-    // méthode à remplacer par la bdd
+    // init perks from the database
     public void init(){
-        this.addPerk(new PerkInfectivity(0, "Blood I", "kek", 1, 1));
-        this.addPerk(new PerkInfectivity(1, "Blood II", "kek", 2, 5));
-        this.addPerk(new PerkInfectivity(2, "Blood III", "kek", 3, 10));
-        
-        this.addPerk(new PerkInfectivity(3, "Animals I", "kek", 1, 1));
-        this.addPerk(new PerkInfectivity(4, "Animals II", "kek", 2, 5));
-        this.addPerk(new PerkInfectivity(5, "Animals III", "kek", 3, 10));
+        try{
+            this.perks = this.getPerksFromDb().get();
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+    }
 
-        this.addPerk(new PerkInfectivity(6, "Air I", "kek", 1, 1));
-        this.addPerk(new PerkInfectivity(7, "Air II", "kek", 2, 5));
-        this.addPerk(new PerkInfectivity(8, "Air III", "kek", 3, 10));
+    public static CompletableFuture<List<Perk>> getPerksFromDb(){
+        return CompletableFuture.supplyAsync( () ->{
+            List<Perk> res = new ArrayList<>();
 
-        this.addPerk(new PerkInfectivity(9, "Water I", "kek", 1, 1));
-        this.addPerk(new PerkInfectivity(10, "Water II", "kek", 2, 5));
-        this.addPerk(new PerkInfectivity(11, "Water III", "kek", 3, 10));
+            String driver = "com.mysql.cj.jdbc.Driver";
+            String url = "jdbc:mysql://localhost/";
+            String req = "SELECT * FROM Perk";
 
-        // INFECTIFIVITY
-        this.addPerk(new PerkLethality(12, "Nausea I", "kek", 1, 1));
-        this.addPerk(new PerkLethality(13, "Nausea II", "kek", 2, 5));
-        this.addPerk(new PerkLethality(14, "Nausea III", "kek", 3, 10));
-        
-        this.addPerk(new PerkLethality(15, "Cough I", "kek", 1, 1));
-        this.addPerk(new PerkLethality(16, "Cough II", "kek", 2, 5));
-        this.addPerk(new PerkLethality(17, "Cough III", "kek", 3, 10));
-
-        this.addPerk(new PerkLethality(18, "Anemia I", "kek", 1, 1));
-        this.addPerk(new PerkLethality(19, "Anemia II", "kek", 2, 5));
-        this.addPerk(new PerkLethality(20, "Anemia III", "kek", 3, 10));
-
-        this.addPerk(new PerkLethality(21, "Insomnia I", "kek", 1, 1));
-        this.addPerk(new PerkLethality(22, "Insomnia II", "kek", 2, 5));
-        this.addPerk(new PerkLethality(23, "Insomnia III", "kek", 3, 10));
-
-        // RESITANCE
-        this.addPerk(new PerkResistance(24, "Bacterial resistance I", "kek", 1, 1));
-        this.addPerk(new PerkResistance(25, "Bacterial resistance II", "kek", 2, 5));
-        this.addPerk(new PerkResistance(26, "Bacterial resistance III", "kek", 3, 10));
-        
-        this.addPerk(new PerkResistance(27, "Drug resistance I", "kek", 1, 1));
-        this.addPerk(new PerkResistance(28, "Drug resistance II", "kek", 2, 5));
-        this.addPerk(new PerkResistance(29, "Drug resistance III", "kek", 3, 10));
-
-        this.addPerk(new PerkResistance(30, "Vaccine resistance I", "kek", 1, 1));
-        this.addPerk(new PerkResistance(31, "Vaccine resistance II", "kek", 2, 5));
-        this.addPerk(new PerkResistance(32, "Vaccine resistance III", "kek", 3, 10));
-        
-        this.addPerk(new PerkResistance(33, "kek I", "kek", 1, 1));
-        this.addPerk(new PerkResistance(34, "kek II", "kek", 2, 5));
-        this.addPerk(new PerkResistance(35, "kek III", "kek", 3, 10));
+            try{
+                DataBaseCommunicator dbc = new DataBaseCommunicator(driver, url, "root", "root");
+                dbc.executeQuery("USE covid");
+                // add transaction
+                ResultSet rs = dbc.executeQuery(req);
+                while (rs.next()){
+                    res.add(Perk.perkFactory(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), (double)rs.getFloat(5), rs.getString(6)));
+                }
+                dbc.closeConnection();
+            }catch(Exception e){
+                throw new RuntimeException(e);
+            }
+            return res;
+        });
     }
 }

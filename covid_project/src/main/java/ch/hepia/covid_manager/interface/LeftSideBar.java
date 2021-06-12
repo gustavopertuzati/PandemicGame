@@ -29,7 +29,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 import javafx.util.Duration;
-
+import java.lang.Thread;
 
 public class LeftSideBar extends HBox{
     
@@ -44,13 +44,14 @@ public class LeftSideBar extends HBox{
         
         this.controlButton = btn;
 
+        this.getChildren().addAll(nodes);
+
         this.setPrefWidth(expandedLength);
         this.setPrefHeight(newHeight);
         this.setMinWidth(0);
         this.setVisible(false);
         
         setAlignment(Pos.CENTER);
-        getChildren().addAll(nodes);
     
         this.hideSidebar = new Transition(){
             { setCycleDuration(Duration.millis(250)); }
@@ -87,24 +88,27 @@ public class LeftSideBar extends HBox{
             }
         });
     }
-    
-    public void animate(boolean isOtherVisible, RightSideBar rsb){
-        
-        
-        System.out.println("Cure: " + isOtherVisible);
+
+    public void animate(boolean isOtherVisible, RightSideBar rsb){   
         if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
             //Si on ferme
             if(isAnimating){
                 hideSidebar.play();
+                try{
+                    Thread.sleep(250);
+                } catch(java.lang.InterruptedException ve){}
                 return;
             }else if(isOtherVisible){
-            //Si on ouvre et que le menu opposé est ouvert
+                //Si on ouvre et que le menu opposé est ouvert
                 rsb.animate(false, this);
             }
             //On ouvre
             setVisible(true);
             showSidebar.play();
         }
+        try{
+            Thread.sleep(250);
+        } catch(java.lang.InterruptedException ve){}
     }
 
     public boolean isAnimating(){

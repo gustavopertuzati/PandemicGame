@@ -3,8 +3,9 @@ package ch.hepia.covid_manager;
 public class PerkLethality extends Perk{
 
     private double lethality;
-
-    public PerkLethality(int id, String name, String description, double v1, int cost){
+    
+    //Design pattern FactoryMethod
+    public PerkLethality(int id, String name, String description, double v1, int cost) {
         super(id, name, description, cost);
         this.lethality = v1;
     }

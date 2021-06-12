@@ -11,6 +11,10 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.Stop;
 
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+
 
 import javafx.scene.text.Font;
 
@@ -41,6 +45,7 @@ import javafx.geometry.Insets;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderWidths;
 
 
 public class LoginWindow extends HBox{
@@ -80,11 +85,11 @@ public class LoginWindow extends HBox{
         loginVBox.setAlignment(Pos.CENTER);
         loginVBox.setSpacing(30);
 
-        //////// Logo à mettre ici ////////
-
-        Label logo = new Label("COVID");
-        logo.setStyle("-fx-text-fill: #59117c; -fx-font-size: 64px;");
-        logo.setAlignment(Pos.TOP_LEFT);
+        Image img = new Image(this.getClass().getClassLoader().getResourceAsStream("images/logo.png"));
+        ImageView logo = new ImageView(img);
+        logo.setFitWidth(175);
+        logo.setFitHeight(155);
+        logo.setOpacity(0.85);
 
         BorderPane loginRoot = new BorderPane();
         loginRoot.setTop(logo);
@@ -111,12 +116,38 @@ public class LoginWindow extends HBox{
         ImageView icon = new ImageView(img);
         icon.setFitWidth(135);
         icon.setFitHeight(135);
+        icon.addEventHandler(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                vbox.setBorder(new Border(new BorderStroke(Color.valueOf("#9E9E9E"),
+                BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY,
+                BorderWidths.DEFAULT)));
+                event.consume();
+            }
+        });
+
+        icon.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                vbox.setBorder(new Border(new BorderStroke(Color.valueOf("#9E9E9E"),
+                BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY,
+                BorderWidths.EMPTY)));
+                event.consume();
+            }
+        });
+
         icon.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                vbox.setBorder(new Border(new BorderStroke(Color.valueOf("#9E9E9E"),
+                BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY,
+                BorderWidths.DEFAULT)));
                 secondStage.close();
                 event.consume();
-                GameWindow game = new GameWindow(user.getUserId());
+                GameWindow game = new GameWindow(user.getUserId(), user.getUsername());
             }
         });
         icon.setOpacity(0.75);

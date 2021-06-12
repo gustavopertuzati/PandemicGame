@@ -1,18 +1,17 @@
 package ch.hepia.covid_manager;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import ch.hepia.covid_manager.Countries;
-import ch.hepia.covid_manager.Virus;
-
+import java.util.concurrent.CompletableFuture;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import java.time.LocalDate;
-
 
 
 public class DataBaseCommunicator{
@@ -29,9 +28,7 @@ public class DataBaseCommunicator{
     this.pass = pass;
     this.co = DriverManager.getConnection(this.url, this.user, this.pass);
   }
-
-  //Class.forName("com.mysql.jdbc.Driver");
-
+  
   public ResultSet executeQuery(String query) throws SQLException, ClassNotFoundException{
     Class.forName(this.dbDriver);
     PreparedStatement pSt = this.co.prepareStatement(query);
@@ -46,13 +43,37 @@ public class DataBaseCommunicator{
     return rs;
   }
 
-
-
-  
   public void closeConnection() throws SQLException, ClassNotFoundException{
     this.co.close();
   }
 
+  public CompletableFuture<Countries> loadCountries(){    
+    return CompletableFuture.supplyAsync(() -> {
+      Countries countries = new Countries();
+      try{
+        this.executeQuery("USE covid");
+        // faire une transaction si on veut insert
+        ResultSet rs = this.executeQuery("SELECT * FROM Country;");
+        //System.out.println(rs.getFetchSize());
+        while (rs.next()){
+          int totalPop = rs.getInt(6);
+          int totalCases = rs.getInt(7);
+          int totalActive = rs.getInt(8);
+          int totalDeaths = rs.getInt(9);
+          int totalRecovered = totalCases - totalActive - totalDeaths;
+          int size = rs.getInt(3);
+          int lat = rs.getInt(4);
+          int longi = rs.getInt(5);
+          countries.addCountry(new Country(rs.getString(2), lat, longi, totalCases,0, 
+                                                  totalDeaths, 0, totalRecovered,0,0, 0, size, // added 0,0 -> totalCured / dailyCured
+                                                  totalPop ,rs.getString(1)));
+        }
+      }catch(Exception e){
+          throw new RuntimeException(e);
+      }
+      return countries;
+    });
+  }
 
   public void save(Virus v, Countries c, User user, LocalDate ld){
     String req = "UPDATE `Virus` SET `infectivity`="+ v.infectivity() +",`lethality`=" + v.lethality() + ",`resistance`=" + v.resistance() + "WHERE `id`="+user.getUserId();
@@ -89,7 +110,5 @@ public class DataBaseCommunicator{
     throw new RuntimeException("Not implemeneted");
   }
 
-  public Countries loadCountries(){
-    throw new RuntimeException("Not implemeneted");
-  }
 }
+
