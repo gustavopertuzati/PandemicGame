@@ -147,12 +147,16 @@ public class GameWindow extends Stage{
 
         CasesBar cb = new CasesBar(newWidth, newHeight, countries);
 
+        DropdownMenu optionBox = new DropdownMenu(v, countries, idPlayer, ld);
+        optionBox.setLayoutX(10);
+        optionBox.setLayoutY(10);
 
         ImageView iV = new ImageView(worldImage);
         iV.setOnMouseClicked(e ->{
             cb.setSickBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCases() / 10000.0), 16.0);
             cb.setDeathBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalDeaths() / 10000.0), 16.0 );
             cb.setBarName("World");
+            optionBox.removeItems();
         });
 
         Map<Country,Circle[]> countryCirclesMap = countries.getCountryCirclesMap((e, c) ->  {
@@ -160,6 +164,7 @@ public class GameWindow extends Stage{
                 cb.setSickBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
                 cb.setDeathBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
                 cb.setBarName(c.countryName());
+                optionBox.removeItems();
             });;
         
         
@@ -191,43 +196,6 @@ public class GameWindow extends Stage{
         
         Group game = new Group();
 
-        //String options[] = {"Save", "Save and exit", "Exit"};
-        MenuItem menuItem1 = new MenuItem("Save");
-        menuItem1.setStyle("-fx-background-color: transparent; padding:100%;");
-        menuItem1.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
-                //DataBaseCommunicator.save(v, countries, idPlayer);
-            }
-        });
-
-        MenuItem menuItem2 = new MenuItem("Save and exit");
-        menuItem2.setStyle("-fx-background-color: transparent;");
-        menuItem2.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
-                //DataBaseCommunicator.save(v, countries, idPlayer);
-                System.exit(0);
-            }
-        });
-
-        MenuItem menuItem3 = new MenuItem("Exit");
-        menuItem3.setStyle("-fx-background-color: transparent;");
-        menuItem3.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
-                System.exit(0);
-            }
-        });
-
-        MenuButton optionBox = new MenuButton("", null, menuItem1, menuItem2, menuItem3);
-        Image img = new Image(this.getClass().getClassLoader().getResourceAsStream("images/bars.png"));
-        ImageView menuIcon = new ImageView(img);
-        menuIcon.setFitWidth(50);
-        menuIcon.setFitHeight(50);
-        optionBox.setWrapText(true);
-        optionBox.setMinWidth(75);
-        optionBox.setMinHeight(75);
-        optionBox.setGraphic(menuIcon);
-        optionBox.setStyle("-fx-background-color: transparent;");
-
         game.getChildren().addAll(scroller, optionBox);
 
         BottomBar btBar = new BottomBar();
@@ -256,11 +224,13 @@ public class GameWindow extends Stage{
         virusBtn.setOnAction(e -> {
             sbVirus.animate(sbCure.isAnimating(), sbCure);
             cvm.refreshDisplay();
-            
+            optionBox.removeItems();            
         });
         cureBtn.setOnAction(e ->{
             sbCure.animate(sbVirus.isAnimating(),sbVirus );
             ccm.refreshDisplay();
+            optionBox.removeItems();
+            optionBox.manageDisplay();
         });
         sbVirus.setTranslateX(newWidth);
         
