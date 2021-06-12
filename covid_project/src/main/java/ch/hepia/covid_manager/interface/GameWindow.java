@@ -105,8 +105,7 @@ public class GameWindow extends Stage{
     LocalDate ld;
     
     public GameWindow(int idPlayer, String playerName){
-        System.out.println("\n\n\n=======\n" + idPlayer + "\n=======\n\n\n");
-        //this.setResizable(false);
+        System.out.println(idPlayer + ": " + playerName + "\n\n");
         Virus v = Virus.getInstance();
         ld = LocalDate.of(2020,01,22);
         
@@ -122,18 +121,15 @@ public class GameWindow extends Stage{
 
         Perks perks = new Perks();
         perks.init();
-        System.out.println(perks.listOfPerks());
+        //System.out.println(perks.listOfPerks());
         
-        Region sickBar = new Region();
-        Region vaccinatedBar = new Region();
-        Region deathBar = new Region();
+        
 
         Countries countries = new Countries();
         dbc.loadCountries().thenAccept(c ->{
             c.listOfCountries().forEach(i -> {
                 countries.addCountry(i);
             });
-
         });
 
 
@@ -143,57 +139,27 @@ public class GameWindow extends Stage{
         APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
         int newWidth = 1420;
-        int newHeight = (int)(worldImage.getHeight() * newWidth / worldImage.getWidth());
-        
-        ImageView iV = new ImageView(worldImage);        
-        
-        
-        
+        int newHeight = (int)(worldImage.getHeight() * newWidth / worldImage.getWidth());        
+
+
+// ON VA FAIRE UNE CLASSE BAR STP GOUSSE
         //Barre des cas sains
-        Rectangle healthyBar = new Rectangle(newWidth/3, 20.0, Color.GREEN);
-        healthyBar.opacityProperty().set(0.75);
-        healthyBar.setStroke(Color.WHITE);
-        healthyBar.setStrokeWidth(3.0);
-        healthyBar.setTranslateX(newWidth/3);
-        healthyBar.setTranslateY(newHeight-47);
-        healthyBar.setArcWidth(30.0);        
-        healthyBar.setArcHeight(20.0);
-        
-        //Barre des cas infectés
-        sickBar.opacityProperty().set(0.75);
-        sickBar.setPrefSize((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCases() / 100000.0), 16.0);
-        sickBar.setStyle("-fx-background-color: red; -fx-background-radius: 10 0 0 10");
-        sickBar.setTranslateX(newWidth/3 + 2);
-        sickBar.setTranslateY(newHeight-45);
-        
-        //Barre des cas morts
-        deathBar.setPrefSize((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalDeaths() / 100000.0), 16.0);
-        deathBar.setStyle("-fx-background-color: black; -fx-background-radius: 10 0 0 10");
-        deathBar.setTranslateX(newWidth/3 + 2);
-        deathBar.setTranslateY(newHeight-45);
-        
-        //Barre des cas vaccinés
-        vaccinatedBar.opacityProperty().set(0.75);
-        vaccinatedBar.setPrefSize(0.0, 16.0); //je mets 0 parce qu'on a pas de données
-        vaccinatedBar.setStyle("-fx-background-color: blue; -fx-background-radius: 0 10 10 0");
-        vaccinatedBar.setTranslateX(2*newWidth/3 - 62.0);
-        vaccinatedBar.setTranslateY(newHeight-45);
-        
-        Label barName = new Label("World");
-        barName.setStyle("-fx-font-size: 1.4em;");
-        barName.setTextFill(Color.WHITE);
-        barName.setTranslateX(newWidth/3 + 10);
-        barName.setTranslateY(newHeight - 73);
-        
+
+        CasesBar cb = new CasesBar(newWidth, newHeight, countries);
 
 
-        
+        ImageView iV = new ImageView(worldImage);
+        iV.setOnMouseClicked(e ->{
+            cb.setSickBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCases() / 10000.0), 16.0);
+            cb.setDeathBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalDeaths() / 10000.0), 16.0 );
+            cb.setBarName("World");
+        });
 
         Map<Country,Circle[]> countryCirclesMap = countries.getCountryCirclesMap((e, c) ->  {
-                NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY(), ld);
-                sickBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
-                deathBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
-                barName.setText(c.countryName());
+                NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY(), ld, cb, countries, newWidth, newHeight);
+                cb.setSickBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
+                cb.setDeathBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
+                cb.setBarName(c.countryName());
             });;
         
         
@@ -212,6 +178,7 @@ public class GameWindow extends Stage{
 
             //La suppression et l'ajout des cercles en fonction du niveau du zoom
             adjustCircles(countryCirclesMap, scroller.getZoomWidth(),box );
+            
             e.consume();
         });
 
@@ -220,6 +187,7 @@ public class GameWindow extends Stage{
         scroller.setPannable(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroller.getStyleClass().add("edge-to-edge");
         
         Group game = new Group();
 
@@ -292,35 +260,27 @@ public class GameWindow extends Stage{
         });
         cureBtn.setOnAction(e ->{
             sbCure.animate(sbVirus.isAnimating(),sbVirus );
-            // je sais pas comment faire mais le add va pas la sinon on ajoute a chaque fois
-            // il faudra faire des updates ici -> pour les labels et les graphs
             ccm.refreshDisplay();
         });
         sbVirus.setTranslateX(newWidth);
         
-        game.getChildren().addAll(sbVirus, barName, healthyBar, sickBar, deathBar, vaccinatedBar, sbCure);
+        game.getChildren().addAll(sbVirus, cb.getBarName(), cb.getHealthyBar(), cb.getSickBar(), cb.getDeathBar(), cb.getVaccinatedBar(), sbCure);
         scroller.setTranslateX(0);
 
         VBox root = new VBox(game,btBar);
-        newHeight += 50;
-        Scene finalScene = new Scene(root, newWidth, newHeight);
+        Scene finalScene = new Scene(root, newWidth-1, newHeight+50);
         
         this.setScene(finalScene);
-        //this.setResizable(false);
         this.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue)
                 this.setMaximized(false);
-        });
-
-        Rewards.addRewardCirclesToBox(box, countries, v, 15 );
-        
+        });        
 
         //How many seconds for a day to elapse in seconds
-        int speed = 10;
-
-        Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1), e ->{
+        int speed = 5;
+        Timeline tl = new Timeline(new KeyFrame(Duration.seconds(speed), e ->{
                 ld = ld.plusDays(1);
-                elapseDayForGame(countries, btBar, ld);
+                elapseDayForGame(countries, btBar, ld, newWidth, newHeight, v, box);
         }));
         tl.setCycleCount(Timeline.INDEFINITE);
         tl.play();
@@ -339,10 +299,16 @@ public class GameWindow extends Stage{
         this.show();
     }
 
-    public void elapseDayForGame(Countries c, BottomBar b, LocalDate ld){
+    public void elapseDayForGame(Countries c, BottomBar b, LocalDate ld, int w, int h, Virus v, Group box){
         b.updateDate(ld);
         c.elapseDayForAllCountries();
         c.updateWorldHistory(ld);
+        if(c.getTotalDailyPoints() > 1){
+            v.addPoint();
+        }
+        if(ld.getDayOfYear() % 10 == 0){
+            Rewards.addRewardCirclesToBox(box, c, v, 2, w, h);
+        }
     }
 
     public void adjustCircles(Map<Country, Circle[]> map, double zoomWidth, Group container){
@@ -364,5 +330,4 @@ public class GameWindow extends Stage{
     public void setCountryCircles(Map<Country,Circle[]> countryCirclesMap, Countries countries){
 
     }
-
 }

@@ -61,7 +61,7 @@ public class DataBaseCommunicator{
         this.executeQuery("USE covid");
         // faire une transaction si on veut insert
         ResultSet rs = this.executeQuery("SELECT * FROM Country;");
-        System.out.println(rs.getFetchSize());
+        //System.out.println(rs.getFetchSize());
         while (rs.next()){
           int totalPop = rs.getInt(6);
           int totalCases = rs.getInt(7);

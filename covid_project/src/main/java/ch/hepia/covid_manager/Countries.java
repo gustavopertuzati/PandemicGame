@@ -105,7 +105,7 @@ public class Countries{
     }
 
     public int getTotalDailyPoints(){
-        return (this.totalDailyActive() + this.totalDailyDeaths()) / 1000;
+        return (this.totalDailyActive() + this.totalDailyDeaths()) / 5000000;
     }
     
     public List<int[]> getRandomCountryCoordinates(int num){
@@ -128,15 +128,14 @@ public class Countries{
 
     public void updateWorldHistory(LocalDate date){
         // remplacer 0 par totalDailyCured()
-        System.out.println(this.totalDailyActive());
-        System.out.println(this.totalDailyDeaths());
-        System.out.println(this.totalDailyRecovered());
         this.worldHistory.put(date, new int[] {this.totalDailyActive(), this.totalDailyDeaths(), this.totalDailyRecovered(),0});
     }
 
     public LinkedHashMap<LocalDate, int[]> worldHistory(){
         return this.worldHistory;
     }
+
+    
 
     public Map<Country, Circle[]> getCountryCirclesMap(BiConsumer<MouseEvent,Country> cons){
         Map<Country, Circle[]> map = new HashMap<>();

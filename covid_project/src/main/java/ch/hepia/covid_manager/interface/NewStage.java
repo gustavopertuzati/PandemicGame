@@ -29,7 +29,7 @@ import java.time.LocalDate;
 
 class NewStage {
 
-    NewStage(Country c, Stage primaryStage, double x, double y, LocalDate date){
+    NewStage(Country c, Stage primaryStage, double x, double y, LocalDate date, CasesBar cb, Countries countries, int newWidth, int newHeight){
         Stage detailStage = new Stage();
         detailStage.setTitle(c.countryName());
 
@@ -46,18 +46,21 @@ class NewStage {
         btn2.setText("X");
         btn2.setStyle("-fx-background-color: transparent; -fx-font-weight: bold");
         btn2.setOnAction(aevent -> {
+
+            cb.setSickBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCases() / 10000.0), 16.0);
+            cb.setDeathBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalDeaths() / 10000.0), 16.0 );
+            cb.setBarName("World");
+
             detailStage.hide();
-            System.out.println("kek");
         });
         
-
         VBox detailRoot = new VBox();
         detailRoot.getChildren().add(btn2);
         detailRoot.getChildren().add(countryDetail);
         detailRoot.getChildren().add(btn1);
         detailRoot.getChildren().add(countryMoreDetail);
 
-        VBox.setMargin(btn2, new Insets(5, 5, 0, 220));
+        VBox.setMargin(btn2, new Insets(5, 5, 0, 200));
         VBox.setMargin(btn1, new Insets(5, 0, 0, 5));
         VBox.setMargin(countryDetail, new Insets(-45, 0, -15, 5));
         VBox.setMargin(countryMoreDetail, new Insets(0, 0, 0, 5));
@@ -69,7 +72,7 @@ class NewStage {
         detailStage.initOwner(primaryStage);
         detailStage.setX(x);
         detailStage.setY(y);
-        detailStage.setWidth(250);
+        detailStage.setWidth(230);
         detailStage.setHeight(130);
         detailStage.initStyle(StageStyle.UNDECORATED);
         detailStage.setOpacity(0.8);

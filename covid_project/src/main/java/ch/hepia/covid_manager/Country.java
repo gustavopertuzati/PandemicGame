@@ -160,7 +160,7 @@ public class Country {
 
     @Override
     public String toString() {
-        return this.slug + ":" +
+        return this.countryName + ":" +
             "\n\tcases: " + this.totalCases + " (+" + this.dailyCases + ")" +
             "\n\tactive: " + this.totalActive +
             "\n\tdeaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" +
@@ -168,7 +168,7 @@ public class Country {
     }
 
     public String realData(LocalDate date){
-        return "Real data for " + date.toString() + ":" +
+        return "Real data for the " + date.toString() + ":" +
             "\n\tcases: " + this.getTotalCasesByDate(date) + " (+" + this.getDailyCasesByDate(date) + ")" +
             "\n\tactive: " + this.getTotalActiveByDate(date) +
             "\n\tdeaths: " + this.getTotalDeathsByDate(date) + " (+" + this.getDailyDeathsByDate(date) + ")" +
@@ -230,9 +230,9 @@ public class Country {
         //This depends on the measures taken by the country ( i.e. confinement or remote work etc...)
         int nbPpl = 12; 
         //Chance to infect depends on whether or not masks are enforced etc...
-        double chanceToInfect = 0.05;
+        double chanceToInfect = Virus.getInstance().infectivity();
 
-        int newCases = (int) Math.round(this.totalActive*nbPpl*chanceToInfect);
+        int newCases = (int) Math.round(this.totalActive*nbPpl*chanceToInfect)+2;
 
         if (newCases > this.totalPopulation - this.totalDeaths - this.totalActive - this.totalRecovered){
             this.dailyCases = newCases;
@@ -245,8 +245,8 @@ public class Country {
     private void newRecoveries(){
         Random rand = new Random();
         //This should be about a 5% recovery everytime this method is called
-        double randDouble =  rand.nextGaussian()*0.01;
-        int newRecov = (int)randDouble * this.totalActive;
+        double randDouble =  rand.nextGaussian()*0.0001*(1-Virus.getInstance().resistance());
+        int newRecov = (int)randDouble * this.totalActive+2;
 
         this.totalActive -= newRecov;
         this.totalRecovered += newRecov;
@@ -255,8 +255,8 @@ public class Country {
     private void newDeaths(){
         Random rand = new Random();
         //This should be about a .5% death rate everytime this method is called
-        double randDouble =  rand.nextGaussian()*0.005;
-        int newDead = (int)randDouble * this.totalActive;
+        double randDouble =  rand.nextGaussian()*Virus.getInstance().lethality() ;
+        int newDead = (int)randDouble * this.totalActive+2;
 
         this.totalActive -= newDead;
         this.totalDeaths += newDead;

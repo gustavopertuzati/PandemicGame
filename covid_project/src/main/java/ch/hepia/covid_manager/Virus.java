@@ -90,16 +90,9 @@ public class Virus{
   public void upgrade(Perk p){
 
     if (this.currentPoints < p.cost()){
-      //Pas assez de points pour acheter l'amélioration
-      //Normalement, ne devrait pas rentrer ici, vue que l'option d'améliorer
-      //n'est disponnible que si on a assez de points
-      System.out.println("Not enough points!");
       return;
     }
     if(this.hasPerk(p)){
-      //Déjà recu cette amélioration
-      //Pareil qu'en haut, ne devrait pas rentrer ici
-      System.out.println("Already have this perk!");
       return;
     }
     this.currentPoints -= p.cost();

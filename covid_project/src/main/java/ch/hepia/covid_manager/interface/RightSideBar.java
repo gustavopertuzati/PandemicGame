@@ -64,24 +64,7 @@ class RightSideBar extends HBox{
     }
 
     public void animate(boolean isOtherVisible, LeftSideBar lsb){
-
-        //if(isAnimating){return;};
-        //isAnimating = true;
-        /*
-        tt.setFromX(getTranslateX());
-        System.out.println(getTranslateX());
-            if(getTranslateX() <= hiddenLength){
-                tt.setToX(getTranslateX() + expandedLength);
-                isShowing = false;
-            }else if(!isOtherVisible){
-                tt.setToX(getTranslateX() - expandedLength);
-                lsb.animate(false, this);
-                isShowing = true;
-            }
-        */
-        //Si on ferme
         if(getTranslateX() <= hiddenLength ){
-
             tt.setToX(getTranslateX() + expandedLength);
             isShowing = false;
         }else{

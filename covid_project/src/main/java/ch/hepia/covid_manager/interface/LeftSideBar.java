@@ -90,7 +90,6 @@ public class LeftSideBar extends HBox{
     }
 
     public void animate(boolean isOtherVisible, RightSideBar rsb){   
-        System.out.println("Cure: " + isOtherVisible);
         if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
             //Si on ferme
             if(isAnimating){
