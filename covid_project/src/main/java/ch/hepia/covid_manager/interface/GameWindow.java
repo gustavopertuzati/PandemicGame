@@ -96,16 +96,15 @@ import java.time.LocalDate;
 
 import javafx.stage.StageStyle;
 
-import java.util.concurrent.TimeUnit;
+import java.lang.Thread;
 
 import javafx.collections.FXCollections;
-
 
 public class GameWindow extends Stage{
     
     LocalDate ld;
     
-    public GameWindow(int idPlayer){
+    public GameWindow(int idPlayer, String playerName){
         System.out.println("\n\n\n=======\n" + idPlayer + "\n=======\n\n\n");
         //this.setResizable(false);
         Virus v = Virus.getInstance();
@@ -253,8 +252,8 @@ public class GameWindow extends Stage{
         MenuButton optionBox = new MenuButton("", null, menuItem1, menuItem2, menuItem3);
         Image img = new Image(this.getClass().getClassLoader().getResourceAsStream("images/bars.png"));
         ImageView menuIcon = new ImageView(img);
-        menuIcon.setFitWidth(75);
-        menuIcon.setFitHeight(75);
+        menuIcon.setFitWidth(50);
+        menuIcon.setFitHeight(50);
         optionBox.setWrapText(true);
         optionBox.setMinWidth(75);
         optionBox.setMinHeight(75);
@@ -299,7 +298,7 @@ public class GameWindow extends Stage{
         //virusContentPane.getChildren().add();
         ContentCureMenu ccm = new ContentCureMenu(countries, v, newWidth/3, newHeight);
         Button cureBtn = btBar.buttonCure();
-        LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight, ccm);
+        LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight);
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
         sbCure.setBackground(new Background(new BackgroundFill(new ImagePattern(cureImage), CornerRadii.EMPTY, Insets.EMPTY)));
         
@@ -322,19 +321,25 @@ public class GameWindow extends Stage{
         });
         cureBtn.setOnAction(e ->{
             sbCure.animate(sbVirus.isAnimating(),sbVirus );
+            try{
+                Thread.sleep(200);
+            } catch(java.lang.InterruptedException ve){}
+            sbCure.addContent(ccm);
             //cvm.updateMenuContent();
         });
         sbVirus.setTranslateX(newWidth);
         
         game.getChildren().addAll(sbVirus, barName, healthyBar, sickBar, deathBar, vaccinatedBar, sbCure);
+        //game.setStyle("-fx-background-color: #FFFFFF;");
         scroller.setTranslateX(0);
 
         VBox root = new VBox(game,btBar);
         newHeight += 50;
-        Scene finalScene = new Scene(root, newWidth, newHeight);
+        Scene finalScene = new Scene(root, newWidth, newHeight);//, Color.BLACK);
+        
         this.setScene(finalScene);
-
-        this.setResizable(false);
+        //finalScene.setFill(Color.web("#FFFFFF"));
+        //this.setResizable(false);
         this.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue)
                 this.setMaximized(false);
