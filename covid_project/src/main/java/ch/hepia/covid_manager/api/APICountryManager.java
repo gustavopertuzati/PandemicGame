@@ -40,100 +40,45 @@ public class APICountryManager {
         this.apiLink = apiLink;
     }
 
-    private Map < String, Integer[] > readFile(String path) {
-        Map < String, Integer[] > myMap = new HashMap < > ();
-        try {
-            Scanner sc = new Scanner(this.getClass().getClassLoader().getResourceAsStream(path));
-            while (sc.hasNextLine()) {
-                String[] tmpStr = sc.nextLine().split("/");
-                Integer[] tmpInt = {
-                    Integer.parseInt(tmpStr[1]),
-                    Integer.parseInt(tmpStr[2]),
-                    Integer.parseInt(tmpStr[3]),
-                    Integer.parseInt(tmpStr[4])
-                };
-                myMap.put(tmpStr[0], tmpInt);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return myMap;
-    }
+    public CompletableFuture<Map<LocalDate, Integer[]>> getCountryHistory(Country c) {
+        return CompletableFuture.supplyAsync(()->{
+            Map < LocalDate, Integer[] > map = new HashMap <> ();
+            try {
+                URL url = new URL(this.apiLink + "/total/country/" + c.slug());
+                HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
+                connexion.setRequestMethod("GET");
 
-    //Utilisé à la main lentement pour récupérer les coordonnées
-    //Provoque l'erreur Too Many Requests, donc fait à la main 
-    //Puis stocké dans le fichier ressources/countrycoords
-    private double[] getCountryCoord(String slug) {
+                int response = connexion.getResponseCode();
+                if (response != 200) {
+                    System.out.println("HTTP Request failed with response code: " + response + "\n Data will be taken form contrycords.txt");
+                }
 
-        double[] coords = new double[2];
-        try {
-            URL url = new URL(this.apiLink + "/dayone/country/" + slug + "/status/confirmed");
-            HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
-            connexion.setRequestMethod("GET");
+                String content = "";
+                Scanner sc = new Scanner(url.openStream());
+                while (sc.hasNext()) {
+                    content += sc.nextLine();
+                }
+                sc.close();
+                JSONParser parser = new JSONParser();
+                JSONArray data_obj = (JSONArray) parser.parse(content);
 
-            int response = connexion.getResponseCode();
-            if (response != 200) {
-                throw new RuntimeException("HTTP Request failed with response code: " + response);
-            }
+                for (Object i: data_obj) {
+                    JSONObject a = (JSONObject) i;
+                    String dateString = a.get("Date").toString();
+                    Integer[] data = {
+                        Integer.parseInt(a.get("Confirmed").toString()),
+                        Integer.parseInt(a.get("Deaths").toString()),
+                        Integer.parseInt(a.get("Recovered").toString()),
+                        Integer.parseInt(a.get("Active").toString())
+                        };
+                        map.put(LocalDate.parse(dateString.substring(0, 10)), data);
+                    }
 
-            String content = "";
-            Scanner sc = new Scanner(url.openStream());
-            while (sc.hasNext()) {
-                content += sc.nextLine();
-            }
-            sc.close();
-
-            JSONParser parser = new JSONParser();
-            JSONArray data_obj = (JSONArray) parser.parse(content);
-
-            JSONObject i = (JSONObject) data_obj.get(0);
-
-            coords[0] = Double.parseDouble(i.get("Lat").toString());
-            coords[1] = Double.parseDouble(i.get("Lon").toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return coords;
-    }
-
-    public Map < LocalDate, Integer[] > getCountryHistory(Country c) {
-        Map < LocalDate, Integer[] > map = new HashMap < > ();
-        try {
-
-            URL url = new URL(this.apiLink + "/total/country/" + c.slug());
-            HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
-            connexion.setRequestMethod("GET");
-
-            int response = connexion.getResponseCode();
-            if (response != 200) {
-                System.out.println("HTTP Request failed with response code: " + response + "\n Data will be taken form contrycords.txt");
-            }
-
-            String content = "";
-            Scanner sc = new Scanner(url.openStream());
-            while (sc.hasNext()) {
-                content += sc.nextLine();
-            }
-            sc.close();
-
-            JSONParser parser = new JSONParser();
-            JSONArray data_obj = (JSONArray) parser.parse(content);
-
-            for (Object i: data_obj) {
-                JSONObject a = (JSONObject) i;
-                String dateString = a.get("Date").toString();
-                Integer[] data = {
-                    Integer.parseInt(a.get("Confirmed").toString()),
-                    Integer.parseInt(a.get("Deaths").toString()),
-                    Integer.parseInt(a.get("Recovered").toString()),
-                    Integer.parseInt(a.get("Active").toString())
-                };
-                map.put(LocalDate.parse(dateString.substring(0, 10)), data);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return map;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return map;
+        });
+        
     }
 }

@@ -136,7 +136,6 @@ public class GameWindow extends Stage{
             });
 
         });
-        
 
 
         LinkedHashMap buttonsPerksmap = perks.buttonsPerksMap();
@@ -187,6 +186,8 @@ public class GameWindow extends Stage{
         barName.setTranslateX(newWidth/3 + 10);
         barName.setTranslateY(newHeight - 73);
         
+
+
         
 
         Map<Country,Circle[]> countryCirclesMap = countries.getCountryCirclesMap((e, c) ->  {
