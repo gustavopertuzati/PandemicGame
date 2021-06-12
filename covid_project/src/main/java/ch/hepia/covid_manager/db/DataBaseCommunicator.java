@@ -54,30 +54,31 @@ public class DataBaseCommunicator{
   }
 
   public CompletableFuture<Countries> loadCountries(){
-    CompletableFuture<Countries> countries = new CompletableFuture<>();
-    List<Country> lst = new ArrayList<Country>();
-    try{
+
+    return CompletableFuture.supplyAsync(() -> {
+      Countries countries = new Countries();
+      try{
+        this.executeQuery("USE covid");
         // faire une transaction si on veut insert
         ResultSet rs = this.executeQuery("SELECT * FROM Country;");
         System.out.println(rs.getFetchSize());
-        if (rs.next()){
+        while (rs.next()){
           int totalPop = rs.getInt(6);
           int totalCases = rs.getInt(7);
           int totalActive = rs.getInt(8);
           int totalDeaths = rs.getInt(9);
           int totalRecovered = totalCases - totalActive - totalDeaths;
-
           int size = rs.getInt(3);
           int lat = rs.getInt(4);
           int longi = rs.getInt(5);
-          countries.get().addCountry(new Country(rs.getString(2), lat, longi, totalCases,0, 
+          countries.addCountry(new Country(rs.getString(2), lat, longi, totalCases,0, 
                                                   totalDeaths, 0, totalRecovered, 0, size, 
                                                   totalPop ,rs.getString(1)));
         }
-    }catch(Exception e){
-        throw new RuntimeException(e);
-    }
-
-    return countries;
+      }catch(Exception e){
+          throw new RuntimeException(e);
+      }
+      return countries;
+    });
   }
 }

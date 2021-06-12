@@ -111,9 +111,39 @@ public class GameWindow extends Stage{
         Virus v = Virus.getInstance();
         ld = LocalDate.of(2020,01,22);
         
-        // TEMPORAIRE : AJOUT DES PERKS ICI
+        String driver = "com.mysql.cj.jdbc.Driver";
+        String url = "jdbc:mysql://localhost";
+        DataBaseCommunicator dbc;
+        try{
+            dbc = new DataBaseCommunicator(driver, url, "root", "root");
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+
+
         Perks perks = new Perks();
         perks.init();
+        System.out.println(perks.listOfPerks());
+        
+        Region sickBar = new Region();
+        Region vaccinatedBar = new Region();
+        Region deathBar = new Region();
+
+        Countries countries = new Countries();
+        Map<Country,Circle[]> countryCirclesMap;
+        dbc.loadCountries().thenAccept(c ->{
+            c.listOfCountries().forEach(i -> {
+                countries.addCountry(i);
+            });
+            countryCirclesMap = c.getCountryCirclesMap((e, c) ->  {
+                NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY(), ld);
+                sickBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
+                deathBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
+                barName.setText(c.countryName());
+            });
+        });
+
+
         LinkedHashMap buttonsPerksmap = perks.buttonsPerksMap();
         //
         
@@ -124,23 +154,6 @@ public class GameWindow extends Stage{
         
         ImageView iV = new ImageView(worldImage);        
         
-        String driver = "com.mysql.cj.jdbc.Driver";
-        String url = "jdbc:mysql://localhost/covid";
-        DataBaseCommunicator dbc;
-        try{
-            dbc = new DataBaseCommunicator(driver, url, "root", "root");
-        }catch(Exception e){
-            throw new RuntimeException(e);
-        }
-        
-        Countries countries = new Countries();
-        
-        dbc.loadCountries().thenAccept(c ->{
-            c.listOfCountries().forEach(i -> {
-                countries.addCountry(i);
-                System.out.println(i);
-            });
-        });
         
         
         //Barre des cas sains
@@ -154,7 +167,6 @@ public class GameWindow extends Stage{
         healthyBar.setArcHeight(20.0);
         
         //Barre des cas infectés
-        Region sickBar = new Region();
         sickBar.opacityProperty().set(0.75);
         sickBar.setPrefSize((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCases() / 100000.0), 16.0);
         sickBar.setStyle("-fx-background-color: red; -fx-background-radius: 10 0 0 10");
@@ -162,14 +174,12 @@ public class GameWindow extends Stage{
         sickBar.setTranslateY(newHeight-45);
         
         //Barre des cas morts
-        Region deathBar = new Region();
         deathBar.setPrefSize((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalDeaths() / 100000.0), 16.0);
         deathBar.setStyle("-fx-background-color: black; -fx-background-radius: 10 0 0 10");
         deathBar.setTranslateX(newWidth/3 + 2);
         deathBar.setTranslateY(newHeight-45);
         
         //Barre des cas vaccinés
-        Region vaccinatedBar = new Region();
         vaccinatedBar.opacityProperty().set(0.75);
         vaccinatedBar.setPrefSize(0.0, 16.0); //je mets 0 parce qu'on a pas de données
         vaccinatedBar.setStyle("-fx-background-color: blue; -fx-background-radius: 0 10 10 0");
@@ -183,12 +193,7 @@ public class GameWindow extends Stage{
         barName.setTranslateY(newHeight - 73);
         
         
-        Map<Country,Circle[]> countryCirclesMap = countries.getCountryCirclesMap((e, c) ->  {
-            NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY(), ld);
-            sickBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
-            deathBar.setPrefSize((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
-            barName.setText(c.countryName());
-        });
+
         
         
         Group box = new Group();

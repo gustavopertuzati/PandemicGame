@@ -66,11 +66,11 @@ public class Perks{
             dbc.executeQuery("USE covid");
             // faire une transaction si on veut insert
             ResultSet rs = dbc.executeQuery(req);
-            System.out.println(rs);
             while (rs.next()){
                 //selon le type du resultat, instancier une classe diff
                 res.add(Perk.perkFactory(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), (double)rs.getFloat(5), rs.getString(6)));
             }
+            dbc.closeConnection();
         }catch(Exception e){
             throw new RuntimeException(e);
         }
