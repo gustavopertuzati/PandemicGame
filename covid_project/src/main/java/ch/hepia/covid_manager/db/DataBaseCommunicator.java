@@ -53,14 +53,14 @@ public class DataBaseCommunicator{
 
 
   public void save(Virus v, Countries c, User user){
-    String req = "UPDATE `Virus` SET `id`="+user.getUserId()+",`infectivity`="+ v.infectivity() +",`lethality`=" + v.lethality() + ",`resistance`=" + v.resistance() + ",`player_name`=" + user.getUsername();
-    
+    String req = "UPDATE `Virus` SET `infectivity`="+ v.infectivity() +",`lethality`=" + v.lethality() + ",`resistance`=" + v.resistance() + "WHERE `id`="+user.getUserId();
+    System.out.println(req);
     try{
       this.executeUpdate(req);
     }catch (Exception e){
       throw new RuntimeException(e);
     }
-
+    
     c.listOfCountries().forEach((Country co) ->{
         try{
           this.executeQuery("UPDATE `State` SET `game_id`="+user.getUserId()+",`slug`=" + co.slug() + ",`current_total_cases`=" + co.playerTotalCases() + ",`current_total_active`=" + co.playerTotalActive() + ",`current_total_deaths`=" + co.playerTotalDeaths() +")");
