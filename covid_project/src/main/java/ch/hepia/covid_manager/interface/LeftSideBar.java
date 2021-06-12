@@ -29,7 +29,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 import javafx.util.Duration;
-
+import java.lang.Thread;
 
 public class LeftSideBar extends HBox{
     
@@ -40,7 +40,7 @@ public class LeftSideBar extends HBox{
 
     private boolean isAnimating = false;
 
-    public LeftSideBar(final double expandedLength, final double hiddenLength, Button btn, int newHeight, Node... nodes){
+    public LeftSideBar(final double expandedLength, final double hiddenLength, Button btn, int newHeight){
         
         this.controlButton = btn;
 
@@ -50,7 +50,6 @@ public class LeftSideBar extends HBox{
         this.setVisible(false);
         
         setAlignment(Pos.CENTER);
-        getChildren().addAll(nodes);
     
         this.hideSidebar = new Transition(){
             { setCycleDuration(Duration.millis(250)); }
@@ -87,14 +86,21 @@ public class LeftSideBar extends HBox{
             }
         });
     }
-    
-    public void animate(boolean isOtherVisible, RightSideBar rsb){
-        
-        
+
+    public void addContent(Node... nodes){
+        getChildren().addAll(nodes);
+    }
+
+    public void animate(boolean isOtherVisible, RightSideBar rsb){   
+
         System.out.println("Cure: " + isOtherVisible);
         if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
             //Si on ferme
             if(isAnimating){
+                try{
+                    Thread.sleep(200);
+                } catch(InterruptedException e){}
+                this.getChildren().clear();
                 hideSidebar.play();
                 return;
             }else if(isOtherVisible){

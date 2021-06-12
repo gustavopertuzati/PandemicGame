@@ -147,7 +147,7 @@ public class LoginWindow extends HBox{
                 BorderWidths.DEFAULT)));
                 secondStage.close();
                 event.consume();
-                GameWindow game = new GameWindow(user.getUserId());
+                GameWindow game = new GameWindow(user.getUserId(), user.getUsername());
             }
         });
         icon.setOpacity(0.75);
