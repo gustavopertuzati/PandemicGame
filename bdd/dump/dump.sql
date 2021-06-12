@@ -115,32 +115,32 @@ END
 $
 DELIMITER ;
 
--- trigger pour vérifier lors de la sauvegarde que les valeurs insérées pour chaque pays ne dépassent pas la population du pays
-DELIMITER $
-CREATE TRIGGER trigger_state BEFORE INSERT ON covid.State 
-FOR EACH ROW 
-BEGIN 
-    DECLARE pop INTEGER; 
-    SELECT total_population FROM State INNER JOIN Country ON State.slug = Country.slug INTO pop; 
-    IF new.current_total_cases > pop 
-    THEN 
-    	signal sqlstate '45000' 
-        set message_text = 'current total cases can not be greater than the total population of the country';
-    END IF;
-    IF new.current_total_active > pop
-    THEN 
-    	signal sqlstate '45000'
-        set message_text = 'current total actives can not be greater than the total population of the country';
-    END IF;
-    IF new.current_total_deaths > pop
-    THEN 
-    	signal sqlstate '45000'
-        set message_text = 'current total deaths can not be greater than the total population of the country';
-    END IF;
-END; 
-$
-DELIMITER ;
-
+-- -- trigger pour vérifier lors de la sauvegarde que les valeurs insérées pour chaque pays ne dépassent pas la population du pays
+-- DELIMITER $
+-- CREATE TRIGGER trigger_state BEFORE INSERT ON covid.State 
+-- FOR EACH ROW 
+-- BEGIN 
+--     DECLARE pop INTEGER; 
+--     SELECT total_population FROM State INNER JOIN Country ON State.slug = Country.slug INTO pop; 
+--     IF new.current_total_cases > pop 
+--     THEN 
+--     	signal sqlstate '45000' 
+--         set message_text = 'current total cases can not be greater than the total population of the country';
+--     END IF;
+--     IF new.current_total_active > pop
+--     THEN 
+--     	signal sqlstate '45000'
+--         set message_text = 'current total actives can not be greater than the total population of the country';
+--     END IF;
+--     IF new.current_total_deaths > pop
+--     THEN 
+--     	signal sqlstate '45000'
+--         set message_text = 'current total deaths can not be greater than the total population of the country';
+--     END IF;
+-- END; 
+-- $
+-- DELIMITER ;
+-- 
 -- vue pour obtenir le nombre de cas guéris en fonction des autres paramètres du pays une fois la sauvegarde effectuée
 CREATE VIEW totalRecovered AS
 SELECT State.slug, State.current_total_cases - (State.current_total_active + State.current_total_deaths) FROM State;
@@ -152,12 +152,12 @@ SELECT State.slug, (State.current_total_active / Country.total_population) AS pr
 
 START TRANSACTION;
 USE `covid`;
-INSERT INTO `Virus`(`id`, `infectivity`, `lethality`, `resistance`, `player_name`) 
-        VALUES (0, 0.15,0.05,0.005, "ThomasKek");
-INSERT INTO `Virus`(`id`, `infectivity`, `lethality`, `resistance`, `player_name`) 
-        VALUES (1, 0.15,0.05,0.005, "Banatwan");
-INSERT INTO `Virus`(`id`, `infectivity`, `lethality`, `resistance`, `player_name`) 
-        VALUES (2, 0.15,0.05,0.005, "Amon-Gus");
+INSERT INTO `Virus`(`infectivity`, `lethality`, `resistance`, `player_name`) 
+        VALUES (0.15,0.05,0.005, "ThomasKek");
+INSERT INTO `Virus`(`infectivity`, `lethality`, `resistance`, `player_name`) 
+        VALUES (0.15,0.05,0.005, "Banatwan");
+INSERT INTO `Virus`(`infectivity`, `lethality`, `resistance`, `player_name`) 
+        VALUES (0.15,0.05,0.005, "Amon-Gus");
 COMMIT;
 
 
@@ -165,11 +165,11 @@ START TRANSACTION;
 USE `covid`;
 
 INSERT INTO `Game`(`virus_id`, `start_date`, `current_date`) 
-        VALUES (0,"2020-01-22","2020-01-22");
-INSERT INTO `Game`(`virus_id`, `start_date`, `current_date`) 
         VALUES (1,"2020-01-22","2020-01-22");
 INSERT INTO `Game`(`virus_id`, `start_date`, `current_date`) 
         VALUES (2,"2020-01-22","2020-01-22");
+INSERT INTO `Game`(`virus_id`, `start_date`, `current_date`) 
+        VALUES (3,"2020-01-22","2020-01-22");
 COMMIT;
 
 
