@@ -47,6 +47,7 @@ class NewStage {
         btn2.setStyle("-fx-background-color: transparent; -fx-font-weight: bold");
         btn2.setOnAction(aevent -> {
             detailStage.hide();
+            System.out.println("kek");
         });
         
 

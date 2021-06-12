@@ -190,6 +190,7 @@ class ContentVirusMenu extends Group{
     public void refreshDisplay(){
         this.updateButtonStates();
         this.updateLines();
+        this.updateLabel();
     }
 
 

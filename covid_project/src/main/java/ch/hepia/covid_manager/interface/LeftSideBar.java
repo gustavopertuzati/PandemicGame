@@ -40,9 +40,11 @@ public class LeftSideBar extends HBox{
 
     private boolean isAnimating = false;
 
-    public LeftSideBar(final double expandedLength, final double hiddenLength, Button btn, int newHeight){
+    public LeftSideBar(final double expandedLength, final double hiddenLength, Button btn, int newHeight, Node... nodes){
         
         this.controlButton = btn;
+
+        this.getChildren().addAll(nodes);
 
         this.setPrefWidth(expandedLength);
         this.setPrefHeight(newHeight);
@@ -87,30 +89,27 @@ public class LeftSideBar extends HBox{
         });
     }
 
-    public void addContent(Node... nodes){
-        getChildren().addAll(nodes);
-    }
-
     public void animate(boolean isOtherVisible, RightSideBar rsb){   
-
         System.out.println("Cure: " + isOtherVisible);
         if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
             //Si on ferme
             if(isAnimating){
-                try{
-                    Thread.sleep(200);
-                } catch(InterruptedException e){}
-                this.getChildren().clear();
                 hideSidebar.play();
+                try{
+                    Thread.sleep(250);
+                } catch(java.lang.InterruptedException ve){}
                 return;
             }else if(isOtherVisible){
-            //Si on ouvre et que le menu opposé est ouvert
+                //Si on ouvre et que le menu opposé est ouvert
                 rsb.animate(false, this);
             }
             //On ouvre
             setVisible(true);
             showSidebar.play();
         }
+        try{
+            Thread.sleep(250);
+        } catch(java.lang.InterruptedException ve){}
     }
 
     public boolean isAnimating(){

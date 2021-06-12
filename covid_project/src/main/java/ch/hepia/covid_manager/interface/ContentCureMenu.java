@@ -2,6 +2,7 @@ package ch.hepia.covid_manager;
 
 import java.util.Map;
 import java.util.LinkedHashMap;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,11 @@ import javafx.util.Duration;
 
 import javafx.scene.effect.BlurType;
 
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+
 class ContentCureMenu extends Group{
 
     private Button cases;
@@ -52,56 +58,71 @@ class ContentCureMenu extends Group{
     private Button cured;
     private Button recovered;
     private int status;
-    private Virus virus;
-    private Countries countries;
     private LineChart chart;
+    private Countries countries;
+    private Virus virus;
+
+    private Label legend;
+    private Label lblInfectivity;
+    private Label lblLethality;
+    private Label lblResistance;
 
     private HBox topSection;
     private VBox bottomSection;
     private VBox currentMenu;
 
-
-    ContentCureMenu(Countries c, Virus v, int width, int height){       
+    public ContentCureMenu(Countries c, Virus v, int width, int height){       
         this.topSection = this.generateMenuHeader();
         this.currentMenu = new VBox();
-        this.bottomSection = this.initializeBottomSection(v);
-        
+        this.bottomSection = this.initBottomSection();
+
+        this.legend = new Label();
+        this.legend.setTextFill(Color.WHITE);
+        this.legend.setStyle("-fx-font-size: 1.2em;");
+        this.legend.setTranslateX(150);
+
         this.status = 1;
-        this.virus = v;
         this.countries = c;
+        this.virus = v;
         
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabel("Date");
-        NumberAxis yAxis = new NumberAxis();
+        xAxis.setAnimated(false);
+        NumberAxis yAxis = new NumberAxis();        
         yAxis.setLabel("No of people");
+        yAxis.setAnimated(false);
+
         this.chart = new LineChart(xAxis, yAxis);
         this.chart.lookup(".chart-plot-background").setStyle("-fx-background-color: transparent;");
         this.chart.lookup(".chart-horizontal-grid-lines").setStyle("-fx-stroke: transparent;");
-        this.chart.lookup(".chart-vertical-grid-lines").setStyle("-fx-stroke: transparent;");
-        
-        this.updateChart();
-        
+        this.chart.lookup(".chart-vertical-grid-lines").setStyle("-fx-stroke: transparent;");    
+        this.chart.lookup(".axis-label").setStyle("-fx-text-fill: #ffffff;");
+        this.chart.lookup(".axis").setStyle("-fx-font-size: 1em; -fx-tick-label-fill: #ffffff;");
+        this.chart.setPrefSize(400, 400);
+        this.chart.setLegendVisible(false);
+
+        this.updateChart();        
         this.updateMenu();
+        this.updateLabel();
         
-        this.currentMenu.getChildren().add(this.topSection);
-        this.currentMenu.getChildren().add(new VBox(this.chart));
+        Line line = new Line(20,0, width-20,0);
+        line.setStroke(Color.WHITE);
+        line.setStrokeWidth(3);  
 
-        this.currentMenu.setMargin(topSection, new Insets(10, 0, 60, 30));
-
-        this.getChildren().add(this.currentMenu);
+        this.currentMenu.getChildren().addAll(this.topSection, new VBox(this.chart), this.legend, line, this.bottomSection);
+        this.currentMenu.setMargin(this.topSection, new Insets(0, 0, 60, 30));
+        this.currentMenu.setMargin(line, new Insets(20, 0, 20, 0));
+        this.getChildren().addAll(this.currentMenu);
     }
 
-    
     private Button generateMenuButtons(String label, int pos){
         Button b = new Button(label);
         b.setTextFill(Color.WHITE);
         b.setStyle("-fx-border-color: #fff;-fx-border-width: 3;-fx-background-color: transparent;-fx-font-size: 1.5em;-fx-border-radius: 5px;");
         b.setTranslateX(7 * pos);
+        b.setTranslateY(20);
         b.hoverProperty().addListener( e -> {
             this.updateMenu();
-            // a voir ou il faut mettre ce truc
-            this.chart.getData().removeAll();
-            this.updateChart();
         });
         return b;
     }
@@ -111,6 +132,8 @@ class ContentCureMenu extends Group{
         this.cases.setOnAction(e -> {
             if(this.status != 1){
                 this.status = 1;
+                this.updateMenu();
+                this.updateChart();
             }
         });
         
@@ -118,6 +141,8 @@ class ContentCureMenu extends Group{
         this.deaths.setOnAction(e -> {
             if(this.status != 2){
                 this.status = 2;
+                this.updateMenu();
+                this.updateChart();
             }
         });
         
@@ -125,6 +150,8 @@ class ContentCureMenu extends Group{
         this.cured.setOnAction(e -> {
             if(this.status != 3){
                 this.status = 3;
+                this.updateMenu();
+                this.updateChart();
             }
         });
 
@@ -132,6 +159,8 @@ class ContentCureMenu extends Group{
         this.recovered.setOnAction(e -> {
             if(this.status != 4){
                 this.status = 4;
+                this.updateMenu();
+                this.updateChart();
             }
         });
         return new HBox(this.cases, this.deaths, this.cured, this.recovered);
@@ -161,35 +190,51 @@ class ContentCureMenu extends Group{
         } 
     }
 
-    private void updateChart(){     
+    private void updateChart(){
+        this.chart.getData().clear();    
         if(this.status == 1){
-            this.chart.getData().add(dataSet("Evolution of cases"));//, list));
+            this.legend.setText("Evolution of cases");
+            this.chart.getData().add(dataSet(this.countries.listOfCasesByDay()));
         } else if(this.status == 2){
-            this.chart.getData().add(dataSet("Evolution of deaths"));//, list));
+            this.legend.setText("Evolution of deaths");
+            this.chart.getData().add(dataSet(this.countries.listOfDeathsByDay()));
         } else if(this.status == 3){
-            this.chart.getData().add(dataSet("Evolution of cured"));//, list));
+            this.legend.setText("Evolution of cured");
+            this.chart.getData().add(dataSet(this.countries.listOfCuredByDay()));
         } else if(this.status == 4){
-            this.chart.getData().add(dataSet("Evolution of recovered"));//, list));
+            this.legend.setText("Evolution of recovered");
+            this.chart.getData().add(dataSet(this.countries.listOfRecoveredByDay()));
         }
     }
 
-    public VBox initializeBottomSection(Virus v){
-        Label lblLethality = new Label("lethality: " + v.lethality());
-        lblLethality.setWrapText(true);
-        lblLethality.setTextFill(Color.WHITE);
-        lblLethality.setStyle("-fx-font-size: 2em;");
+    private VBox initBottomSection(){
+        Label lblTitle = new Label("Virus infos:");
+        lblTitle.setTextFill(Color.WHITE);
+        lblTitle.setStyle("-fx-font-size: 1.2em;");
+        lblTitle.setTranslateX(20);
 
-        Label lblInfectivity = new Label("infectivity: " + v.infectivity());
-        lblInfectivity.setWrapText(true);
-        lblInfectivity.setTextFill(Color.WHITE);
-        lblInfectivity.setStyle("-fx-font-size: 2em;");
+        this.lblLethality = new Label();
+        this.lblLethality.setTextFill(Color.WHITE);
+        this.lblLethality.setStyle("-fx-font-size: 1.2em;");
+        this.lblLethality.setTranslateX(70);
 
-        Label lblResistance = new Label("resistance: " + v.resistance());
-        lblResistance.setWrapText(true);
-        lblResistance.setTextFill(Color.WHITE);
-        lblResistance.setStyle("-fx-font-size: 2em;");
+        this.lblInfectivity = new Label();
+        this.lblInfectivity.setTextFill(Color.WHITE);
+        this.lblInfectivity.setStyle("-fx-font-size: 1.2em;");
+        this.lblInfectivity.setTranslateX(70);
 
-        return new VBox(lblInfectivity, lblLethality, lblResistance);
+        this.lblResistance = new Label();
+        this.lblResistance.setTextFill(Color.WHITE);
+        this.lblResistance.setStyle("-fx-font-size: 1.2em;");
+        this.lblResistance.setTranslateX(70);
+
+        return new VBox(lblTitle, lblInfectivity, lblLethality, lblResistance);
+    }
+
+    private void updateLabel(){
+        this.lblLethality.setText("lethality: " + this.virus.lethality());
+        this.lblInfectivity.setText("infectivity: " + this.virus.infectivity());
+        this.lblResistance.setText("resistance: " + this.virus.resistance());
     }
 
     private void emphasisButton(Button b){
@@ -202,15 +247,18 @@ class ContentCureMenu extends Group{
         b.setStyle("-fx-border-color: #fff;-fx-border-width: 3;-fx-background-color: transparent;-fx-font-size: 1.5em;-fx-border-radius: 5px;");
     }
 
-    public XYChart.Series dataSet(String name){
+    private XYChart.Series dataSet(List<Integer> set){
         XYChart.Series data = new XYChart.Series();
-        data.setName(name);
-        
-        data.getData().add(new XYChart.Data( 1, 567));
-        data.getData().add(new XYChart.Data( 5, 612));
-        data.getData().add(new XYChart.Data(10, 800));
-        data.getData().add(new XYChart.Data(20, 780));
-
+        int i = -1;
+        for(int val: set){
+            data.getData().add(new XYChart.Data( i+=1, val));
+        }
         return data;
+    }
+
+    public void refreshDisplay(){
+        this.updateChart();
+        this.updateLabel();
+        this.updateMenu();
     }
 }

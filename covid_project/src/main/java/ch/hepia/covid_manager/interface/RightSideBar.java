@@ -39,7 +39,7 @@ class RightSideBar extends HBox{
     private double expandedLength;
     private double hiddenLength;
 
-    private TranslateTransition tt = new TranslateTransition(Duration.seconds(1), this);
+    private TranslateTransition tt = new TranslateTransition(Duration.millis(300), this);
 
     private boolean isAnimating = false;
 

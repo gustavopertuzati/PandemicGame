@@ -235,50 +235,21 @@ public class GameWindow extends Stage{
         optionBox.setMinHeight(75);
         optionBox.setGraphic(menuIcon);
         optionBox.setStyle("-fx-background-color: transparent;");
-        /*EventHandler<ActionEvent> event =
-                  new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e)
-            {
-                switch((int)optionBox.getValue()){
-                    case 0://"Save":
-                        //DataBaseCommunicator.save(v, countries, idPlayer);
-                        break;
-                    case 1://"Save and exit":
-                        System.out.println(optionBox.getValue());
-                        //DataBaseCommunicator.save(v, countries, idPlayer);
-                        System.exit(0);
-                    case 2://"Exit":
-                        System.out.println(optionBox.getValue());
-                        System.exit(0);
-                }
-            }
-        };
-        optionBox.setOnAction(event);*/
 
         game.getChildren().addAll(scroller, optionBox);
-        //optionBox.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-        //optionBox.getEditor().setStyle("-fx-alignment: baseline-left");
-
-        
 
         BottomBar btBar = new BottomBar();
         btBar.setSpacing(30);        
         btBar.setAlignment(Pos.BOTTOM_CENTER);
         btBar.setPrefWidth(newWidth);
         btBar.setMinHeight(40);
-        
-        
-        // Sidebar left
-        // on va avoir besoin de ca pour les labels et tout dans cure
-        //BorderPane virusContentPane = new BorderPane();
-        //virusContentPane.getChildren().add();
+                
         ContentCureMenu ccm = new ContentCureMenu(countries, v, newWidth/3, newHeight);
         Button cureBtn = btBar.buttonCure();
-        LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight);
+        LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight, ccm);
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
         sbCure.setBackground(new Background(new BackgroundFill(new ImagePattern(cureImage), CornerRadii.EMPTY, Insets.EMPTY)));
         
-        // Sidebar right
         ContentVirusMenu cvm = new ContentVirusMenu(buttonsPerksmap, v, newWidth/3, newHeight);
         Image virusImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuVirus.png"));        
         ImageView iVvirus = new ImageView(virusImage);
@@ -289,32 +260,28 @@ public class GameWindow extends Stage{
         g.getChildren().addAll(iVvirus, cvm);
         Button virusBtn = btBar.buttonVirus();
         RightSideBar sbVirus = new RightSideBar(newWidth/3, newWidth-(newWidth/3), g);
+
         virusBtn.setOnAction(e -> {
-            sbVirus.animate( sbCure.isAnimating(), sbCure);
-            cvm.updateLabel();
+            sbVirus.animate(sbCure.isAnimating(), sbCure);
             cvm.refreshDisplay();
             
         });
         cureBtn.setOnAction(e ->{
             sbCure.animate(sbVirus.isAnimating(),sbVirus );
-            try{
-                Thread.sleep(200);
-            } catch(java.lang.InterruptedException ve){}
-            sbCure.addContent(ccm);
-            //cvm.updateMenuContent();
+            // je sais pas comment faire mais le add va pas la sinon on ajoute a chaque fois
+            // il faudra faire des updates ici -> pour les labels et les graphs
+            ccm.refreshDisplay();
         });
         sbVirus.setTranslateX(newWidth);
         
         game.getChildren().addAll(sbVirus, barName, healthyBar, sickBar, deathBar, vaccinatedBar, sbCure);
-        //game.setStyle("-fx-background-color: #FFFFFF;");
         scroller.setTranslateX(0);
 
         VBox root = new VBox(game,btBar);
         newHeight += 50;
-        Scene finalScene = new Scene(root, newWidth, newHeight);//, Color.BLACK);
+        Scene finalScene = new Scene(root, newWidth, newHeight);
         
         this.setScene(finalScene);
-        //finalScene.setFill(Color.web("#FFFFFF"));
         //this.setResizable(false);
         this.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue)
@@ -365,6 +332,7 @@ public class GameWindow extends Stage{
     public void elapseDayForGame(Countries c, BottomBar b, LocalDate ld){
         b.updateDate(ld);
         c.elapseDayForAllCountries();
+        c.updateWorldHistory(ld);
     }
 
     public void adjustCircles(Map<Country, Circle[]> map, double zoomWidth, Group container){

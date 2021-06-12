@@ -7,22 +7,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.input.MouseEvent;
 
-
-
-
 import java.lang.Math;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.Map;
 import java.util.HashMap;
-
-
+import java.util.LinkedHashMap;
 import java.time.LocalDate;
 
 public class Countries{
 
     private List < Country > countries = new ArrayList < > ();
+
+    private LinkedHashMap < LocalDate, int[] > worldHistory = new LinkedHashMap < > ();
+
 
     public Countries() {}
 
@@ -99,11 +98,16 @@ public class Countries{
                                 .sum();        
     }
 
+    public int totalDailyRecovered(){
+        return this.countries.stream()
+                                .mapToInt(c -> c.playerDailyRecovered())
+                                .sum();        
+    }
+
     public int getTotalDailyPoints(){
         return (this.totalDailyActive() + this.totalDailyDeaths()) / 1000;
     }
     
-
     public List<int[]> getRandomCountryCoordinates(int num){
         List<int[]> lstCoords = new ArrayList<>();
         for(int i = 0; i < num; i+=1){
@@ -117,13 +121,22 @@ public class Countries{
         return lstCoords;
     }
 
-
     //Function that is called for 
     public void elapseDayForAllCountries(){
         this.countries.forEach(c->c.elapseDay());
     }
 
+    public void updateWorldHistory(LocalDate date){
+        // remplacer 0 par totalDailyCured()
+        System.out.println(this.totalDailyActive());
+        System.out.println(this.totalDailyDeaths());
+        System.out.println(this.totalDailyRecovered());
+        this.worldHistory.put(date, new int[] {this.totalDailyActive(), this.totalDailyDeaths(), this.totalDailyRecovered(),0});
+    }
 
+    public LinkedHashMap<LocalDate, int[]> worldHistory(){
+        return this.worldHistory;
+    }
 
     public Map<Country, Circle[]> getCountryCirclesMap(BiConsumer<MouseEvent,Country> cons){
         Map<Country, Circle[]> map = new HashMap<>();
@@ -134,5 +147,37 @@ public class Countries{
             });
         });
         return map;
+    }
+
+    public List<Integer> listOfCasesByDay(){
+        List<Integer> res = new ArrayList<>();
+        for (Map.Entry<LocalDate, int[]> entry : this.worldHistory.entrySet()) {
+            res.add(entry.getValue()[0]);
+        }
+        return res;
+    }
+
+    public List<Integer> listOfDeathsByDay(){
+        List<Integer> res = new ArrayList<>();
+        for (Map.Entry<LocalDate, int[]> entry : this.worldHistory.entrySet()) {
+            res.add(entry.getValue()[1]);
+        }
+        return res;
+    }
+
+    public List<Integer> listOfRecoveredByDay(){
+        List<Integer> res = new ArrayList<>();
+        for (Map.Entry<LocalDate, int[]> entry : this.worldHistory.entrySet()) {
+            res.add(entry.getValue()[2]);
+        }
+        return res;
+    }
+
+    public List<Integer> listOfCuredByDay(){
+        List<Integer> res = new ArrayList<>();
+        for (Map.Entry<LocalDate, int[]> entry : this.worldHistory.entrySet()) {
+            res.add(entry.getValue()[3]);
+        }
+        return res;
     }
 }
