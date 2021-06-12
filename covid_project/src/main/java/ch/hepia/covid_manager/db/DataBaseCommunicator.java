@@ -78,6 +78,7 @@ public class DataBaseCommunicator{
     
     c.listOfCountries().forEach((Country co) ->{
         try{
+          System.out.println("INSERT INTO `State`(`game_id`, `slug`, `current_total_cases`, `current_total_active`, `current_total_deaths`) VALUES ("+user.getUserId()+",'"+ co.slug()+"',"+co.playerTotalCases()+"," + co.playerTotalActive() + ", "+ co.playerTotalDeaths() +") ON DUPLICATE KEY UPDATE `current_total_cases` = "+co.playerTotalCases()+", `current_total_active` = " + co.playerTotalActive() +", `current_total_deaths` = " + co.playerTotalDeaths());
           this.executeUpdate("INSERT INTO `State`(`game_id`, `slug`, `current_total_cases`, `current_total_active`, `current_total_deaths`) VALUES ("+user.getUserId()+",'"+ co.slug()+"',"+co.playerTotalCases()+"," + co.playerTotalActive() + ", "+ co.playerTotalDeaths() +") ON DUPLICATE KEY UPDATE `current_total_cases` = "+co.playerTotalCases()+", `current_total_active` = " + co.playerTotalActive() +", `current_total_deaths` = " + co.playerTotalDeaths());
         }catch(Exception e){
           throw new RuntimeException(e);
