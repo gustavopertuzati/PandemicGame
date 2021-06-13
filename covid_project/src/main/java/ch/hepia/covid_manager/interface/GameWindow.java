@@ -46,14 +46,10 @@ import javafx.stage.StageStyle;
 /*
     comprendre pourquoi on commence avec des cas négatifs au début
     verifier que les updates des pays se font bien (cases, cured, deaths, actives, recovered) -> verifier que le ratio est ok et que les graphs sont bons
-    modifier un peut la manière dont on determine la couleur du cercle pour le pays (checker si les ratios sont cohérents)
+    checker si les ratios pour changer les couleurs des cercles sont cohérents
     faire en sorte que le vaccin fonctionne (modifier le constructeur Cure() + gerer les updates des champs aux bons endroits, la barre du bas avec l'observer...)
-    verifier que les interractions avec la base de données sont bonnes (sauvegardes + chargement + fonctionnement des procédures / triggers / vues)
-    populate correctement la base de données (les bons coefs pour les perks ajout des virus...)
-    clean le code dans GameWindow (si possible)
+    mettre les bons coefs pour les perks dans le dump
     faire des tests pour les notions critiques
-    uniformiser le nom des fonctions
-    remplacer les cure et virus par getInstance()
     ajouter les décisions prises par les pays quand les facteurs sont trop hauts (si le nombre de nouveau cas est trop élevé on cut un peu les champs du virus)
 */
 
@@ -76,6 +72,7 @@ public class GameWindow extends Stage{
         }
         Perks perks = new Perks();
         perks.init();
+        System.out.println(perks.listOfPerks());
         
 
         if(!newGame){
@@ -118,7 +115,7 @@ public class GameWindow extends Stage{
         iV.setOnMouseClicked(e ->{
             cb.setSickBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCases() / 10000.0), 16.0);
             cb.setDeathBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalDeaths() / 10000.0), 16.0 );
-            cb.setVaccinatedBarX((2*newWidth/3) - (newWidth/(3.0 * countries.totalCured() / 100000.0)) * (countries.totalPop() / 100000.0));
+            cb.setVaccinatedBarX((2*newWidth/3) - (newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCured() / 100000.0));
             cb.setVaccinatedBar((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCured() / 100000.0));
             cb.setBarName("World");
             optionBox.removeItems();

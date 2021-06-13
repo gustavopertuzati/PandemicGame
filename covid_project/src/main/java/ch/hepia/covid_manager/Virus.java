@@ -48,6 +48,11 @@ public class Virus{
         this.updateObservers();
     }
 
+    public void addPoints(int num){
+        this.currentPoints += num;
+        this.updateObservers();
+    }
+
     public void updateObservers(){
         this.lstObservers.forEach(i->
             i.propertyChange(new PropertyChangeEvent(this, "virus", Integer.valueOf(this.currentPoints - 1), Integer.valueOf(this.currentPoints)))

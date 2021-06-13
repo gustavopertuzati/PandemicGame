@@ -50,7 +50,7 @@ public class BottomBar extends HBox implements PropertyChangeListener{
         this.date = labelFromBottomBar(LocalDate.of(2020,01,22).toString());
         this.date.setMinWidth(145);
         this.date.setAlignment(Pos.CENTER);
-    
+        
         this.virusPoints = labelFromBottomBar("0");
 
         this.curePoints = labelFromBottomBar("0");

@@ -265,7 +265,7 @@ public class Country {
 
         //System.out.println("\t" + newRecov);
 
-        this.totalActive -= newRecov;
+        this.totalActive = Math.max((this.totalActive -newRecov), 0);
         this.totalRecovered += newRecov;
     }
 
@@ -277,7 +277,7 @@ public class Country {
 
         //System.out.println("\t" + newDead);
 
-        this.totalActive -= newDead;
+        this.totalActive = Math.max((this.totalActive -newDead), 0);
         this.totalDeaths += newDead;
     }
 

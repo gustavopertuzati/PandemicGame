@@ -12,8 +12,8 @@ public class Rewards{
     
         for(int i = 0; i < num; i+=1){
             int[] crt = coords.get(i);
-            int randOffsetX = Math.min((int)Math.floor(Math.random()*500),width);
-            int randOffsetY = Math.min((int)Math.floor(Math.random()*500), height);
+            int randOffsetX = Math.min((int)Math.floor(Math.random()*500 - 50), width);
+            int randOffsetY = Math.min((int)Math.floor(Math.random()*500 - 50), height);
         
             Circle points = new Circle(crt[0]+randOffsetX, crt[1]+randOffsetY, 50, Color.PINK);
             Circle blackOutline = new Circle(crt[0]+randOffsetX, crt[1]+randOffsetY, 60, Color.BLACK);

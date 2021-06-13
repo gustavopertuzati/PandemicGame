@@ -127,8 +127,9 @@ public class DataBaseCommunicator {
       v.lethality() +
       ",`resistance`=" +
       v.resistance() +
-      "WHERE `id`=" +
+      " WHERE `id`=" +
       user.getUserId();
+    System.out.println(req);
     try {
       this.executeQuery("USE covid");
       this.executeUpdate(req);
@@ -142,6 +143,7 @@ public class DataBaseCommunicator {
       user.getUserId();
 
     try {
+      System.out.println(req);
       this.executeUpdate(req);
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -209,6 +211,10 @@ public class DataBaseCommunicator {
                 .freeUpgrade(p.getPerkById(rs.getInt(1)).get());
             }
           }
+          rs = this.executeQuery("SELECT * FROM Virus WHERE `id` = " + u.getUserId());
+          if(rs.next()){
+            Virus.getInstance().addPoints(rs.getInt(6));
+          }
         } catch (Exception e) {
           throw new RuntimeException(e);
         }
@@ -217,21 +223,21 @@ public class DataBaseCommunicator {
     );
   }
 
-  public CompletableFuture<LocalDate> loadDate(LocalDate ld, User u){
-    return CompletableFuture.supplyAsync(() ->{
-      try{
-        this.executeQuery("USE covid");
-        String req =
-          "SELECT * FROM Game WHERE `virus_id` = " + u.getUserId();
-        ResultSet rs = this.executeQuery(req);
-        if(rs.next()){
-          return LocalDate.parse(rs.getString(3));
+  public CompletableFuture<LocalDate> loadDate(LocalDate ld, User u) {
+    return CompletableFuture.supplyAsync(
+      () -> {
+        try {
+          this.executeQuery("USE covid");
+          String req = "SELECT * FROM Game WHERE `virus_id` = " + u.getUserId();
+          ResultSet rs = this.executeQuery(req);
+          if (rs.next()) {
+            return LocalDate.parse(rs.getString(3));
+          }
+        } catch (Exception e) {
+          throw new RuntimeException(e);
         }
-      }catch(Exception e){
-        throw new RuntimeException(e);
+        return ld;
       }
-      return ld;
-    });
+    );
   }
-
 }
