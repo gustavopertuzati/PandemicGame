@@ -80,7 +80,7 @@ public class DropdownMenu extends VBox {
     }
 
     public void removeItems(){
-        this.getChildren().remove(items);
+        this.getChildren().remove(this.items);
     }
 
     public void manageDisplay(){
