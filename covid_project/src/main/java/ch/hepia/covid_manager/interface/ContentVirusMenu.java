@@ -6,40 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
-
-import javafx.scene.Scene;
-import javafx.scene.Node;
 import javafx.scene.Group;
 import javafx.scene.control.*;
-
-import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
-
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Priority;
-
 import javafx.scene.Group;
-
 import javafx.scene.input.MouseEvent;
-
 import javafx.scene.Parent;
-
 import javafx.scene.shape.Line;
-
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
 import javafx.util.Duration;
-
-import javafx.scene.effect.BlurType;
 
 class ContentVirusMenu extends Group{
 

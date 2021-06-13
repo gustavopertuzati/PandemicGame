@@ -47,12 +47,10 @@ public class APICountryManager {
                 URL url = new URL(this.apiLink + "/total/country/" + c.slug());
                 HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
                 connexion.setRequestMethod("GET");
-
                 int response = connexion.getResponseCode();
                 if (response != 200) {
                     System.out.println("HTTP Request failed with response code: " + response + "\n Data will be taken form contrycords.txt");
                 }
-
                 String content = "";
                 Scanner sc = new Scanner(url.openStream());
                 while (sc.hasNext()) {
@@ -61,7 +59,6 @@ public class APICountryManager {
                 sc.close();
                 JSONParser parser = new JSONParser();
                 JSONArray data_obj = (JSONArray) parser.parse(content);
-
                 for (Object i: data_obj) {
                     JSONObject a = (JSONObject) i;
                     String dateString = a.get("Date").toString();
@@ -74,7 +71,6 @@ public class APICountryManager {
                         };
                         map.put(LocalDate.parse(dateString.substring(0, 10)), data);
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

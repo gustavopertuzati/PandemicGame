@@ -1,28 +1,14 @@
 package ch.hepia.covid_manager;
 
-import java.time.LocalDate;
-
 import javafx.application.Application;
-
-import javafx.scene.Scene;
-import javafx.scene.Node;
 import javafx.scene.Group;
 import javafx.scene.control.*;
-
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
-
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-
 import javafx.scene.layout.VBox;
-
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.Parent;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
