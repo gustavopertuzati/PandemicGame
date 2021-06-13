@@ -298,4 +298,22 @@ public class Country {
             new Circle(this.latitude, this.longitude, this.getCircleWidth() , this.getColorFromCountry())
         };
     }
+
+
+
+    public void setTotalCases(int val){
+        this.totalCases = val;
+    }
+
+    public void setTotalActive(int val){
+        this.totalActive = val;
+    }
+
+    public void setTotalDeaths(int val){
+        this.totalDeaths = val;
+    }
+
+    public void setTotalRecovered(int val){
+        this.totalRecovered = val;
+    }
 }

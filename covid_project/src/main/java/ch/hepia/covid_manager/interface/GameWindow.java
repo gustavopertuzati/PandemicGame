@@ -138,7 +138,7 @@ public class GameWindow extends Stage{
         
 
         Countries countries = new Countries();
-        dbc.loadCountries().thenAccept(c ->{
+        dbc.loadCountries(new User(idPlayer, User.getUserById(idPlayer))).thenAccept(c ->{
             c.listOfCountries().forEach(i -> {
                 countries.addCountry(i);
             });

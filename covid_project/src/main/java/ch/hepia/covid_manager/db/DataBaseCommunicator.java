@@ -47,7 +47,7 @@ public class DataBaseCommunicator{
     this.co.close();
   }
 
-  public CompletableFuture<Countries> loadCountries(){    
+  public CompletableFuture<Countries> loadCountries(User u){    
     return CompletableFuture.supplyAsync(() -> {
       Countries countries = new Countries();
       try{
@@ -67,6 +67,21 @@ public class DataBaseCommunicator{
           countries.addCountry(new Country(rs.getString(2), lat, longi, totalCases,0, 
                                                   totalDeaths, 0, totalRecovered,0,0, 0, size, // added 0,0 -> totalCured / dailyCured
                                                   totalPop ,rs.getString(1)));
+        }
+        //On va lire les données "personnelles" à l'utilisateur
+        rs = this.executeQuery("SELECT * FROM State WHERE `game_id` = "+u.getUserId()+";");
+        while(rs.next()){
+          String slug = rs.getString(2);
+          int totalCases = rs.getInt(3);
+          int totalActive = rs.getInt(4);
+          int totalDeaths = rs.getInt(5);
+          Country tmp = countries.listOfCountries().stream()
+            .filter(c -> c.slug().equals(slug))
+            .findFirst().get();
+          tmp.setTotalCases(totalCases);
+          tmp.setTotalActive(totalActive);
+          tmp.setTotalDeaths(totalDeaths);
+          tmp.setTotalRecovered(totalCases - totalActive - totalDeaths);
         }
       }catch(Exception e){
           throw new RuntimeException(e);
@@ -106,8 +121,11 @@ public class DataBaseCommunicator{
       });
   }
 
-  public Virus loadVirus(){ 
-    throw new RuntimeException("Not implemeneted");
+  public CompletableFuture<Virus> loadVirus(){ 
+    throw new RuntimeException("Not Implemented yet!");
+    //return CompletableFuture.supplyAsync(() -> {
+      
+    //});
   }
 
 }

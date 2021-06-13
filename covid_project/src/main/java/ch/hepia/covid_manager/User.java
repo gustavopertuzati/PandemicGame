@@ -24,4 +24,17 @@ public class User{
     public int getUserId(){
         return this.id;
     }
+
+    public static String getUserById(int id){
+        switch(id){
+            case 1:
+                return "ThomasKek";
+            case 2:
+                return "Banantwan";
+            case 3:
+                return "Amon-Gus";
+            default:
+                return "unknown user";
+        }
+    }
 }
