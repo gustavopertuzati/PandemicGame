@@ -67,7 +67,7 @@ public class Perks{
             List<Perk> res = new ArrayList<>();
 
             String driver = "com.mysql.cj.jdbc.Driver";
-            String url = "jdbc:mysql://localhost/";
+            String url = "jdbc:mysql://localhost";
             String req = "SELECT * FROM Perk";
 
             try{

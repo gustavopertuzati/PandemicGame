@@ -25,6 +25,7 @@ public class Virus{
         }
         return Virus.virus;
     }
+
   
     private Virus(){
         //Takes constants "similar" to the real covid-19's "stats"
@@ -71,6 +72,17 @@ public class Virus{
     public void applyResistanceBonus(double bonus){
         this.resistance *= (1 + bonus);
     }
+    
+    //This method needs to be called only when loading the virus
+    public void freeUpgrade(Perk p){
+        if(this.hasPerk(p)){
+            return;
+        }
+        this.perkLst.add(p);
+        p.update(this);
+        this.updateObservers();
+    }
+
 
     public void upgrade(Perk p){
         if (this.currentPoints < p.cost()){
@@ -111,4 +123,5 @@ public class Virus{
     public void addListener(PropertyChangeListener pcl){
         this.lstObservers.add(pcl);
     }
+
 }

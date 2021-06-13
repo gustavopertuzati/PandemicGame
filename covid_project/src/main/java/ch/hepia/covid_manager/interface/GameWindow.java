@@ -113,7 +113,6 @@ public class GameWindow extends Stage{
     
     public GameWindow(int idPlayer, String playerName){
         System.out.println(idPlayer + ": " + playerName + "\n\n");
-        Virus v = Virus.getInstance();
         
         
 
@@ -130,9 +129,14 @@ public class GameWindow extends Stage{
             throw new RuntimeException(e);
         }
 
-
         Perks perks = new Perks();
         perks.init();
+        try{
+            dbc.loadVirus(new User(idPlayer, User.getUserById(idPlayer)), perks).get();
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+        Virus v = Virus.getInstance();
         //System.out.println(perks.listOfPerks());
         
         

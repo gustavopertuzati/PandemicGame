@@ -121,11 +121,22 @@ public class DataBaseCommunicator{
       });
   }
 
-  public CompletableFuture<Virus> loadVirus(){ 
-    throw new RuntimeException("Not Implemented yet!");
-    //return CompletableFuture.supplyAsync(() -> {
-      
-    //});
+  public CompletableFuture<Virus> loadVirus(User u, Perks p){ 
+    return CompletableFuture.supplyAsync(() -> {
+      try{
+        this.executeQuery("USE covid");
+        String req = "SELECT * FROM UnlockedPerk WHERE `virus` = " + u.getUserId();
+        ResultSet rs = this.executeQuery(req);
+        while(rs.next()){
+          if(p.getPerkById(rs.getInt(1)).isPresent()){
+            Virus.getInstance().freeUpgrade(p.getPerkById(rs.getInt(1)).get());
+          }
+        }
+      }catch (Exception e){
+        throw new RuntimeException(e);
+      }
+      return Virus.getInstance();
+    });
   }
 
 }
