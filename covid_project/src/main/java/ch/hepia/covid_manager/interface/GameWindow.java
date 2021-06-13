@@ -44,6 +44,7 @@ import javafx.util.Duration;
 import javafx.stage.StageStyle;
 
 /*
+    comprendre pourquoi on commence avec des cas négatifs au début
     verifier que les updates des pays se font bien (cases, cured, deaths, actives, recovered) -> verifier que le ratio est ok et que les graphs sont bons
     modifier un peut la manière dont on determine la couleur du cercle pour le pays (checker si les ratios sont cohérents)
     faire en sorte que le vaccin fonctionne (modifier le constructeur Cure() + gerer les updates des champs aux bons endroits, la barre du bas avec l'observer...)
@@ -214,6 +215,7 @@ public class GameWindow extends Stage{
     }
 
     public void elapseDayForGame(Countries c, BottomBar b, LocalDate ld, int w, int h, Virus v, Group box){
+        //System.out.println(ld.toString());
         b.updateDate(ld);
         c.elapseDayForAllCountries();
         c.updateWorldHistory(ld);
