@@ -2,43 +2,28 @@ package ch.hepia.covid_manager;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
-
 import javafx.application.Application;
-
 import javafx.scene.Scene;
-import javafx.scene.Node;
-import javafx.scene.Group;
 import javafx.scene.control.*;
-
-import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
-
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.Region;
-
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
-
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
-// pas très propre -> il faut amméliorer le code et revoir les imports dont on a besoin
 import java.time.LocalDate;
 
 public class BottomBar extends HBox implements PropertyChangeListener{

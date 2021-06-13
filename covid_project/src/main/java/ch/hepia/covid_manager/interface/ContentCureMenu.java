@@ -1,55 +1,28 @@
 package ch.hepia.covid_manager;
 
 import java.util.Map;
-import java.util.LinkedHashMap;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
-
-import javafx.scene.Scene;
-import javafx.scene.Node;
 import javafx.scene.Group;
 import javafx.scene.control.*;
-
-import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
-
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Priority;
-
-import javafx.scene.Group;
-
 import javafx.scene.input.MouseEvent;
-
-import javafx.scene.Parent;
-
 import javafx.scene.shape.Line;
-
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import javafx.util.Duration;
-
-import javafx.scene.effect.BlurType;
-
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
 
 class ContentCureMenu extends Group{
 
@@ -102,7 +75,6 @@ class ContentCureMenu extends Group{
         this.chart.setLegendVisible(false);
 
         this.updateChart();        
-        this.updateMenu();
         this.updateLabel();
         
         Line line = new Line(20,0, width-20,0);
@@ -122,7 +94,6 @@ class ContentCureMenu extends Group{
         b.setTranslateX(7 * pos);
         b.setTranslateY(20);
         b.hoverProperty().addListener( e -> {
-            this.updateMenu();
         });
         return b;
     }
@@ -132,7 +103,6 @@ class ContentCureMenu extends Group{
         this.cases.setOnAction(e -> {
             if(this.status != 1){
                 this.status = 1;
-                this.updateMenu();
                 this.updateChart();
             }
         });
@@ -141,7 +111,6 @@ class ContentCureMenu extends Group{
         this.deaths.setOnAction(e -> {
             if(this.status != 2){
                 this.status = 2;
-                this.updateMenu();
                 this.updateChart();
             }
         });
@@ -150,7 +119,6 @@ class ContentCureMenu extends Group{
         this.cured.setOnAction(e -> {
             if(this.status != 3){
                 this.status = 3;
-                this.updateMenu();
                 this.updateChart();
             }
         });
@@ -159,49 +127,40 @@ class ContentCureMenu extends Group{
         this.recovered.setOnAction(e -> {
             if(this.status != 4){
                 this.status = 4;
-                this.updateMenu();
                 this.updateChart();
             }
         });
         return new HBox(this.cases, this.deaths, this.cured, this.recovered);
     }
 
-    private void updateMenu(){
+    private void updateChart(){
+        this.chart.getData().clear();    
         if(this.status == 1){
             emphasisButton(this.cases);
             clearButton(this.deaths);
             clearButton(this.cured);
             clearButton(this.recovered);
+            this.legend.setText("Evolution of cases");
+            this.chart.getData().add(dataSet(this.countries.listOfCasesByDay()));
         } else if(this.status == 2){
             clearButton(this.cases);
             emphasisButton(this.deaths);
             clearButton(this.cured);
             clearButton(this.recovered);
+            this.legend.setText("Evolution of deaths");
+            this.chart.getData().add(dataSet(this.countries.listOfDeathsByDay()));
         } else if(this.status == 3){
             clearButton(this.cases);
             clearButton(this.deaths);
             emphasisButton(this.cured);
             clearButton(this.recovered);
+            this.legend.setText("Evolution of cured");
+            this.chart.getData().add(dataSet(this.countries.listOfCuredByDay()));
         } else if(this.status == 4){
             clearButton(this.cases);
             clearButton(this.deaths);
             clearButton(this.cured);
             emphasisButton(this.recovered);
-        } 
-    }
-
-    private void updateChart(){
-        this.chart.getData().clear();    
-        if(this.status == 1){
-            this.legend.setText("Evolution of cases");
-            this.chart.getData().add(dataSet(this.countries.listOfCasesByDay()));
-        } else if(this.status == 2){
-            this.legend.setText("Evolution of deaths");
-            this.chart.getData().add(dataSet(this.countries.listOfDeathsByDay()));
-        } else if(this.status == 3){
-            this.legend.setText("Evolution of cured");
-            this.chart.getData().add(dataSet(this.countries.listOfCuredByDay()));
-        } else if(this.status == 4){
             this.legend.setText("Evolution of recovered");
             this.chart.getData().add(dataSet(this.countries.listOfRecoveredByDay()));
         }
@@ -259,6 +218,5 @@ class ContentCureMenu extends Group{
     public void refreshDisplay(){
         this.updateChart();
         this.updateLabel();
-        this.updateMenu();
     }
 }

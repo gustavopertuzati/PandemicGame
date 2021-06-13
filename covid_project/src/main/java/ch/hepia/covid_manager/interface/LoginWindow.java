@@ -1,27 +1,18 @@
 package ch.hepia.covid_manager;
 
 import javafx.application.Application;
-
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.Screen;
-import javafx.stage.Modality;
-import javafx.stage.Window;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.Stop;
-
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
-
-
 import javafx.scene.text.Font;
-
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.Scene;
@@ -31,22 +22,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.CornerRadii;
-
-
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.geometry.Insets;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderWidths;
-
 
 public class LoginWindow extends HBox{
 
@@ -55,13 +38,11 @@ public class LoginWindow extends HBox{
     private User userG = new User(3, "Amon-Gus");
 
     private Stage secondStage = new Stage();
-    
     private boolean loggedIn = false;
     
     public LoginWindow(){}
     
     public void loginScene() {
-
         VBox loginT = this.createUserVBox(this.userT, "images/user1.png");
         VBox loginA = this.createUserVBox(this.userA, "images/user2.png");
         VBox loginG = this.createUserVBox(this.userG, "images/user3.png");
@@ -78,7 +59,6 @@ public class LoginWindow extends HBox{
         label.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 64px;");
         label.setAlignment(Pos.CENTER);
         label.setMinWidth(1400);
-
 
         VBox loginVBox = new VBox();
         loginVBox.getChildren().addAll(label, loginHBox);
@@ -105,13 +85,10 @@ public class LoginWindow extends HBox{
         this.secondStage.setScene(scene); 
         this.secondStage.initStyle(StageStyle.UNDECORATED);
         this.secondStage.show();
-
     }
 
     public VBox createUserVBox(User user, String path){
-
         VBox vbox = new VBox();
-
         Image img = new Image(this.getClass().getClassLoader().getResourceAsStream(path));
         ImageView icon = new ImageView(img);
         icon.setFitWidth(135);
@@ -151,14 +128,10 @@ public class LoginWindow extends HBox{
             }
         });
         icon.setOpacity(0.75);
-        
         Label label = new Label(user.getUsername());
         label.setStyle("-fx-text-fill: #808080; -fx-font-size: 16px;");
-        
         vbox.getChildren().addAll(icon, label);
-        
         return vbox;
-        
     }
 
     public void loginClose(){

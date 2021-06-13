@@ -248,8 +248,10 @@ public class Country {
         double chanceToInfect = Virus.getInstance().infectivity();
 
         int newCases = (int) Math.round(this.totalActive*nbPpl*chanceToInfect)+2;
-
-        if (newCases > this.totalPopulation - this.totalDeaths - this.totalActive - this.totalRecovered){
+        
+        //System.out.println("\t" + newCases);
+        
+        if (newCases > this.totalPopulation - this.totalDeaths - this.totalActive - this.totalRecovered - this.totalCured){
             this.dailyCases = newCases;
             this.totalActive += newCases;
         }else{
@@ -263,6 +265,8 @@ public class Country {
         double randDouble =  rand.nextGaussian()*0.0001*(1-Virus.getInstance().resistance());
         int newRecov = (int)randDouble * this.totalActive+2;
 
+        //System.out.println("\t" + newRecov);
+
         this.totalActive -= newRecov;
         this.totalRecovered += newRecov;
     }
@@ -273,12 +277,26 @@ public class Country {
         double randDouble =  rand.nextGaussian()*Virus.getInstance().lethality() ;
         int newDead = (int)randDouble * this.totalActive+2;
 
+        //System.out.println("\t" + newDead);
+
         this.totalActive -= newDead;
         this.totalDeaths += newDead;
     }
 
     private void newCured(){
-        System.out.println("State updates not implemented yet");
+        if(this.totalCases > 1000000){
+            Random rand = new Random();
+            // update progression
+            Cure.getInstance().updateCure();
+            // The value is not accurate
+            double randDouble =  rand.nextGaussian()*Cure.getInstance().impact() ;
+            // we need to know the population that can be infected -> (totalpop-recovered-active-death-cured)
+            int newCured = (int)randDouble * this.totalActive+2;
+    
+            //System.out.println("\t" + newCured);
+    
+            this.totalCured += newCured;
+        }
     }
 
     private void updateState(){

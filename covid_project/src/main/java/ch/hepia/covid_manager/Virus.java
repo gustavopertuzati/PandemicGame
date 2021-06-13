@@ -13,6 +13,7 @@ public class Virus{
     private double resistance;
   
     private List<Perk> perkLst;
+    //Design Pattern Observer
     private List<PropertyChangeListener> lstObservers;
     private int currentPoints;
   
@@ -100,7 +101,6 @@ public class Virus{
     public boolean hasEnoughPoints(Perk p){
         return p.cost() <= this.currentPoints;
     }
-
 
     public boolean hasPerk(Perk p){
         return this.perkLst.contains(p);
