@@ -278,11 +278,11 @@ public class Country {
     }
 
     private void newCured(){
-        System.out.println("State updates not implemented yet");
+        //System.out.println("State updates not implemented yet");
     }
 
     private void updateState(){
-        System.out.println("State updates not implemented yet");
+        //System.out.println("State updates not implemented yet");
     }
 
     public void elapseDay(){

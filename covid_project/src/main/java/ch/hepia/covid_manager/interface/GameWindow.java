@@ -108,7 +108,8 @@ public class GameWindow extends Stage{
         iV.setOnMouseClicked(e ->{
             cb.setSickBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCases() / 10000.0), 16.0);
             cb.setDeathBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalDeaths() / 10000.0), 16.0 );
-            cb.setVaccinatedBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCured() / 10000.0), 16.0 );
+            cb.setVaccinatedBarX((2*newWidth/3) - (newWidth/(3.0 * countries.totalCured() / 100000.0)) * (countries.totalPop() / 100000.0));
+            cb.setVaccinatedBar((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCured() / 100000.0));
             cb.setBarName("World");
             optionBox.removeItems();
         });
@@ -117,7 +118,8 @@ public class GameWindow extends Stage{
                 NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY(), ld, cb, countries, newWidth, newHeight);
                 cb.setSickBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
                 cb.setDeathBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
-                cb.setVaccinatedBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalPop()/*countries.totalCured()*/ / 10000.0), 16.0 );
+                cb.setVaccinatedBarX((2*newWidth/3) - (newWidth/(3.0 * c.totalPopulation() / 100000.0)) * (c.playerTotalCured() / 100000.0));
+                cb.setVaccinatedBar((newWidth/(3.0 * c.totalPopulation() / 100000.0)) * (c.playerTotalCured() / 100000.0));
                 cb.setBarName(c.name());
                 optionBox.removeItems();
             });;
