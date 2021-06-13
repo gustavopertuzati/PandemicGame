@@ -45,12 +45,11 @@ import javafx.stage.StageStyle;
 
 /*
     comprendre pourquoi on commence avec des cas négatifs au début
-    verifier que les updates des pays se font bien (cases, cured, deaths, actives, recovered) -> verifier que le ratio est ok et que les graphs sont bons
-    checker si les ratios pour changer les couleurs des cercles sont cohérents
+    checker si les ratios pour changer les couleurs des cercles sont cohérents + les ratios pour les updates dans elapseDay() -> checker avec les graphs
     faire en sorte que le vaccin fonctionne (modifier le constructeur Cure() + gerer les updates des champs aux bons endroits, la barre du bas avec l'observer...)
     mettre les bons coefs pour les perks dans le dump
     faire des tests pour les notions critiques
-    ajouter les décisions prises par les pays quand les facteurs sont trop hauts (si le nombre de nouveau cas est trop élevé on cut un peu les champs du virus)
+    charger la date et les points correctements
 */
 
 public class GameWindow extends Stage{
@@ -58,9 +57,7 @@ public class GameWindow extends Stage{
     LocalDate ld;
     
     public GameWindow(int idPlayer, String playerName, boolean newGame){
-        ld = LocalDate.of(2020,01,22);
-        System.out.println(idPlayer + ": " + playerName + ", " + newGame + "\n\n");
-        
+        ld = LocalDate.of(2020,01,22);      
         
         String driver = "com.mysql.cj.jdbc.Driver";
         String url = "jdbc:mysql://localhost";
@@ -71,9 +68,7 @@ public class GameWindow extends Stage{
             throw new RuntimeException(e);
         }
         Perks perks = new Perks();
-        perks.init();
-        System.out.println(perks.listOfPerks());
-        
+        perks.init();       
 
         if(!newGame){
             try{
@@ -84,12 +79,8 @@ public class GameWindow extends Stage{
             }
         }
 
-
-
         Virus v = Virus.getInstance();
-        //System.out.println(perks.listOfPerks());
-        
-        
+        System.out.println(perks.listOfPerks());      
 
         Countries countries = new Countries();
         dbc.loadCountries(new User(idPlayer, User.getUserById(idPlayer)), newGame).thenAccept(c ->{
@@ -190,7 +181,7 @@ public class GameWindow extends Stage{
         });
 
         sbVirus.setTranslateX(newWidth);
-        
+
         game.getChildren().addAll(sbVirus, cb.getBarName(), cb.getHealthyBar(), cb.getSickBar(), cb.getDeathBar(), cb.getVaccinatedBar(), sbCure);
         scroller.setTranslateX(0);
 

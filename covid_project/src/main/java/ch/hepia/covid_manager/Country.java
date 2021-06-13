@@ -27,6 +27,7 @@ public class Country {
     private int totalCured;
     private int dailyCured;
     private int totalActive;
+    private int nbPpl = 12;
 
     // données réelles
     private Map < LocalDate, Integer[] > countryHistory = new HashMap < > ();
@@ -240,12 +241,19 @@ public class Country {
     }
 
     private void newCases(){
-        //This depends on the measures taken by the country ( i.e. confinement or remote work etc...)
-        int nbPpl = 12; 
         //Chance to infect depends on whether or not masks are enforced etc...
         double chanceToInfect = Virus.getInstance().infectivity();
-
-        int newCases = (int) Math.round(this.totalActive*nbPpl*chanceToInfect)+2;
+        //This depends on the measures taken by the country ( i.e. confinement or remote work etc...)
+        if(this.dailyCases >= this.totalPopulation / 2500 || this.dailyDeaths >= this.totalPopulation / 5000){
+            this.nbPpl = 4; // comme l'effet d'un confinement 
+            chanceToInfect /= 3.0;
+        } else if(this.dailyCases >= this.totalPopulation / 1250 || this.dailyDeaths >= this.totalPopulation / 2500){
+            this.nbPpl = 8; // comme l'effet d'un couvre feu
+            chanceToInfect /= 1.5;
+        }
+        int newCases = (int) Math.round(this.totalActive*this.nbPpl*chanceToInfect)+2;
+        //peut etre tirer un nombre random sinon ils passent tous le seuil en meme temps
+        // comment on faire pour determiner quelle partie de la population on peut encore infecter (peut etre avec un champ supplémentaire)
         
         //System.out.println("\t" + newCases);
         
@@ -265,7 +273,7 @@ public class Country {
 
         //System.out.println("\t" + newRecov);
 
-        this.totalActive = Math.max((this.totalActive -newRecov), 0);
+        this.totalActive = Math.max((this.totalActive -newRecov), 1);
         this.totalRecovered += newRecov;
     }
 
@@ -274,10 +282,8 @@ public class Country {
         //This should be about a .5% death rate everytime this method is called
         double randDouble =  rand.nextGaussian()*Virus.getInstance().lethality() ;
         int newDead = (int)randDouble * this.totalActive+2;
-
         //System.out.println("\t" + newDead);
-
-        this.totalActive = Math.max((this.totalActive -newDead), 0);
+        this.totalActive = Math.max((this.totalActive -newDead), 1);
         this.totalDeaths += newDead;
     }
 

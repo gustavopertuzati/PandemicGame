@@ -7,7 +7,7 @@ public class PerkResistance extends Perk{
     //Design pattern FactoryMethod
     public PerkResistance(int id, String name, String description, double v1, int cost) {
         super(id, name, description, cost);
-        this.resistance = v1;
+        this.resistance = Math.floor(v1 * 100) / 100;
     }
 
     @Override

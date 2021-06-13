@@ -7,7 +7,7 @@ public class PerkInfectivity extends Perk{
     //Design pattern FactoryMethod
     public PerkInfectivity(int id, String name, String description, double v1, int cost) {
         super(id, name, description, cost);
-        this.infectivity = v1;
+        this.infectivity =  Math.floor(v1 * 100) / 100;
     }
 
     @Override
