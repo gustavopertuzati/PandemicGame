@@ -44,7 +44,7 @@ public class CasesBar{
         this.vaccinatedBar.opacityProperty().set(0.75);
         this.vaccinatedBar.setPrefSize((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCured() / 100000.0), 16.0); //je mets 0 parce qu'on a pas de données
         this.vaccinatedBar.setStyle("-fx-background-color: blue; -fx-background-radius: 0 10 10 0");
-        this.vaccinatedBar.setTranslateX(2*newWidth/3 - 62.0);
+        this.vaccinatedBar.setTranslateX(2*newWidth/3);
         this.vaccinatedBar.setTranslateY(newHeight-45);
 
         //Nom de la barre des cas
@@ -75,8 +75,12 @@ public class CasesBar{
         return this.vaccinatedBar;
     }
 
-    public void setVaccinatedBar(double newWidth, double newHeight){
-        this.vaccinatedBar.setPrefSize(newWidth, newHeight);        
+    public void setVaccinatedBarX(double newWidth){
+        this.vaccinatedBar.setTranslateX(newWidth);
+    }
+
+    public void setVaccinatedBar(double newWidth){
+        this.vaccinatedBar.setPrefWidth(newWidth);
     }
 
     public Rectangle getHealthyBar(){

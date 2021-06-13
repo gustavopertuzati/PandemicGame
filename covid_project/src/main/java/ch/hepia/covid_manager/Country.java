@@ -298,7 +298,7 @@ public class Country {
     }
 
     private void updateState(){
-        System.out.println("State updates not implemented yet");
+        //System.out.println("State updates not implemented yet");
     }
 
     public void elapseDay(){

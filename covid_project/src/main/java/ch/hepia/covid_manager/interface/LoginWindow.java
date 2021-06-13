@@ -31,6 +31,12 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderWidths;
 
+import javafx.animation.FadeTransition;
+import javafx.util.Duration;
+
+
+
+
 public class LoginWindow extends HBox{
 
     private User userT = new User(1, "ThomasKek");
@@ -70,6 +76,8 @@ public class LoginWindow extends HBox{
         HBox loginHBox = new HBox(); 
         loginHBox.getChildren().addAll(loginT, loginA, loginG); 
         loginHBox.setAlignment(Pos.CENTER);
+        
+        makeFadeIn(loginHBox);
 
         Label label = new Label("Who's playing?");
         label.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 64px;");
@@ -98,6 +106,7 @@ public class LoginWindow extends HBox{
         Stop[] stops = new Stop[] { new Stop(0, begin), new Stop(1, end)};
         LinearGradient lg1 = new LinearGradient(0, 1, 0, 0, true, CycleMethod.REFLECT, stops);
         loginRoot.setBackground(new Background(new BackgroundFill(lg1, CornerRadii.EMPTY, Insets.EMPTY)));
+
 
         Scene scene = new Scene(loginRoot); 
         this.secondStage.setScene(scene); 
@@ -159,6 +168,15 @@ public class LoginWindow extends HBox{
 
     public void loginClose(){
         secondStage.close();
+    }
+
+    public void makeFadeIn(HBox hb){
+        FadeTransition fd = new FadeTransition();
+        fd.setDuration(Duration.seconds(10));
+        fd.setNode(hb);
+        fd.setFromValue(0);
+        fd.setToValue(1);
+        fd.play();
     }
     
     public User getUserById(int id){
