@@ -50,7 +50,7 @@ import javafx.stage.StageStyle;
     verifier que les perks fonctionnent bien (qu'ils affectent les bons champs du virus, qu'ils ont les bons coefs...)
     verifier que les interractions avec la base de données sont bonnes (sauvegardes + chargement + fonctionnement des procédures / triggers / vues)
     populate correctement la base de données (les bons coefs pour les perks ajout des virus...)
-    modifier la base de données pour ajouter les vaccinés
+    modifier la base de données pour ajouter les vacciné
     faire en sorte qu'au login on puisse choisir entre reprendre ou recommencer une partie
     clean le code dans GameWindow (si possible)
     faire des tests pour les notions critiques
@@ -65,6 +65,11 @@ public class GameWindow extends Stage{
     public GameWindow(int idPlayer, String playerName){
         System.out.println(idPlayer + ": " + playerName + "\n\n");
         Virus v = Virus.getInstance();
+        
+        
+
+
+
         ld = LocalDate.of(2020,01,22);
         
         String driver = "com.mysql.cj.jdbc.Driver";
@@ -204,7 +209,7 @@ public class GameWindow extends Stage{
         v.addPoint();
             
         this.initStyle(StageStyle.UNDECORATED);
-
+        
         this.show();
     }
 
@@ -224,16 +229,12 @@ public class GameWindow extends Stage{
         for(Country c : map.keySet()){
             if(zoomWidth/400 < 1/(0.1*c.size())){
                 if(container.getChildren().contains(map.get(c)[1]))
-                    container.getChildren().removeAll(map.get(c)[0], map.get(c)[1]);
+                container.getChildren().removeAll(map.get(c)[0], map.get(c)[1]);
             }else{
                 if(!container.getChildren().contains(map.get(c)[1])){
                     container.getChildren().addAll(map.get(c)[0], map.get(c)[1]);
                 }
             }
         }
-    }
-
-    public void setCountryCircles(Map<Country,Circle[]> countryCirclesMap, Countries countries){
-
     }
 }

@@ -94,6 +94,9 @@ public class Virus{
         return this.perkLst.contains(p);
     }
 
+  public List<Perk> getUnlockedPerks(){
+    return this.perkLst;
+  }
     @Override
     public String toString(){
         String output = "Virus{\n";
