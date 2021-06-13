@@ -51,9 +51,9 @@ public class BottomBar extends HBox implements PropertyChangeListener{
         this.date.setMinWidth(145);
         this.date.setAlignment(Pos.CENTER);
     
-        this.virusPoints = labelFromBottomBar("5");
+        this.virusPoints = labelFromBottomBar("0");
 
-        this.curePoints = labelFromBottomBar("12");
+        this.curePoints = labelFromBottomBar("0");
     
         this.getChildren().addAll(this.btnCure, this.curePoints, this.pbCure, this.date, this.pbVirus, this.virusPoints, this.btnVirus);
         this.setBackground(new Background(new BackgroundFill(Color.BLACK,

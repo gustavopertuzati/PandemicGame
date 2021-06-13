@@ -35,7 +35,6 @@ public class Country {
                    int totalCases, int dailyCases, 
                    int totalDeaths, int dailyDeaths, 
                    int totalRecovered, int dailyRecovered,
-                   int totalCured, int dailyCured, 
                    int size, int totalPopulation, String slug){
 
         this.slug = slug;
@@ -48,13 +47,12 @@ public class Country {
         this.dailyDeaths = dailyDeaths;
         this.totalRecovered = totalRecovered;
         this.dailyRecovered = dailyRecovered;
-        this.totalCured = totalCured;
-        this.dailyCured = dailyCured;
+        this.totalCured = 0;
+        this.dailyCured = 0;
         this.totalActive = totalCases - (totalRecovered + totalDeaths + totalCured);
         this.size = size;
         this.totalPopulation = totalPopulation;
     }
-
 
     public int playerTotalCases() {
         return this.totalCases;

@@ -12,7 +12,7 @@ public class PerkResistance extends Perk{
 
     @Override
     public void update(Virus v){
-        v.applyInfectivityBonus(this.resistance);
+        v.applyResistanceBonus(this.resistance);
     }
 
     @Override

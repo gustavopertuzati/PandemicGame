@@ -84,7 +84,6 @@ public class Virus{
         this.updateObservers();
     }
 
-
     public void upgrade(Perk p){
         if (this.currentPoints < p.cost()){
             return;

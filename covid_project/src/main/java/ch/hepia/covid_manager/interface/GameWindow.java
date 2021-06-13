@@ -48,14 +48,12 @@ import javafx.stage.StageStyle;
     verifier que les updates des pays se font bien (cases, cured, deaths, actives, recovered) -> verifier que le ratio est ok et que les graphs sont bons
     modifier un peut la manière dont on determine la couleur du cercle pour le pays (checker si les ratios sont cohérents)
     faire en sorte que le vaccin fonctionne (modifier le constructeur Cure() + gerer les updates des champs aux bons endroits, la barre du bas avec l'observer...)
-    verifier que les perks fonctionnent bien (qu'ils affectent les bons champs du virus, qu'ils ont les bons coefs...)
     verifier que les interractions avec la base de données sont bonnes (sauvegardes + chargement + fonctionnement des procédures / triggers / vues)
     populate correctement la base de données (les bons coefs pour les perks ajout des virus...)
-    modifier la base de données pour ajouter les vacciné
-    faire en sorte qu'au login on puisse choisir entre reprendre ou recommencer une partie
     clean le code dans GameWindow (si possible)
     faire des tests pour les notions critiques
     uniformiser le nom des fonctions
+    remplacer les cure et virus par getInstance()
     ajouter les décisions prises par les pays quand les facteurs sont trop hauts (si le nombre de nouveau cas est trop élevé on cut un peu les champs du virus)
 */
 
@@ -63,14 +61,10 @@ public class GameWindow extends Stage{
     
     LocalDate ld;
     
-    public GameWindow(int idPlayer, String playerName){
-        System.out.println(idPlayer + ": " + playerName + "\n\n");
-        
-        
-
-
-
+    public GameWindow(int idPlayer, String playerName, boolean newGame){
         ld = LocalDate.of(2020,01,22);
+        System.out.println(idPlayer + ": " + playerName + ", " + newGame + "\n\n");
+        
         
         String driver = "com.mysql.cj.jdbc.Driver";
         String url = "jdbc:mysql://localhost";
@@ -80,21 +74,28 @@ public class GameWindow extends Stage{
         }catch(Exception e){
             throw new RuntimeException(e);
         }
-
         Perks perks = new Perks();
         perks.init();
-        try{
-            dbc.loadVirus(new User(idPlayer, User.getUserById(idPlayer)), perks).get();
-        }catch(Exception e){
-            throw new RuntimeException(e);
+        
+
+        if(!newGame){
+            try{
+                dbc.loadVirus(new User(idPlayer, User.getUserById(idPlayer)), perks).get();
+                ld = dbc.loadDate(ld, new User(idPlayer, User.getUserById(idPlayer))).get();
+            }catch(Exception e){
+                throw new RuntimeException(e);
+            }
         }
+
+
+
         Virus v = Virus.getInstance();
         //System.out.println(perks.listOfPerks());
         
         
 
         Countries countries = new Countries();
-        dbc.loadCountries(new User(idPlayer, User.getUserById(idPlayer))).thenAccept(c ->{
+        dbc.loadCountries(new User(idPlayer, User.getUserById(idPlayer)), newGame).thenAccept(c ->{
             c.listOfCountries().forEach(i -> {
                 countries.addCountry(i);
             });
@@ -203,22 +204,15 @@ public class GameWindow extends Stage{
                 this.setMaximized(false);
         });        
 
-        int speed = 5;
+        int speed = 1;
         Timeline tl = new Timeline(new KeyFrame(Duration.seconds(speed), e ->{
                 ld = ld.plusDays(1);
                 elapseDayForGame(countries, btBar, ld, newWidth, newHeight, v, box);
         }));
         tl.setCycleCount(Timeline.INDEFINITE);
         tl.play();
-
         v.addListener(btBar);
-
-        // a retirer 
-        v.addPoint();
-        v.addPoint();
-            
         this.initStyle(StageStyle.UNDECORATED);
-        
         this.show();
     }
 

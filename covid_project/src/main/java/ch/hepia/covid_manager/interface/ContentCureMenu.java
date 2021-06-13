@@ -93,8 +93,6 @@ class ContentCureMenu extends Group{
         b.setStyle("-fx-border-color: #fff;-fx-border-width: 3;-fx-background-color: transparent;-fx-font-size: 1.5em;-fx-border-radius: 5px;");
         b.setTranslateX(7 * pos);
         b.setTranslateY(20);
-        b.hoverProperty().addListener( e -> {
-        });
         return b;
     }
 

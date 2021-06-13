@@ -12,7 +12,7 @@ public class PerkLethality extends Perk{
 
     @Override
     public void update(Virus v){
-        v.applyInfectivityBonus(this.lethality);
+        v.applyLethalityBonus(this.lethality);
     }
 
     @Override

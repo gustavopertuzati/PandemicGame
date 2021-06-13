@@ -28,13 +28,24 @@ public class DropdownMenu extends VBox {
         this.status = true;
         this.statusDisplay = true;
         this.save = generateMenuButtons("Save");
+
+        String driver = "com.mysql.cj.jdbc.Driver";
+        String url = "jdbc:mysql://localhost";
+        DataBaseCommunicator dbc;
+        try{
+            dbc = new DataBaseCommunicator(driver, url, "root", "root");
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+
         this.save.setOnAction(e -> {
-            //DataBaseCommunicator.save(v, countries, idPlayer, ld);
+
+            dbc.save(v, c, new User(idPlayer, User.getUserById(idPlayer)), ld);
             this.removeItems();
         });
         this.saveExit = generateMenuButtons("Save & Exit");
         this.saveExit.setOnAction(e -> {
-            //DataBaseCommunicator.save(v, countries, idPlayer, ld);
+            dbc.save(v, c, new User(idPlayer, User.getUserById(idPlayer)), ld);
             System.exit(0);
         });
         this.exit = generateMenuButtons("Exit");
@@ -71,10 +82,10 @@ public class DropdownMenu extends VBox {
             }
         });
         b.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
-          @Override
-          public void handle(MouseEvent e) {
-            b.setStyle("-fx-border-color: #fff;-fx-border-width: 2;-fx-background-color: transparent;-fx-font-size: 1em;");
-          }
+            @Override
+            public void handle(MouseEvent e) {
+                b.setStyle("-fx-border-color: #fff;-fx-border-width: 2;-fx-background-color: transparent;-fx-font-size: 1em;");
+            }
         });
         return b;
     }

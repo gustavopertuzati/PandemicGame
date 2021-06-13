@@ -39,10 +39,24 @@ public class LoginWindow extends HBox{
 
     private Stage secondStage = new Stage();
     private boolean loggedIn = false;
-    
+
+    private Button start;
+    private Button load;
+    private HBox items;
+
     public LoginWindow(){}
     
     public void loginScene() {
+
+        this.start = this.generateMenuButtons("Start");
+        this.load = this.generateMenuButtons("Continue");
+        
+        this.items = new HBox();
+        this.items.setVisible(false);
+        this.items.setOnMouseMoved(e -> {
+            this.items.setVisible(false);    
+        });
+
         VBox loginT = this.createUserVBox(this.userT, "images/user1.png");
         VBox loginA = this.createUserVBox(this.userA, "images/user2.png");
         VBox loginG = this.createUserVBox(this.userG, "images/user3.png");
@@ -50,6 +64,8 @@ public class LoginWindow extends HBox{
         loginT.setAlignment(Pos.CENTER);
         loginA.setAlignment(Pos.CENTER);
         loginG.setAlignment(Pos.CENTER);
+        this.items.setAlignment(Pos.CENTER);
+
 
         HBox loginHBox = new HBox(); 
         loginHBox.getChildren().addAll(loginT, loginA, loginG); 
@@ -61,9 +77,11 @@ public class LoginWindow extends HBox{
         label.setMinWidth(1400);
 
         VBox loginVBox = new VBox();
-        loginVBox.getChildren().addAll(label, loginHBox);
+        loginVBox.getChildren().addAll(label, loginHBox, this.items);
+        loginVBox.setMargin(this.items, new Insets(30, 0, 0, 0));
+
         loginVBox.setAlignment(Pos.CENTER);
-        loginVBox.setSpacing(30);
+        loginVBox.setSpacing(35);
 
         Image img = new Image(this.getClass().getClassLoader().getResourceAsStream("images/logo.png"));
         ImageView logo = new ImageView(img);
@@ -115,17 +133,22 @@ public class LoginWindow extends HBox{
             }
         });
 
-        icon.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                vbox.setBorder(new Border(new BorderStroke(Color.valueOf("#9E9E9E"),
-                BorderStrokeStyle.SOLID,
-                CornerRadii.EMPTY,
-                BorderWidths.DEFAULT)));
-                secondStage.close();
-                event.consume();
-                GameWindow game = new GameWindow(user.getUserId(), user.getUsername());
-            }
+        icon.setOnMouseClicked(e -> {
+            this.items.getChildren().clear();
+            vbox.setBorder(new Border(new BorderStroke(Color.valueOf("#9E9E9E"),
+            BorderStrokeStyle.SOLID,
+            CornerRadii.EMPTY,
+            BorderWidths.EMPTY)));
+            this.start.setOnAction(e1 -> {
+                GameWindow game = new GameWindow(user.getUserId(), user.getUsername(), true);
+                this.loginClose();
+            });
+            this.load.setOnAction(e2 -> {
+                GameWindow game = new GameWindow(user.getUserId(), user.getUsername(), false);
+                this.loginClose();
+            });
+            this.items.getChildren().addAll(this.start, this.load);
+            this.items.setVisible(true);
         });
         icon.setOpacity(0.75);
         Label label = new Label(user.getUsername());
@@ -149,5 +172,26 @@ public class LoginWindow extends HBox{
             default:
                 return userT;
         }
+    }
+
+    private Button generateMenuButtons(String label){
+        Button b = new Button(label);
+        b.setTextFill(Color.WHITE);
+        b.setStyle("-fx-border-color: #fff;-fx-border-width: 2;-fx-background-color: transparent;-fx-font-size: 1.5em;");
+        b.setPrefWidth(200);
+        b.setPrefHeight(50);
+        b.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                b.setStyle("-fx-border-color: #808080;-fx-border-width: 2;-fx-background-color: transparent;-fx-font-size: 1.5em;");
+            }
+        });
+        b.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                b.setStyle("-fx-border-color: #fff;-fx-border-width: 2;-fx-background-color: transparent;-fx-font-size: 1.5em;");
+          }
+        });
+        return b;
     }
 }
