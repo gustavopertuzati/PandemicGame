@@ -137,6 +137,7 @@ public class Countries{
     // update fields for each country at the end of the day
     public void elapseDayForAllCountries(){
         this.countries.forEach(c->c.elapseDay());
+        System.out.println(this.totalCases());
     }
 
     // global data for the world fields for each new day 

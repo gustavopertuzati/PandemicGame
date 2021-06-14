@@ -308,8 +308,8 @@ public class Country {
     }
 
     public void elapseDay(){
-        this.newRecoveries();
         this.newCases();
+        this.newRecoveries();
         this.newDeaths();
         this.newCured();
     }

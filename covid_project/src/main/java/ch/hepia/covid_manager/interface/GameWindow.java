@@ -53,8 +53,7 @@ import javafx.stage.StageStyle;
 */
 
 public class GameWindow extends Stage{
-    
-    LocalDate ld;
+    LocalDate ld;    
     
     public GameWindow(int idPlayer, String playerName, boolean newGame){
         ld = LocalDate.of(2020,01,22);      
