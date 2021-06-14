@@ -35,11 +35,8 @@ class NewStage {
         btn2.setText("X");
         btn2.setStyle("-fx-background-color: transparent; -fx-font-weight: bold");
         btn2.setOnAction(aevent -> {
-
-            cb.setSickBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCases() / 10000.0), 16.0);
-            cb.setDeathBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalDeaths() / 10000.0), 16.0 );
-            cb.setBarName("World");
-
+            cb.setDisplay(false);
+            cb.update(countries, newWidth, newHeight);
             detailStage.hide();
         });
         
@@ -62,7 +59,7 @@ class NewStage {
         detailStage.setX(x);
         detailStage.setY(y);
         detailStage.setWidth(230);
-        detailStage.setHeight(130);
+        detailStage.setHeight(150);
         detailStage.initStyle(StageStyle.UNDECORATED);
         detailStage.setOpacity(0.8);
         
@@ -90,7 +87,7 @@ class NewStage {
         detailStage.setX(x);
         detailStage.setY(y);
         detailStage.setWidth(250);
-        detailStage.setHeight(130);
+        detailStage.setHeight(150);
         detailStage.initStyle(StageStyle.UNDECORATED);
         detailStage.setOpacity(0.8);
         
@@ -105,7 +102,7 @@ class NewStage {
 
     void toggleStage(Stage detailStage){ 
         if(detailStage.getHeight() == 260){
-            detailStage.setHeight(130);
+            detailStage.setHeight(150);
         }else{
             detailStage.setHeight(260);
         }

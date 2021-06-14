@@ -37,10 +37,9 @@ public class DropdownMenu extends VBox {
         }catch(Exception e){
             throw new RuntimeException(e);
         }
-
         this.save.setOnAction(e -> {
 
-            dbc.save(v, c, new User(idPlayer, User.getUserById(idPlayer)), ld);
+            dbc.save(v, c, new User(idPlayer, User.getUserById(idPlayer)), GameWindow.getDate());
             this.removeItems();
         });
         this.saveExit = generateMenuButtons("Save & Exit");

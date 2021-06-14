@@ -44,13 +44,13 @@ import javafx.util.Duration;
 import javafx.stage.StageStyle;
 
 /*
-    addapter les ratios pour les pays,, le virus, les perks et le vaccin
+    bien addapter les ratios pour les pays, le virus, les perks et le vaccin -> Equilibrage du jeu (ratio de cercles qui est nul + formule des recovered)
     faire des tests pour les notions critiques
-    charger la date et les points correctements
+    clean le code (Virus.getInstance par exemple)
 */
 
 public class GameWindow extends Stage{
-    LocalDate ld;    
+    private static LocalDate ld;    
     
     public GameWindow(int idPlayer, String playerName, boolean newGame){
         ld = LocalDate.of(2020,01,22);      
@@ -99,21 +99,15 @@ public class GameWindow extends Stage{
 
         ImageView iV = new ImageView(worldImage);
         iV.setOnMouseClicked(e ->{
-            cb.setSickBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCases() / 10000.0), 16.0);
-            cb.setDeathBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalDeaths() / 10000.0), 16.0 );
-            cb.setVaccinatedBarX((2*newWidth/3) - (newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCured() / 100000.0));
-            cb.setVaccinatedBar((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCured() / 100000.0));
-            cb.setBarName("World");
+            cb.setDisplay(false);
+            cb.update(countries, newWidth, newHeight);
             optionBox.removeItems();
         });
 
         Map<Country,Circle[]> countryCirclesMap = countries.getCountryCirclesMap((e, c) ->  {
                 NewStage ct = new NewStage(c, this, e.getScreenX(), e.getScreenY(), ld, cb, countries, newWidth, newHeight);
-                cb.setSickBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
-                cb.setDeathBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
-                cb.setVaccinatedBarX((2*newWidth/3) - (newWidth/(3.0 * c.totalPopulation() / 100000.0)) * (c.playerTotalCured() / 100000.0));
-                cb.setVaccinatedBar((newWidth/(3.0 * c.totalPopulation() / 100000.0)) * (c.playerTotalCured() / 100000.0));
-                cb.setBarName(c.name());
+                cb.setDisplay(true);
+                cb.update(c, newWidth, newHeight);
                 optionBox.removeItems();
             });;
         
@@ -192,7 +186,7 @@ public class GameWindow extends Stage{
         int speed = 1;
         Timeline tl = new Timeline(new KeyFrame(Duration.seconds(speed), e ->{
                 ld = ld.plusDays(1);
-                elapseDayForGame(countries, btBar, ld, newWidth, newHeight, v, box);
+                elapseDayForGame(countries, btBar, ld, newWidth, newHeight, v, box, cb);
         }));
         tl.setCycleCount(Timeline.INDEFINITE);
         tl.play();
@@ -204,11 +198,12 @@ public class GameWindow extends Stage{
         this.show();
     }
 
-    public void elapseDayForGame(Countries c, BottomBar b, LocalDate ld, int w, int h, Virus v, Group box){
+    public void elapseDayForGame(Countries c, BottomBar b, LocalDate ld, int w, int h, Virus v, Group box, CasesBar cb){
         //System.out.println(ld.toString());
         b.updateDate(ld);
         c.elapseDayForAllCountries();
         c.updateWorldHistory(ld);
+        cb.update(c, w, h);
         if(c.getTotalDailyPoints() > 1){
             v.addPoint();
         }
@@ -228,5 +223,10 @@ public class GameWindow extends Stage{
                 }
             }
         }
+    }
+
+
+    public static LocalDate getDate(){
+        return ld;
     }
 }

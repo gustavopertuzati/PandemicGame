@@ -128,4 +128,8 @@ public class Virus{
         this.lstObservers.add(pcl);
     }
 
+
+    public int getPoints(){
+        return this.currentPoints;
+    }
 }

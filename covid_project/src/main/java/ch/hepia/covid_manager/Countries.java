@@ -138,9 +138,7 @@ public class Countries{
     public void elapseDayForAllCountries(){
         if(this.totalCases() > 500000){
             Cure.getInstance().updateCure();
-            System.out.println(Cure.getInstance().progression());
         }
-        System.out.println(this.totalCases());
         this.countries.forEach(c->c.elapseDay());
         //System.out.println(this.totalCases());
     }
@@ -198,4 +196,5 @@ public class Countries{
         }
         return res;
     }
+
 }

@@ -12,6 +12,7 @@ public class CasesBar{
     private Region deathBar = new Region();
     private Rectangle healthyBar = new Rectangle();
     private Label barName = new Label("World");
+    private boolean display;
 
     public CasesBar(int newWidth, int newHeight, Countries countries) {
         
@@ -93,5 +94,29 @@ public class CasesBar{
 
     public void setBarName(String newName){
         this.barName.setText(newName);
+    }
+
+    public void setDisplay(boolean value){
+        this.display = value;
+    }
+
+    public void update(Country c, double newWidth, double newHeight){
+        if(this.display){
+            this.setSickBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
+            this.setDeathBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalDeaths() / 10000.0), 16.0 );
+            this.setVaccinatedBarX((2*newWidth/3) - (newWidth/(3.0 * c.totalPopulation() / 100000.0)) * (c.playerTotalCured() / 100000.0));
+            this.setVaccinatedBar((newWidth/(3.0 * c.totalPopulation() / 100000.0)) * (c.playerTotalCured() / 100000.0));
+            this.setBarName(c.name());
+        }
+    }
+
+    public void update(Countries countries, double newWidth, double newHeight){
+        if(!this.display){
+            this.setSickBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCases() / 10000.0), 16.0);
+            this.setDeathBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalDeaths() / 10000.0), 16.0 );
+            this.setVaccinatedBarX((2*newWidth/3) - (newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCured() / 100000.0));
+            this.setVaccinatedBar((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCured() / 100000.0));
+            this.setBarName("World");
+        }
     }
 }

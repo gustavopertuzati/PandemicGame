@@ -15,7 +15,7 @@ class AppTest {
     @Test
     void elapseDayTest() {
 
-        Country c = new Country("Test", 0, 0,0,0,0,0,0,0,0,10000,"test");
+        Country c = new Country("Test", 0, 0,0,0,0,0,0,0,0,10000,"test",0);
         Circle c1[] = c.getCountryCircles();
 
         int tmp1 = c.playerTotalCases();
@@ -34,7 +34,7 @@ class AppTest {
     @Test
     void perksPurchaseTest(){
 
-        
+
 
     }
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import ch.hepia.covid_manager.Cure;
+import ch.hepia.covid_manager.Virus;
 
 public class DataBaseCommunicator {
 
@@ -86,7 +87,8 @@ public class DataBaseCommunicator {
                 0,
                 size,
                 totalPop,
-                rs.getString(1)
+                rs.getString(1),
+                0
               )
             );
           }
@@ -130,7 +132,9 @@ public class DataBaseCommunicator {
       ",`lethality`=" +
       v.lethality() +
       ",`resistance`=" +
-      v.resistance() +
+      v.resistance() +      
+      ",`points`=" +
+      v.getPoints() +
       ", `cure_progress`=" +
       Cure.getInstance().progression() +
       ", `cure_impact` = "+
@@ -245,6 +249,7 @@ public class DataBaseCommunicator {
           String req = "SELECT * FROM Game WHERE `virus_id` = " + u.getUserId();
           ResultSet rs = this.executeQuery(req);
           if (rs.next()) {
+            System.out.println(LocalDate.parse(rs.getString(3)));
             return LocalDate.parse(rs.getString(3));
           }
         } catch (Exception e) {

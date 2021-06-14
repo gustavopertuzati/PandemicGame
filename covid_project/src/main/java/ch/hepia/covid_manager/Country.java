@@ -39,29 +39,6 @@ public class Country {
                    int totalCases, int dailyCases, 
                    int totalDeaths, int dailyDeaths, 
                    int totalRecovered, int dailyRecovered,
-                   int size, int totalPopulation, String slug){
-
-        this.slug = slug;
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.totalCases = totalCases;
-        this.dailyCases = dailyCases;
-        this.totalDeaths = totalDeaths;
-        this.dailyDeaths = dailyDeaths;
-        this.totalRecovered = totalRecovered;
-        this.dailyRecovered = dailyRecovered;
-        this.totalCured = 0;
-        this.dailyCured = 0;
-        this.totalActive = totalCases - (totalRecovered + totalDeaths + totalCured);
-        this.size = size;
-        this.totalPopulation = totalPopulation;
-    }
-
-    public Country(String name, int latitude, int longitude,
-                   int totalCases, int dailyCases, 
-                   int totalDeaths, int dailyDeaths, 
-                   int totalRecovered, int dailyRecovered,
                    int size, int totalPopulation, String slug, int totalCured){
 
         this.slug = slug;
@@ -295,7 +272,7 @@ public class Country {
         
 
 
-        if (newCases < this.totalPopulation - this.totalDeaths - this.totalActive - this.totalRecovered - this.totalCured && newCases >= 0){
+        if (newCases < this.getTotalInfectible() && newCases >= 0){
             this.dailyCases = newCases;
             this.totalActive += newCases;
             this.totalCases += newCases;
@@ -335,7 +312,7 @@ public class Country {
             // The value is not accurate
             double randDouble =  rand.nextGaussian()*Cure.getInstance().impact() ;
             // we need to know the population that can be infected -> (totalpop-recovered-active-death-cured)
-            int newCured = (int) Math.abs(randDouble * this.totalActive);
+            int newCured = (int) Math.abs(randDouble * this.getTotalInfectible());
     
             //System.out.println("\t" + newCured);
             this.totalCured += newCured;
@@ -380,5 +357,9 @@ public class Country {
 
     public void setTotalRecovered(int val){
         this.totalRecovered = val;
+    }
+
+    private int getTotalInfectible(){
+        return this.totalPopulation - this.totalActive - this.totalCured - this.totalDeaths - this.totalRecovered;
     }
 }
