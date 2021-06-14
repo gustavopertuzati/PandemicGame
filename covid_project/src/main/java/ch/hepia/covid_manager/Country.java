@@ -28,6 +28,9 @@ public class Country {
     private int dailyCured;
     private int totalActive;
     private int nbPpl = 12;
+    private int confinementDays;
+
+    private Circle circles[];
 
     // données réelles
     private Map < LocalDate, Integer[] > countryHistory = new HashMap < > ();
@@ -242,11 +245,15 @@ public class Country {
 
     private void newCases(){
         //Chance to infect depends on whether or not masks are enforced etc...
-        double chanceToInfect = Virus.getInstance().infectivity();
+        double chanceToInfect = Virus.getInstance().infectivity()*0.05;
         //This depends on the measures taken by the country ( i.e. confinement or remote work etc...)
         if(this.dailyCases >= this.totalPopulation / 2500 || this.dailyDeaths >= this.totalPopulation / 5000){
+            this.confinementDays = 31;
+        }
+        if(this.confinementDays >    0){
             this.nbPpl = 4; // comme l'effet d'un confinement 
             chanceToInfect /= 3.0;
+            this.confinementDays -= 1;
         } else if(this.dailyCases >= this.totalPopulation / 1250 || this.dailyDeaths >= this.totalPopulation / 2500){
             this.nbPpl = 8; // comme l'effet d'un couvre feu
             chanceToInfect /= 1.5;
@@ -255,21 +262,21 @@ public class Country {
         //peut etre tirer un nombre random sinon ils passent tous le seuil en meme temps
         // comment on faire pour determiner quelle partie de la population on peut encore infecter (peut etre avec un champ supplémentaire)
         
-        //System.out.println("\t" + newCases);
-        
-        if (newCases > this.totalPopulation - this.totalDeaths - this.totalActive - this.totalRecovered - this.totalCured){
+
+
+        if (newCases < this.totalPopulation - this.totalDeaths - this.totalActive - this.totalRecovered - this.totalCured && newCases >= 0){
             this.dailyCases = newCases;
             this.totalActive += newCases;
         }else{
-            //Player has infected every infectible person
-        }
+            this.dailyCases = 0;
+        }       
     }
 
     private void newRecoveries(){
         Random rand = new Random();
         //This should be about a 5% recovery everytime this method is called
         double randDouble =  rand.nextGaussian()*0.0001*(1-Virus.getInstance().resistance());
-        int newRecov = (int)randDouble * this.totalActive+2;
+        int newRecov = (int) Math.abs(randDouble * this.totalActive);
 
         //System.out.println("\t" + newRecov);
 
@@ -281,9 +288,12 @@ public class Country {
         Random rand = new Random();
         //This should be about a .5% death rate everytime this method is called
         double randDouble =  rand.nextGaussian()*Virus.getInstance().lethality() ;
-        int newDead = (int)randDouble * this.totalActive+2;
+        int newDead = (int) Math.abs(randDouble * this.totalActive);
+
         //System.out.println("\t" + newDead);
         this.totalActive = Math.max((this.totalActive -newDead), 1);
+        this.dailyDeaths = newDead;
+
         this.totalDeaths += newDead;
     }
 
@@ -295,7 +305,7 @@ public class Country {
             // The value is not accurate
             double randDouble =  rand.nextGaussian()*Cure.getInstance().impact() ;
             // we need to know the population that can be infected -> (totalpop-recovered-active-death-cured)
-            int newCured = (int)randDouble * this.totalActive+2;
+            int newCured = (int) Math.abs(randDouble * this.totalActive);
     
             //System.out.println("\t" + newCured);
     
@@ -312,13 +322,17 @@ public class Country {
         this.newRecoveries();
         this.newDeaths();
         this.newCured();
+        this.circles[1].setFill(this.getColorFromCountry());
+        this.circles[0].setRadius(this.getCircleWidth() + 2);
+        this.circles[1].setRadius(this.getCircleWidth());
     }
 
     public Circle[] getCountryCircles() {
-        return new Circle[] {
+        this.circles =  new Circle[] {
             new Circle(this.latitude, this.longitude, this.getCircleWidth() + 2 , Color.BLACK ),
             new Circle(this.latitude, this.longitude, this.getCircleWidth() , this.getColorFromCountry())
         };
+        return this.circles;
     }
 
 

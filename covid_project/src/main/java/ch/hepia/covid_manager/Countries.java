@@ -53,9 +53,9 @@ public class Countries{
         return this.countries;
     }
 
-    public double totalCases(){
+    public int totalCases(){
         return this.countries.stream()
-                             .mapToDouble(c -> c.playerTotalCases())
+                             .mapToInt(c -> c.playerTotalCases())
                              .sum();
     }
 
@@ -71,9 +71,9 @@ public class Countries{
                              .sum();
     }
 
-    public double totalDeaths(){
+    public int totalDeaths(){
         return this.countries.stream()
-                             .mapToDouble(c -> c.playerTotalDeaths())
+                             .mapToInt(c -> c.playerTotalDeaths())
                              .sum();
     }
 
@@ -83,9 +83,9 @@ public class Countries{
                              .sum();    
     }
 
-    public double totalPop(){
+    public int totalPop(){
         return this.countries.stream()
-                             .mapToDouble(c -> c.totalPopulation())
+                             .mapToInt(c -> c.totalPopulation())
                              .sum();
     }
 
@@ -137,13 +137,13 @@ public class Countries{
     // update fields for each country at the end of the day
     public void elapseDayForAllCountries(){
         this.countries.forEach(c->c.elapseDay());
-        System.out.println(this.totalCases());
+        //System.out.println(this.totalCases());
     }
 
     // global data for the world fields for each new day 
     // (store actives, deaths, recovered and cured that will be displayed on the left side bar)
     public void updateWorldHistory(LocalDate date){
-        this.worldHistory.put(date, new int[] {this.totalDailyActive(), this.totalDailyDeaths(), this.totalDailyRecovered(), this.totalDailyCured()});
+        this.worldHistory.put(date, new int[] {this.totalActive(), this.totalDeaths(), this.totalRecovered(), this.totalCured()});
     }
 
     public LinkedHashMap<LocalDate, int[]> worldHistory(){

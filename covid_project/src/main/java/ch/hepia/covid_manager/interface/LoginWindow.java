@@ -172,7 +172,7 @@ public class LoginWindow extends HBox{
 
     public void makeFadeIn(HBox hb){
         FadeTransition fd = new FadeTransition();
-        fd.setDuration(Duration.seconds(10));
+        fd.setDuration(Duration.seconds(7));
         fd.setNode(hb);
         fd.setFromValue(0);
         fd.setToValue(1);
