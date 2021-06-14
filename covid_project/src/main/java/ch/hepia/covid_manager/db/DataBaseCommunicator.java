@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import ch.hepia.covid_manager.Cure;
+
 public class DataBaseCommunicator {
 
   private String dbDriver;
@@ -99,6 +101,7 @@ public class DataBaseCommunicator {
               int totalCases = rs.getInt(3);
               int totalActive = rs.getInt(4);
               int totalDeaths = rs.getInt(5);
+              int totalCured = rs.getInt(6);
               Country tmp = countries
                 .listOfCountries()
                 .stream()
@@ -108,6 +111,7 @@ public class DataBaseCommunicator {
               tmp.setTotalCases(totalCases);
               tmp.setTotalActive(totalActive);
               tmp.setTotalDeaths(totalDeaths);
+              tmp.setTotalCured(totalCured);
               tmp.setTotalRecovered(totalCases - totalActive - totalDeaths);
             }
           }
@@ -127,6 +131,10 @@ public class DataBaseCommunicator {
       v.lethality() +
       ",`resistance`=" +
       v.resistance() +
+      ", `cure_progress`=" +
+      Cure.getInstance().progression() +
+      ", `cure_impact` = "+
+      Cure.getInstance().impact()+
       " WHERE `id`=" +
       user.getUserId();
     System.out.println(req);
@@ -172,7 +180,7 @@ public class DataBaseCommunicator {
         (Country co) -> {
           try {
             this.executeUpdate(
-                "INSERT INTO `State`(`game_id`, `slug`, `current_total_cases`, `current_total_active`, `current_total_deaths`) VALUES (" +
+                "INSERT INTO `State`(`game_id`, `slug`, `current_total_cases`, `current_total_active`, `current_total_deaths`, `current_total_cured`) VALUES (" +
                 user.getUserId() +
                 ",'" +
                 co.slug() +
@@ -182,12 +190,16 @@ public class DataBaseCommunicator {
                 co.playerTotalActive() +
                 ", " +
                 co.playerTotalDeaths() +
+                "," +
+                co.playerTotalCured() +
                 ") ON DUPLICATE KEY UPDATE `current_total_cases` = " +
                 co.playerTotalCases() +
                 ", `current_total_active` = " +
                 co.playerTotalActive() +
                 ", `current_total_deaths` = " +
-                co.playerTotalDeaths()
+                co.playerTotalDeaths() +
+                ", `current_total_cured` = " +
+                co.playerTotalCured()
               );
           } catch (Exception e) {
             throw new RuntimeException(e);
@@ -214,6 +226,8 @@ public class DataBaseCommunicator {
           rs = this.executeQuery("SELECT * FROM Virus WHERE `id` = " + u.getUserId());
           if(rs.next()){
             Virus.getInstance().addPoints(rs.getInt(6));
+            Cure.getInstance().setProgress(rs.getFloat(7));
+            Cure.getInstance().setImpact(rs.getFloat(8));
           }
         } catch (Exception e) {
           throw new RuntimeException(e);

@@ -42,6 +42,8 @@ CREATE TABLE IF NOT EXISTS `covid`.`Virus` (
     `resistance` FLOAT NOT NULL DEFAULT 0.005,
     `player_name` VARCHAR(127) NOT NULL,
     `points` INT UNSIGNED NOT NULL DEFAULT 0,
+    `cure_progress` FLOAT NOT NULL DEFAULT 0.0,
+    `cure_impact` FLOAT NOT NULL DEFAULT 0.0,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -62,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `covid`.`State` (
   `current_total_cases` INT UNSIGNED NOT NULL,
   `current_total_active` INT UNSIGNED NOT NULL,
   `current_total_deaths` INT UNSIGNED NOT NULL,
+  `current_total_cured` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`game_id`, `slug`),
   CONSTRAINT `countryState_game_id_constraint`
     FOREIGN KEY (`game_id`) REFERENCES `covid`.`Game` (`virus_id`)
@@ -153,12 +156,12 @@ SELECT State.slug, (State.current_total_active / Country.total_population) AS pr
 
 START TRANSACTION;
 USE `covid`;
-INSERT INTO `Virus`(`infectivity`, `lethality`, `resistance`, `player_name`, `points`) 
-        VALUES (0.15,0.05,0.005, "ThomasKek", 0);
-INSERT INTO `Virus`(`infectivity`, `lethality`, `resistance`, `player_name`, `points`) 
-        VALUES (0.15,0.05,0.005, "Banatwan", 0);
-INSERT INTO `Virus`(`infectivity`, `lethality`, `resistance`, `player_name`, `points`) 
-        VALUES (0.15,0.05,0.005, "Amon-Gus", 0);
+INSERT INTO `Virus`(`infectivity`, `lethality`, `resistance`, `player_name`, `points`, `cure_progress`, `cure_impact`) 
+        VALUES (0.15,0.05,0.005, "ThomasKek", 0,0.0,0.0);
+INSERT INTO `Virus`(`infectivity`, `lethality`, `resistance`, `player_name`, `points`, `cure_progress` ,`cure_impact`) 
+        VALUES (0.15,0.05,0.005, "Banatwan", 0,0.0,0.0);
+INSERT INTO `Virus`(`infectivity`, `lethality`, `resistance`, `player_name`, `points`, `cure_progress`, `cure_impact`) 
+        VALUES (0.15,0.05,0.005, "Amon-Gus", 0,0.0,0.0);
 COMMIT;
 
 START TRANSACTION;

@@ -69,8 +69,8 @@ public class BottomBar extends HBox implements PropertyChangeListener{
         this.virusPoints.setText(points.toString());
     }
 
-    public void updateCurePoints(Integer points){
-        this.curePoints.setText(points.toString());
+    public void updateCurePoints(Double points){
+        this.curePoints.setText(points.intValue() + "%");
     }
 
     private Button buttonFromBottomBar(String path){
@@ -122,6 +122,10 @@ public class BottomBar extends HBox implements PropertyChangeListener{
             Integer inte = (Integer)evt.getNewValue();
             this.pbVirus.setProgress(inte * 0.05);
             this.updateVirusPoints(inte);
+        }else if (evt.getPropertyName().equals("cure")){
+            Double inte = (Double)evt.getNewValue();
+            this.pbCure.setProgress(inte / 100);
+            this.updateCurePoints(inte);
         }
     }
 }

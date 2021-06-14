@@ -58,6 +58,30 @@ public class Country {
         this.totalPopulation = totalPopulation;
     }
 
+    public Country(String name, int latitude, int longitude,
+                   int totalCases, int dailyCases, 
+                   int totalDeaths, int dailyDeaths, 
+                   int totalRecovered, int dailyRecovered,
+                   int size, int totalPopulation, String slug, int totalCured){
+
+        this.slug = slug;
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.totalCases = totalCases;
+        this.dailyCases = dailyCases;
+        this.totalDeaths = totalDeaths;
+        this.dailyDeaths = dailyDeaths;
+        this.totalRecovered = totalRecovered;
+        this.dailyRecovered = dailyRecovered;
+        this.totalCured = 0;
+        this.dailyCured = 0;
+        this.totalActive = totalCases - (totalRecovered + totalDeaths + totalCured);
+        this.size = size;
+        this.totalPopulation = totalPopulation;
+        this.totalCured = totalCured;
+    }
+
     public int playerTotalCases() {
         return this.totalCases;
     }
@@ -87,6 +111,12 @@ public class Country {
         return this.dailyDeaths;
     }
 
+    
+    public void setTotalCured(int tc){
+        this.totalCured = tc;
+    }
+
+    
     public int getTotalDeathsByDate(LocalDate date) {
         if (this.countryHistory.keySet().contains(date)) {
             return this.countryHistory.get(date)[1];
@@ -181,6 +211,7 @@ public class Country {
             "\n\tcases: " + this.totalCases + " (+" + this.dailyCases + ")" +
             "\n\tactive: " + this.totalActive +
             "\n\tdeaths: " + this.totalDeaths + " (+" + this.dailyDeaths + ")" +
+            "\n\tcured: " + this.totalCured + " (+" + this.dailyCured + ")" +
             "\n\trecovered: " + this.totalRecovered + " (+" + this.dailyRecovered + ")\n";
     }
 
@@ -267,6 +298,7 @@ public class Country {
         if (newCases < this.totalPopulation - this.totalDeaths - this.totalActive - this.totalRecovered - this.totalCured && newCases >= 0){
             this.dailyCases = newCases;
             this.totalActive += newCases;
+            this.totalCases += newCases;
         }else{
             this.dailyCases = 0;
         }       
@@ -299,16 +331,13 @@ public class Country {
 
     private void newCured(){
         if(this.totalCases > 1000000){
-            Random rand = new Random();
-            // update progression
-            Cure.getInstance().updateCure();
+            Random rand = new Random();  
             // The value is not accurate
             double randDouble =  rand.nextGaussian()*Cure.getInstance().impact() ;
             // we need to know the population that can be infected -> (totalpop-recovered-active-death-cured)
             int newCured = (int) Math.abs(randDouble * this.totalActive);
     
             //System.out.println("\t" + newCured);
-    
             this.totalCured += newCured;
         }
     }

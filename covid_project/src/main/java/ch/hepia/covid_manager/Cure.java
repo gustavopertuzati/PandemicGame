@@ -28,6 +28,7 @@ public class Cure{
         //Takes constants "similar" to the real covid-19's "stats"
         this.impact =  0.0; 
         this.progression = 0.0;
+        this.lstObservers =  new ArrayList<>();
     }
 
     public double impact(){
@@ -56,5 +57,14 @@ public class Cure{
 
     public void addListener(PropertyChangeListener pcl){
         this.lstObservers.add(pcl);
+    }
+
+    public void setImpact(double d){
+        this.impact = d;
+    }
+
+
+    public void setProgress(double d){
+        this.progression = d;
     }
 }

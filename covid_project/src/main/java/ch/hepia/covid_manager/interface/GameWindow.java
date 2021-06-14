@@ -44,10 +44,7 @@ import javafx.util.Duration;
 import javafx.stage.StageStyle;
 
 /*
-    comprendre pourquoi on commence avec des cas négatifs au début
-    checker si les ratios pour changer les couleurs des cercles sont cohérents + les ratios pour les updates dans elapseDay() -> checker avec les graphs
-    faire en sorte que le vaccin fonctionne (modifier le constructeur Cure() + gerer les updates des champs aux bons endroits, la barre du bas avec l'observer...)
-    mettre les bons coefs pour les perks dans le dump
+    addapter les ratios pour les pays,, le virus, les perks et le vaccin
     faire des tests pour les notions critiques
     charger la date et les points correctements
 */
@@ -79,7 +76,6 @@ public class GameWindow extends Stage{
         }
 
         Virus v = Virus.getInstance();
-        System.out.println(perks.listOfPerks());      
 
         Countries countries = new Countries();
         dbc.loadCountries(new User(idPlayer, User.getUserById(idPlayer)), newGame).thenAccept(c ->{
@@ -200,7 +196,10 @@ public class GameWindow extends Stage{
         }));
         tl.setCycleCount(Timeline.INDEFINITE);
         tl.play();
+
         v.addListener(btBar);
+        Cure.getInstance().addListener(btBar);
+
         this.initStyle(StageStyle.UNDECORATED);
         this.show();
     }
@@ -213,7 +212,7 @@ public class GameWindow extends Stage{
         if(c.getTotalDailyPoints() > 1){
             v.addPoint();
         }
-        if(ld.getDayOfYear() % 10 == 0){
+        if(ld.getDayOfYear() % 15 == 0){
             Rewards.addRewardCirclesToBox(box, c, v, 2, w, h);
         }
     }

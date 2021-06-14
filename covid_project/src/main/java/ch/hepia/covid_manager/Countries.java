@@ -136,6 +136,11 @@ public class Countries{
 
     // update fields for each country at the end of the day
     public void elapseDayForAllCountries(){
+        if(this.totalCases() > 500000){
+            Cure.getInstance().updateCure();
+            System.out.println(Cure.getInstance().progression());
+        }
+        System.out.println(this.totalCases());
         this.countries.forEach(c->c.elapseDay());
         //System.out.println(this.totalCases());
     }
