@@ -194,6 +194,12 @@ public class Country {
 
     // display the data for a specific date (took from the api)
     public String realData(LocalDate date){
+        if(date.isAfter(LocalDate.now().minusDays(2))){
+            return "Real data Unvailable (You are now in the future) " + date.toString() + ":" +
+            "\n\tcases: ?? (??)" +
+            "\n\tactive: ?? (??)" +
+            "\n\trecovered: ?? (??)\n";
+        }
         return "Real data for the " + date.toString() + ":" +
             "\n\tcases: " + this.getTotalCasesByDate(date) + " (+" + this.getDailyCasesByDate(date) + ")" +
             "\n\tactive: " + this.getTotalActiveByDate(date) +
@@ -205,9 +211,9 @@ public class Country {
     public Color getColorFromCountry() {
         double ratio = (double)this.playerTotalActive() / (double)this.totalPopulation();
         ratio += (double)this.playerDailyDeaths() / (double)this.totalPopulation();
-        if (ratio <0.0015){
+        if (ratio <0.0030){
             return Color.GREEN;
-        } else if (ratio < 0.0065){
+        } else if (ratio < 0.0120){
             return Color.ORANGE;
         } else {
             return Color.RED;
@@ -284,7 +290,7 @@ public class Country {
     private void newRecoveries(){
         Random rand = new Random();
         //This should be about a 5% recovery everytime this method is called
-        double randDouble =  rand.nextGaussian()*0.0001*(1-Virus.getInstance().resistance());
+        double randDouble =  (rand.nextGaussian() + 1)*(0.01-Virus.getInstance().resistance());
         int newRecov = (int) Math.abs(randDouble * this.totalActive);
 
         //System.out.println("\t" + newRecov);
@@ -296,7 +302,7 @@ public class Country {
     private void newDeaths(){
         Random rand = new Random();
         //This should be about a .5% death rate everytime this method is called
-        double randDouble =  rand.nextGaussian()*Virus.getInstance().lethality() ;
+        double randDouble =  rand.nextGaussian()*0.05*Virus.getInstance().lethality() ;
         int newDead = (int) Math.abs(randDouble * this.totalActive);
 
         //System.out.println("\t" + newDead);
@@ -310,7 +316,7 @@ public class Country {
         if(this.totalCases > 1000000){
             Random rand = new Random();  
             // The value is not accurate
-            double randDouble =  rand.nextGaussian()*Cure.getInstance().impact() ;
+            double randDouble =  rand.nextGaussian()*Cure.getInstance().impact();
             // we need to know the population that can be infected -> (totalpop-recovered-active-death-cured)
             int newCured = (int) Math.abs(randDouble * this.getTotalInfectible());
     
@@ -340,8 +346,6 @@ public class Country {
         };
         return this.circles;
     }
-
-
 
     public void setTotalCases(int val){
         this.totalCases = val;

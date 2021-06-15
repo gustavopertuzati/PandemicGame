@@ -93,7 +93,7 @@ public class GameWindow extends Stage{
 
         CasesBar cb = new CasesBar(newWidth, newHeight, countries);
 
-        DropdownMenu optionBox = new DropdownMenu(v, countries, idPlayer, ld);
+        DropdownMenu optionBox = new DropdownMenu(v, countries, idPlayer);
         optionBox.setLayoutX(10);
         optionBox.setLayoutY(10);
 
@@ -159,7 +159,6 @@ public class GameWindow extends Stage{
         virusBtn.setOnAction(e -> {
             sbVirus.animate(sbCure.isAnimating(), sbCure);
             cvm.refreshDisplay();
-            optionBox.removeItems();            
         });
 
         cureBtn.setOnAction(e ->{
@@ -199,7 +198,6 @@ public class GameWindow extends Stage{
     }
 
     public void elapseDayForGame(Countries c, BottomBar b, LocalDate ld, int w, int h, Virus v, Group box, CasesBar cb){
-        //System.out.println(ld.toString());
         b.updateDate(ld);
         c.elapseDayForAllCountries();
         c.updateWorldHistory(ld);

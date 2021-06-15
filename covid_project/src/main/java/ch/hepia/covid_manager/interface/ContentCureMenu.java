@@ -204,10 +204,10 @@ class ContentCureMenu extends Group{
         b.setStyle("-fx-border-color: #fff;-fx-border-width: 3;-fx-background-color: transparent;-fx-font-size: 1.5em;-fx-border-radius: 5px;");
     }
 
-    private XYChart.Series dataSet(List<Integer> set){
+    private XYChart.Series dataSet(List<Long> set){
         XYChart.Series data = new XYChart.Series();
         int i = -1;
-        for(int val: set){
+        for(Long val: set){
             data.getData().add(new XYChart.Data( i+=1, val));
         }
         return data;

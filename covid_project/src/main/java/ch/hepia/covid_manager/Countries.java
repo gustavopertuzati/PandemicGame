@@ -19,7 +19,7 @@ import java.time.LocalDate;
 public class Countries{
 
     private List < Country > countries = new ArrayList < > ();
-    private LinkedHashMap < LocalDate, int[] > worldHistory = new LinkedHashMap < > ();
+    private LinkedHashMap < LocalDate, long[] > worldHistory = new LinkedHashMap < > ();
 
     public Countries() {}
 
@@ -53,70 +53,70 @@ public class Countries{
         return this.countries;
     }
 
-    public int totalCases(){
+    public long totalCases(){
         return this.countries.stream()
-                             .mapToInt(c -> c.playerTotalCases())
+                             .mapToLong(c -> c.playerTotalCases())
                              .sum();
     }
 
-    public int totalActive(){
+    public long totalActive(){
         return this.countries.stream()
-                             .mapToInt(c -> c.playerTotalActive())
+                             .mapToLong(c -> c.playerTotalActive())
                              .sum();
     }
 
-    public int totalRecovered(){
+    public long totalRecovered(){
         return this.countries.stream()
-                             .mapToInt(c -> c.playerTotalRecovered())
+                             .mapToLong(c -> c.playerTotalRecovered())
                              .sum();
     }
 
-    public int totalDeaths(){
+    public long totalDeaths(){
         return this.countries.stream()
-                             .mapToInt(c -> c.playerTotalDeaths())
+                             .mapToLong(c -> c.playerTotalDeaths())
                              .sum();
     }
 
-    public int totalCured(){
+    public long totalCured(){
         return this.countries.stream()
-                             .mapToInt(c -> c.playerTotalCured())
+                             .mapToLong(c -> c.playerTotalCured())
                              .sum();    
     }
 
-    public int totalPop(){
+    public long totalPop(){
         return this.countries.stream()
-                             .mapToInt(c -> c.totalPopulation())
+                             .mapToLong(c -> c.totalPopulation())
                              .sum();
     }
 
-    public int totalDailyActive(){
+    public long totalDailyActive(){
         return this.countries.stream()
-                                .mapToInt(c -> c.playerDailyCases())
+                                .mapToLong(c -> c.playerDailyCases())
                                 .sum();
     }
 
-    public int totalDailyDeaths(){
+    public long totalDailyDeaths(){
         return this.countries.stream()
-                             .mapToInt(c -> c.playerDailyDeaths())
+                             .mapToLong(c -> c.playerDailyDeaths())
                              .sum();        
     }
 
-    public int totalDailyRecovered(){
+    public long totalDailyRecovered(){
         return this.countries.stream()
-                             .mapToInt(c -> c.playerDailyRecovered())
+                             .mapToLong(c -> c.playerDailyRecovered())
                              .sum();    
     }
 
-    public int totalDailyCured(){
+    public long totalDailyCured(){
         return this.countries.stream()
-                             .mapToInt(c -> c.playerDailyCured())
+                             .mapToLong(c -> c.playerDailyCured())
                              .sum();    
     }
 
     // return the amount of points won by the player at the end of the day
     // depends on the new cases, the new deaths and the minimum to earn points
-    public int getTotalDailyPoints(){
-        return (this.totalDailyActive() + this.totalDailyDeaths()) / 5000000;
+    public long getTotalDailyPoints(){
+        return (this.totalDailyActive() + this.totalDailyDeaths()) / (long)5000000;
     }
     
     // return a list of coordinates for "num" country(s) as they will be used to
@@ -140,16 +140,15 @@ public class Countries{
             Cure.getInstance().updateCure();
         }
         this.countries.forEach(c->c.elapseDay());
-        //System.out.println(this.totalCases());
     }
 
     // global data for the world fields for each new day 
     // (store actives, deaths, recovered and cured that will be displayed on the left side bar)
     public void updateWorldHistory(LocalDate date){
-        this.worldHistory.put(date, new int[] {this.totalActive(), this.totalDeaths(), this.totalRecovered(), this.totalCured()});
+        this.worldHistory.put(date, new long[] {this.totalActive(), this.totalDeaths(), this.totalRecovered(), this.totalCured()});
     }
 
-    public LinkedHashMap<LocalDate, int[]> worldHistory(){
+    public LinkedHashMap<LocalDate, long[]> worldHistory(){
         return this.worldHistory;
     }
 
@@ -165,33 +164,33 @@ public class Countries{
         return map;
     }
 
-    public List<Integer> listOfCasesByDay(){
-        List<Integer> res = new ArrayList<>();
-        for (Map.Entry<LocalDate, int[]> entry : this.worldHistory.entrySet()) {
+    public List<Long> listOfCasesByDay(){
+        List<Long> res = new ArrayList<>();
+        for (Map.Entry<LocalDate, long[]> entry : this.worldHistory.entrySet()) {
             res.add(entry.getValue()[0]);
         }
         return res;
     }
 
-    public List<Integer> listOfDeathsByDay(){
-        List<Integer> res = new ArrayList<>();
-        for (Map.Entry<LocalDate, int[]> entry : this.worldHistory.entrySet()) {
+    public List<Long> listOfDeathsByDay(){
+        List<Long> res = new ArrayList<>();
+        for (Map.Entry<LocalDate, long[]> entry : this.worldHistory.entrySet()) {
             res.add(entry.getValue()[1]);
         }
         return res;
     }
 
-    public List<Integer> listOfRecoveredByDay(){
-        List<Integer> res = new ArrayList<>();
-        for (Map.Entry<LocalDate, int[]> entry : this.worldHistory.entrySet()) {
+    public List<Long> listOfRecoveredByDay(){
+        List<Long> res = new ArrayList<>();
+        for (Map.Entry<LocalDate, long[]> entry : this.worldHistory.entrySet()) {
             res.add(entry.getValue()[2]);
         }
         return res;
     }
 
-    public List<Integer> listOfCuredByDay(){
-        List<Integer> res = new ArrayList<>();
-        for (Map.Entry<LocalDate, int[]> entry : this.worldHistory.entrySet()) {
+    public List<Long> listOfCuredByDay(){
+        List<Long> res = new ArrayList<>();
+        for (Map.Entry<LocalDate, long[]> entry : this.worldHistory.entrySet()) {
             res.add(entry.getValue()[3]);
         }
         return res;

@@ -24,7 +24,7 @@ public class DropdownMenu extends VBox {
     private boolean status;
     private boolean statusDisplay;
 
-    public DropdownMenu(Virus v, Countries c, int idPlayer, LocalDate ld){
+    public DropdownMenu(Virus v, Countries c, int idPlayer){
         this.status = true;
         this.statusDisplay = true;
         this.save = generateMenuButtons("Save");
@@ -44,7 +44,7 @@ public class DropdownMenu extends VBox {
         });
         this.saveExit = generateMenuButtons("Save & Exit");
         this.saveExit.setOnAction(e -> {
-            dbc.save(v, c, new User(idPlayer, User.getUserById(idPlayer)), ld);
+            dbc.save(v, c, new User(idPlayer, User.getUserById(idPlayer)), GameWindow.getDate());
             System.exit(0);
         });
         this.exit = generateMenuButtons("Exit");

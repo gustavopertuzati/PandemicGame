@@ -64,7 +64,6 @@ public class DataBaseCommunicator {
           this.executeQuery("USE covid");
           // faire une transaction si on veut insert
           ResultSet rs = this.executeQuery("SELECT * FROM Country;");
-          //System.out.println(rs.getFetchSize());
           while (rs.next()) {
             int totalPop = rs.getInt(6);
             int totalCases = rs.getInt(7);
@@ -141,7 +140,6 @@ public class DataBaseCommunicator {
       Cure.getInstance().impact()+
       " WHERE `id`=" +
       user.getUserId();
-    System.out.println(req);
     try {
       this.executeQuery("USE covid");
       this.executeUpdate(req);
@@ -155,7 +153,6 @@ public class DataBaseCommunicator {
       user.getUserId();
 
     try {
-      System.out.println(req);
       this.executeUpdate(req);
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -249,7 +246,6 @@ public class DataBaseCommunicator {
           String req = "SELECT * FROM Game WHERE `virus_id` = " + u.getUserId();
           ResultSet rs = this.executeQuery(req);
           if (rs.next()) {
-            System.out.println(LocalDate.parse(rs.getString(3)));
             return LocalDate.parse(rs.getString(3));
           }
         } catch (Exception e) {
