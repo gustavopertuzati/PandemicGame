@@ -116,7 +116,7 @@ public class Countries{
     // return the amount of points won by the player at the end of the day
     // depends on the new cases, the new deaths and the minimum to earn points
     public long getTotalDailyPoints(){
-        return (this.totalDailyActive() + this.totalDailyDeaths()) / (long)5000000;
+        return (this.totalDailyActive() + this.totalDailyDeaths()) / (long)50000000;
     }
     
     // return a list of coordinates for "num" country(s) as they will be used to

@@ -213,7 +213,7 @@ public class Country {
         ratio += (double)this.playerDailyDeaths() / (double)this.totalPopulation();
         if (ratio <0.0030){
             return Color.GREEN;
-        } else if (ratio < 0.0120){
+        } else if (ratio < 0.0){
             return Color.ORANGE;
         } else {
             return Color.RED;
@@ -305,7 +305,6 @@ public class Country {
         double randDouble =  rand.nextGaussian()*0.05*Virus.getInstance().lethality() ;
         int newDead = (int) Math.abs(randDouble * this.totalActive);
 
-        //System.out.println("\t" + newDead);
         this.totalActive = Math.max((this.totalActive -newDead), 1);
         this.dailyDeaths = newDead;
 
@@ -320,7 +319,6 @@ public class Country {
             // we need to know the population that can be infected -> (totalpop-recovered-active-death-cured)
             int newCured = (int) Math.abs(randDouble * this.getTotalInfectible());
     
-            //System.out.println("\t" + newCured);
             this.totalCured += newCured;
         }
     }

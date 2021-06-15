@@ -8,13 +8,14 @@ Vous commencez votre aventure au moment où le monde entend parler du covid. Vot
 
 Mais la tâche ne sera pas simple puisque les pays du monde entier se défendent contre votre virus. Il vous faudra donc faire des choix dificiles afin de privilègier certains asepcts de votre virus comme le taux de mortalité ou celui de propagation.
 
-En fin de partie, vous pourrez comparer votre progression avec celle du vrai covid-19 et ainsi determiner qui de vous ou du covid-19 est le meilleur.
+Tout le long de la partie, vous pourrez comparer votre progression avec celle du vrai covid-19 et ainsi determiner qui de vous ou du covid-19 est le meilleur.
 
 ## Prérequis 
 Ce projet utilise
 ```
 - Java 15
 - Maven
+- Docker-compose
 ```
 
 ## Récupérer le projet
@@ -24,16 +25,29 @@ git clone https://gitedu.hesge.ch/thomas.dagierjo/covid-manager.git
 ```
 
 ## La base de données
-parler de la base de données
+
+Pour lancer la base de donnée, il faut se rendre dans le dossier *bdd/*, puis lancer le server avec la commande:
+
+```
+docker-compose up
+```
+Ou bien, si on ne veut pas "occuper" un terminal:
+```
+docker-compose up -d
+```
+
 
 ## Compiler le projet
-(compilation à voir):
+Pour compiler le projet, il faut se rendre dans le dossier *covid_project/*, et ensuite faire la commande:
 ```
 mvn package
 ```
 
 ## Lancer le projet
 Pour executer le programme, il faut utiliser la commande:
+
+**Attention! Pour pouvoir utiliser le programme, il faut que la base de donnée soit en train de tourner!!**
+
 ```
 mvn exec:java
 ```
