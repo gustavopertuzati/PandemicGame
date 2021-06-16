@@ -5,6 +5,11 @@ import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Label;
 
+
+/* Class used to display the cases according to the world or the country
+ * we clicked on.
+ * It shows the cases (in red), the cured (in blue),  the deaths (in black) and the other one (in green)
+ */
 public class CasesBar{
 
     private Region sickBar = new Region();
@@ -14,9 +19,8 @@ public class CasesBar{
     private Label barName = new Label("World");
     private boolean display;
 
-    public CasesBar(int newWidth, int newHeight, Countries countries) {
-        
-        //Barre des gens sains
+    // each bar are layered over the others
+    public CasesBar(int newWidth, int newHeight, Countries countries) {        
         this.healthyBar.setWidth(newWidth/3);
         this.healthyBar.setHeight(20.0);
         this.healthyBar.setFill(Color.GREEN);
@@ -28,32 +32,30 @@ public class CasesBar{
         this.healthyBar.setArcWidth(30.0);        
         this.healthyBar.setArcHeight(20.0);
         
-        //Barre des cas infectés
         this.sickBar.opacityProperty().set(0.75);
         this.sickBar.setPrefSize((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCases() / 100000.0), 16.0);
         this.sickBar.setStyle("-fx-background-color: red; -fx-background-radius: 10 0 0 10");
         this.sickBar.setTranslateX(newWidth/3 + 2);
         this.sickBar.setTranslateY(newHeight-45);
         
-        //Barre des cas morts
         this.deathBar.setPrefSize((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalDeaths() / 100000.0), 16.0);
         this.deathBar.setStyle("-fx-background-color: black; -fx-background-radius: 10 0 0 10");
         this.deathBar.setTranslateX(newWidth/3 + 2);
         this.deathBar.setTranslateY(newHeight-45);
         
-        //Barre des cas vaccinés
         this.vaccinatedBar.opacityProperty().set(0.75);
         this.vaccinatedBar.setPrefSize((newWidth/(3.0 * countries.totalPop() / 100000.0)) * (countries.totalCured() / 100000.0), 16.0); //je mets 0 parce qu'on a pas de données
         this.vaccinatedBar.setStyle("-fx-background-color: blue; -fx-background-radius: 0 10 10 0");
         this.vaccinatedBar.setTranslateX(2*newWidth/3);
         this.vaccinatedBar.setTranslateY(newHeight-45);
 
-        //Nom de la barre des cas
         this.barName.setStyle("-fx-font-size: 1.4em;");
         this.barName.setTextFill(Color.WHITE);
-        this.barName.setTranslateX(newWidth/3 + 10);
+        this.barName.setTranslateX(newWidth/2 - 30);
         this.barName.setTranslateY(newHeight - 73);
 
+        this.barName.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        this.barName.setPrefHeight(Region.USE_COMPUTED_SIZE);
     }
 
     public Region getSickBar(){
@@ -100,6 +102,7 @@ public class CasesBar{
         this.display = value;
     }
 
+    // update the bar to show the values of a specific country
     public void update(Country c, double newWidth, double newHeight){
         if(this.display){
             this.setSickBar((newWidth/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0), 16.0);
@@ -110,6 +113,7 @@ public class CasesBar{
         }
     }
 
+    // update the bar to show the values of the world
     public void update(Countries countries, double newWidth, double newHeight){
         if(!this.display){
             this.setSickBar((newWidth/(3.0 * countries.totalPop() / 10000.0)) * (countries.totalCases() / 10000.0), 16.0);

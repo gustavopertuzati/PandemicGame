@@ -207,7 +207,7 @@ public class Country {
             "\n\trecovered: " + this.getTotalRecoveredByDate(date) + " (+" + this.getDailyRecoveredByDate(date) + ")\n";
     }
 
-    // update the color to show the current situatio of the country
+    // get the color to show the current situation of the country
     public Color getColorFromCountry() {
         double ratio = (double)this.playerTotalActive() / (double)this.totalPopulation();
         ratio += (double)this.playerDailyDeaths() / (double)this.totalPopulation();
@@ -222,6 +222,7 @@ public class Country {
         }
     }
 
+    // get the circle size based on the current situation of the country
     public double getCircleWidth() {
         double ratio = (double)this.playerTotalActive() / (double)this.totalPopulation();
         ratio += (double)this.playerDailyDeaths() / (double)this.totalPopulation();
@@ -275,10 +276,6 @@ public class Country {
             chanceToInfect /= 1.5;
         }
         int newCases = (int) Math.round(this.totalActive*this.nbPpl*chanceToInfect)+2;
-        //peut etre tirer un nombre random sinon ils passent tous le seuil en meme temps
-        // comment on faire pour determiner quelle partie de la population on peut encore infecter (peut etre avec un champ supplémentaire)
-        
-
 
         if (newCases < this.getTotalInfectible() && newCases >= 0){
             this.dailyCases = newCases;
@@ -291,11 +288,10 @@ public class Country {
 
     private void newRecoveries(){
         Random rand = new Random();
-        //This should be about a 5% recovery everytime this method is called
+        //Basic + inaccurate formula to find new recoveries
         double randDouble =  (rand.nextGaussian() + 1)*(0.01-Virus.getInstance().resistance());
         int newRecov = (int) Math.abs(randDouble * this.totalActive);
 
-        //System.out.println("\t" + newRecov);
 
         this.totalActive = Math.max((this.totalActive -newRecov), 1);
         this.totalRecovered += newRecov;
@@ -303,7 +299,7 @@ public class Country {
 
     private void newDeaths(){
         Random rand = new Random();
-        //This should be about a .5% death rate everytime this method is called
+        //Basic + inaccurate formula to find new deaths
         double randDouble =  rand.nextGaussian()*0.05*Virus.getInstance().lethality() ;
         int newDead = (int) Math.abs(randDouble * this.totalActive);
 
@@ -313,6 +309,7 @@ public class Country {
         this.totalDeaths += newDead;
     }
 
+    //People that get the vaccine
     private void newCured(){
         if(this.totalCases > 1000000){
             Random rand = new Random();  
@@ -329,6 +326,8 @@ public class Country {
         //System.out.println("State updates not implemented yet");
     }
 
+
+    //update everything as if a day has passed
     public void elapseDay(){
         this.newCases();
         this.newRecoveries();
@@ -337,8 +336,10 @@ public class Country {
         this.circles[1].setFill(this.getColorFromCountry());
         this.circles[0].setRadius(this.getCircleWidth() + 2);
         this.circles[1].setRadius(this.getCircleWidth());
-    }
+    }   
 
+
+    //Get an array of circles representing the country cirlce and a bigger, black circle to have an outline around the circle
     public Circle[] getCountryCircles() {
         this.circles =  new Circle[] {
             new Circle(this.latitude, this.longitude, this.getCircleWidth() + 2 , Color.BLACK ),
@@ -346,6 +347,9 @@ public class Country {
         };
         return this.circles;
     }
+
+
+    //Setters for initialization with the database
 
     public void setTotalCases(int val){
         this.totalCases = val;

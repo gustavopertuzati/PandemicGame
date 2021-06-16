@@ -30,14 +30,13 @@ class ContentVirusMenu extends Group{
     private Button resistance;
     private Label infos;
 
-    private Virus virus;
     private int status;
 
     private HBox topSection;
     private VBox currentMenu;
     private VBox buttonMenu;
 
-    ContentVirusMenu(LinkedHashMap<Button, Perk> map, Virus v, int width, int height){       
+    ContentVirusMenu(LinkedHashMap<Button, Perk> map, int width, int height){       
         this.lines = new ArrayList<>();
         this.topSection = new HBox();
         this.currentMenu = new VBox();
@@ -54,7 +53,6 @@ class ContentVirusMenu extends Group{
         this.infos.setTranslateY(height - 400);
 
         this.map = map;
-        this.virus = v;
 
         for(Button b: map.keySet()){
             Tooltip t = new Tooltip(map.get(b).toString());
@@ -109,20 +107,20 @@ class ContentVirusMenu extends Group{
     private void colorLines(Line l1, Line l2, int i){
         List<Button> buttons = generateButtonList();
         
-        if(this.virus.hasPerk(this.map.get(buttons.get(i)))){
+        if(Virus.getInstance().hasPerk(this.map.get(buttons.get(i)))){
             l1.setStroke(Color.WHITE);
         }else{
             l1.setStroke(Color.BLACK);
         }
 
-        if(this.virus.hasPerk(this.map.get(buttons.get(i+1)))){
+        if(Virus.getInstance().hasPerk(this.map.get(buttons.get(i+1)))){
             l1.setStroke(Color.GREEN);
             l2.setStroke(Color.WHITE);
         }else{
             l2.setStroke(Color.BLACK);
         }
         
-        if(this.virus.hasPerk(this.map.get(buttons.get(i+2)))){
+        if(Virus.getInstance().hasPerk(this.map.get(buttons.get(i+2)))){
             l2.setStroke(Color.GREEN);
         }
         //Perk le plus a gauche est débloqué
@@ -131,10 +129,10 @@ class ContentVirusMenu extends Group{
     private void updateButtonStates(){
         List<Button> buttons = generateButtonList();
         buttons.forEach(b->{
-            if(this.virus.hasEnoughPoints(map.get(b))){
+            if(Virus.getInstance().hasEnoughPoints(map.get(b))){
                 b.setStyle("-fx-background-color: white;-fx-font-size: 1.5em;-fx-border-color: black;-fx-border-width:3px;");
                 b.setOnAction(e -> {
-                    this.virus.upgrade(map.get(b));
+                    Virus.getInstance().upgrade(map.get(b));
                     this.generatePerkButtons();
                     this.refreshDisplay();
                     this.infos.setText("New perk purchased!");
@@ -147,7 +145,7 @@ class ContentVirusMenu extends Group{
                 });
             }
             //On a déjà le perk
-            if(this.virus.hasPerk(this.map.get(b))){
+            if(Virus.getInstance().hasPerk(this.map.get(b))){
                 b.setStyle("-fx-border-color: green; -fx-border-width: 3px;-fx-font-size: 1.5em");
                 b.setOnAction(e -> {
                     this.infos.setText("Perk already unlocked!");
@@ -156,7 +154,7 @@ class ContentVirusMenu extends Group{
             int index = buttons.indexOf(b);
             //Ce n'est pas un des boutons de gauche
             if(index % 3 != 0){
-                if(!this.virus.hasPerk( map.get(buttons.get(index - 1)) ) ){
+                if(!Virus.getInstance().hasPerk( map.get(buttons.get(index - 1)) ) ){
                     b.setStyle("-fx-background-color: grey;-fx-font-size: 1.5em;-fx-border-color: black;-fx-border-width:3px;");
                     b.setOnAction(e -> {
                         this.infos.setText("Unlock previous perk!");

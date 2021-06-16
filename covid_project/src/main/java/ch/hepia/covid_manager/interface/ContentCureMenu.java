@@ -24,6 +24,10 @@ import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+
+/*
+
+*/
 class ContentCureMenu extends Group{
 
     private Button cases;
@@ -33,7 +37,6 @@ class ContentCureMenu extends Group{
     private int status;
     private LineChart chart;
     private Countries countries;
-    private Virus virus;
 
     private Label legend;
     private Label lblInfectivity;
@@ -44,7 +47,7 @@ class ContentCureMenu extends Group{
     private VBox bottomSection;
     private VBox currentMenu;
 
-    public ContentCureMenu(Countries c, Virus v, int width, int height){       
+    public ContentCureMenu(Countries c, int width, int height){       
         this.topSection = this.generateMenuHeader();
         this.currentMenu = new VBox();
         this.bottomSection = this.initBottomSection();
@@ -56,7 +59,6 @@ class ContentCureMenu extends Group{
 
         this.status = 1;
         this.countries = c;
-        this.virus = v;
         
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabel("Date");
@@ -189,9 +191,9 @@ class ContentCureMenu extends Group{
     }
 
     private void updateLabel(){
-        this.lblLethality.setText("lethality: " + this.virus.lethality());
-        this.lblInfectivity.setText("infectivity: " + this.virus.infectivity());
-        this.lblResistance.setText("resistance: " + this.virus.resistance());
+        this.lblLethality.setText("lethality: " + Virus.getInstance().lethality());
+        this.lblInfectivity.setText("infectivity: " + Virus.getInstance().infectivity());
+        this.lblResistance.setText("resistance: " + Virus.getInstance().resistance());
     }
 
     private void emphasisButton(Button b){

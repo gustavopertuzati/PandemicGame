@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Rewards{
 
-    public static void addRewardCirclesToBox(Group box, Countries countries, Virus v, int num, int width, int height){
+    public static void addRewardCirclesToBox(Group box, Countries countries, int num, int width, int height){
         List<int[]> coords = countries.getRandomCountryCoordinates(num);
     
         for(int i = 0; i < num; i+=1){
@@ -19,7 +19,7 @@ public class Rewards{
             Circle blackOutline = new Circle(crt[0]+randOffsetX, crt[1]+randOffsetY, 60, Color.BLACK);
             box.getChildren().addAll(blackOutline, points);
             points.setOnMouseClicked(e -> {
-                v.addPoint();
+                Virus.getInstance().addPoint();
                 box.getChildren().remove(points);
                 box.getChildren().remove(blackOutline);
             });

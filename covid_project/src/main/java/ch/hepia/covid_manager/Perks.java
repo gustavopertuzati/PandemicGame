@@ -73,7 +73,6 @@ public class Perks{
             try{
                 DataBaseCommunicator dbc = new DataBaseCommunicator(driver, url, "root", "root");
                 dbc.executeQuery("USE covid");
-                // add transaction
                 ResultSet rs = dbc.executeQuery(req);
                 while (rs.next()){
                     res.add(Perk.perkFactory(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), (double)rs.getFloat(5), rs.getString(6)));

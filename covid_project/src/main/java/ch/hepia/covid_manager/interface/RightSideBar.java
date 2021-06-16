@@ -38,13 +38,15 @@ class RightSideBar extends HBox{
         });
     }
 
-    public void animate(boolean isOtherVisible, LeftSideBar lsb){
+    public void animate(boolean isOtherVisible, LeftSideBar lsb, DropdownMenu d){
         if(getTranslateX() <= hiddenLength ){
             tt.setToX(getTranslateX() + expandedLength);
             isShowing = false;
         } else {
             if(isOtherVisible){
-                lsb.animate(isShowing, this);
+                lsb.animate(isShowing, this, d);
+                d.manageDisplayFirstMenu();
+
             }
             tt.setToX(getTranslateX() - expandedLength);
             isShowing = true;

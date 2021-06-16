@@ -68,8 +68,8 @@ public class GameWindow extends Stage{
 
         if(!newGame){
             try{
-                dbc.loadVirus(new User(idPlayer, User.getUserById(idPlayer)), perks).get();
-                ld = dbc.loadDate(ld, new User(idPlayer, User.getUserById(idPlayer))).get();
+                dbc.loadVirus(new User(idPlayer, User.getUserNameById(idPlayer)), perks).get();
+                ld = dbc.loadDate(ld, new User(idPlayer, User.getUserNameById(idPlayer))).get();
             }catch(Exception e){
                 throw new RuntimeException(e);
             }
@@ -78,7 +78,7 @@ public class GameWindow extends Stage{
         Virus v = Virus.getInstance();
 
         Countries countries = new Countries();
-        dbc.loadCountries(new User(idPlayer, User.getUserById(idPlayer)), newGame).thenAccept(c ->{
+        dbc.loadCountries(new User(idPlayer, User.getUserNameById(idPlayer)), newGame).thenAccept(c ->{
             c.listOfCountries().forEach(i -> {
                 countries.addCountry(i);
             });
@@ -139,13 +139,13 @@ public class GameWindow extends Stage{
         btBar.setPrefWidth(newWidth);
         btBar.setMinHeight(40);
                 
-        ContentCureMenu ccm = new ContentCureMenu(countries, v, newWidth/3, newHeight);
+        ContentCureMenu ccm = new ContentCureMenu(countries, newWidth/3, newHeight);
         Button cureBtn = btBar.buttonCure();
         LeftSideBar sbCure = new LeftSideBar(newWidth/3,0, cureBtn, newHeight, ccm);
         Image cureImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuCure.png"));
         sbCure.setBackground(new Background(new BackgroundFill(new ImagePattern(cureImage), CornerRadii.EMPTY, Insets.EMPTY)));
         
-        ContentVirusMenu cvm = new ContentVirusMenu(buttonsPerksmap, v, newWidth/3, newHeight);
+        ContentVirusMenu cvm = new ContentVirusMenu(buttonsPerksmap, newWidth/3, newHeight);
         Image virusImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/menuVirus.png"));        
         ImageView iVvirus = new ImageView(virusImage);
         iVvirus.setFitWidth(newWidth/3);
@@ -157,15 +157,15 @@ public class GameWindow extends Stage{
         RightSideBar sbVirus = new RightSideBar(newWidth/3, newWidth-(newWidth/3), g);
 
         virusBtn.setOnAction(e -> {
-            sbVirus.animate(sbCure.isAnimating(), sbCure);
+            sbVirus.animate(sbCure.isAnimating(), sbCure, optionBox);
             cvm.refreshDisplay();
         });
 
         cureBtn.setOnAction(e ->{
-            sbCure.animate(sbVirus.isAnimating(),sbVirus );
+            sbCure.animate(sbVirus.isAnimating(),sbVirus, optionBox);
             ccm.refreshDisplay();
             optionBox.removeItems();
-            optionBox.manageDisplay();
+            optionBox.manageDisplayFirstMenu();
         });
 
         sbVirus.setTranslateX(newWidth);
@@ -206,7 +206,7 @@ public class GameWindow extends Stage{
             v.addPoint();
         }
         if(ld.getDayOfYear() % 15 == 0){
-            Rewards.addRewardCirclesToBox(box, c, v, 2, w, h);
+            Rewards.addRewardCirclesToBox(box, c, 2, w, h);
         }
     }
 

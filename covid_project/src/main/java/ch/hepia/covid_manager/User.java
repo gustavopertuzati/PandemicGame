@@ -25,7 +25,7 @@ public class User{
         return this.id;
     }
 
-    public static String getUserById(int id){
+    public static String getUserNameById(int id){
         switch(id){
             case 1:
                 return "ThomasKek";

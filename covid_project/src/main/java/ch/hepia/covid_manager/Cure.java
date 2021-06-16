@@ -39,6 +39,7 @@ public class Cure{
         return this.progression;
     }
 
+    //Update research; and if research is done, increase impact
     public void updateCure(){
         if(this.progression < 100){
             this.progression += 0.05;
@@ -62,7 +63,6 @@ public class Cure{
     public void setImpact(double d){
         this.impact = d;
     }
-
 
     public void setProgress(double d){
         this.progression = d;

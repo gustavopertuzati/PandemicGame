@@ -70,7 +70,7 @@ public class LeftSideBar extends HBox{
         });
     }
 
-    public void animate(boolean isOtherVisible, RightSideBar rsb){   
+    public void animate(boolean isOtherVisible, RightSideBar rsb, DropdownMenu d){   
         if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
             if(isAnimating){
                 hideSidebar.play();
@@ -79,7 +79,7 @@ public class LeftSideBar extends HBox{
                 } catch(java.lang.InterruptedException ve){}
                 return;
             }else if(isOtherVisible){
-                rsb.animate(false, this);
+                rsb.animate(false, this, d);
             }
             setVisible(true);
             showSidebar.play();

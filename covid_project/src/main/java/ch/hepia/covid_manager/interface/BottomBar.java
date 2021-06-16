@@ -26,6 +26,12 @@ import java.beans.PropertyChangeEvent;
 
 import java.time.LocalDate;
 
+
+/* Class used as the bottom bar of the game. The bar implement the design
+ * pattern observer so she will update the content as soon as the virus and the cure
+ * update their fields 
+ */
+
 public class BottomBar extends HBox implements PropertyChangeListener{
 
     private Button btnVirus;
@@ -75,6 +81,7 @@ public class BottomBar extends HBox implements PropertyChangeListener{
         this.curePoints.setText(points.intValue() + "%");
     }
 
+    // used to create both virus and cure menu
     private Button buttonFromBottomBar(String path){
         int width = 60;
         int height = 40;
@@ -117,10 +124,9 @@ public class BottomBar extends HBox implements PropertyChangeListener{
         return this.btnVirus;
     }
 
-
+    // used to update the content when cure and virus notify the observers
     public void propertyChange(PropertyChangeEvent evt){
         if(evt.getPropertyName().equals("virus")){
-            //On a gangé un point!
             Integer inte = (Integer)evt.getNewValue();
             this.pbVirus.setProgress(inte * 0.05);
             this.updateVirusPoints(inte);

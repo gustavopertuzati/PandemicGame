@@ -6,12 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import javafx.scene.shape.Circle;
 
-
-
-
 class AppTest {
 
-    //Test pour vérifier que les cas et les mort totaux progressent normalement
+    //Test vérifiant que les cas et les mort totaux progressent normalement
     @Test
     void elapseDayTest() {
 
@@ -31,6 +28,7 @@ class AppTest {
 
     }
 
+    //Test vérifiant que les achats de perks augementent correctement les attributs du virus
     @Test
     void perksPurchaseTest(){
 
@@ -54,34 +52,43 @@ class AppTest {
 
     }
 
+    //Test vérifiant
     @Test
     void countryHistoryTest(){
 
-    /*
 
-
-
-    */
+        Country c = new Country("Test", 0, 0,0,0,0,0,0,0,0,10000,"test",0);
+        c.updateCountryHistory();
+        assert c.getCountryHistory() != null;
 
     }
 
+    //Test vérifiant que le compte des cas est correct
     @Test
     void casesCountTest(){
 
+        /*
+
+        Country c = new Country("Test", 0, 0,0,0,0,0,0,0,0,10000,"test",0);
+        Circle c1[] = c.getCountryCircles();
+        c.elapseDay();      
+
+        Countries cs = new Countries
+
+        CasesBar cb = new CasesBar();
+
+        */
+    }
+
+    //Test vérifiant que les cercles de récompense sont bien à l'intérieur de la carte    
+    @Test
+    void rewardsInMapTest(){
 
         /*
 
 
 
         */
-
-
-    }
-
-    @Test
-    void rewardsInMapTest(){
-
-
 
     }
 }

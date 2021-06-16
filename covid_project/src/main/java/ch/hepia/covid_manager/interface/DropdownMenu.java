@@ -39,12 +39,12 @@ public class DropdownMenu extends VBox {
         }
         this.save.setOnAction(e -> {
 
-            dbc.save(v, c, new User(idPlayer, User.getUserById(idPlayer)), GameWindow.getDate());
+            dbc.save(v, c, new User(idPlayer, User.getUserNameById(idPlayer)), GameWindow.getDate());
             this.removeItems();
         });
         this.saveExit = generateMenuButtons("Save & Exit");
         this.saveExit.setOnAction(e -> {
-            dbc.save(v, c, new User(idPlayer, User.getUserById(idPlayer)), GameWindow.getDate());
+            dbc.save(v, c, new User(idPlayer, User.getUserNameById(idPlayer)), GameWindow.getDate());
             System.exit(0);
         });
         this.exit = generateMenuButtons("Exit");
@@ -93,8 +93,17 @@ public class DropdownMenu extends VBox {
         this.getChildren().remove(this.items);
     }
 
-    public void manageDisplay(){
+    public void manageDisplayFirstMenu(){
         if(this.statusDisplay){
+            this.setVisible(false);
+        } else{
+            this.setVisible(true);
+        }
+        this.statusDisplay = !this.statusDisplay;
+    }
+
+    public void manageDisplaySecondMenu(){
+        if(!this.statusDisplay){
             this.setVisible(false);
         } else{
             this.setVisible(true);
