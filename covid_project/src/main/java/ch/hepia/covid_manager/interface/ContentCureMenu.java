@@ -25,9 +25,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
-/*
-
-*/
+/* Class used to add the content that will be displayed
+ * in the cure side bar menu
+ */
 class ContentCureMenu extends Group{
 
     private Button cases;
