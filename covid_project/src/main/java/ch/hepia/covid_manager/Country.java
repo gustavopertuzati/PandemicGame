@@ -195,7 +195,7 @@ public class Country {
     // display the data for a specific date (took from the api)
     public String realData(LocalDate date){
         if(date.isAfter(LocalDate.now().minusDays(2))){
-            return "Real data Unvailable (You are now in the future) " + date.toString() + ":" +
+            return "Real data Unvailable (You are \n  now in the future) " + date.toString() + ":" +
             "\n\tcases: ?? (??)" +
             "\n\tactive: ?? (??)" +
             "\n\trecovered: ?? (??)\n";
@@ -211,21 +211,23 @@ public class Country {
     public Color getColorFromCountry() {
         double ratio = (double)this.playerTotalActive() / (double)this.totalPopulation();
         ratio += (double)this.playerDailyDeaths() / (double)this.totalPopulation();
-        if (ratio <0.0030){
+        if (ratio <0.075){
             return Color.GREEN;
-        } else if (ratio < 0.0){
+        } else if (ratio < 0.15){
             return Color.ORANGE;
-        } else {
+        } else if (ratio < 0.8){
             return Color.RED;
+        } else{
+            return Color.GREY;
         }
     }
 
     public double getCircleWidth() {
         double ratio = (double)this.playerTotalActive() / (double)this.totalPopulation();
         ratio += (double)this.playerDailyDeaths() / (double)this.totalPopulation();
-        if (ratio <0.0015){
+        if (ratio <0.075){
             return 15;
-        } else if (ratio < 0.0065){
+        } else if (ratio < 0.15){
             return 20;
         } else {
             return 25;
