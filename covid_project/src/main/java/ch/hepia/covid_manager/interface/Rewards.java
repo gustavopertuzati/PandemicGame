@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Rewards{
 
+    //Spawns  pink cicles on the map, which when clicked gives the player a point
     public static void addRewardCirclesToBox(Group box, Countries countries, int num, int width, int height){
         List<int[]> coords = countries.getRandomCountryCoordinates(num);
     

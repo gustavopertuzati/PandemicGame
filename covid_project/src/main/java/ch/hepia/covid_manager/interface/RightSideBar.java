@@ -38,6 +38,7 @@ class RightSideBar extends HBox{
         });
     }
 
+    //Animations for opening and closing the sideBar
     public void animate(boolean isOtherVisible, LeftSideBar lsb, DropdownMenu d){
         if(getTranslateX() <= hiddenLength ){
             tt.setToX(getTranslateX() + expandedLength);

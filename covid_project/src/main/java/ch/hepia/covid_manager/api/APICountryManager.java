@@ -29,6 +29,14 @@ import org.json.simple.parser.JSONParser;
 
 import java.time.LocalDate;
 
+
+/* Class used to get data from the covid19api
+ * we use them to compare the actual situation from the game
+ * with the real data at the same time (if we are not in the future)
+ *
+ * we used this class too previsously to get the data at the beggining of
+ * the api (01.22.2020) that are now stored in the data base
+ */
 public class APICountryManager {
 
     private String apiLink; //https://api.covid19api.com
@@ -40,6 +48,8 @@ public class APICountryManager {
         this.apiLink = apiLink;
     }
 
+    // async function to get the data from a specific country from the beggining of the api to the
+    // real day we are playing the game (not the one displayed in the game)
     public CompletableFuture<Map<LocalDate, Integer[]>> getCountryHistory(Country c) {
         return CompletableFuture.supplyAsync(()->{
             Map < LocalDate, Integer[] > map = new HashMap <> ();

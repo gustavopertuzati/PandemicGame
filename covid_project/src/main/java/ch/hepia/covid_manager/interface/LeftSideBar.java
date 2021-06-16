@@ -70,6 +70,7 @@ public class LeftSideBar extends HBox{
         });
     }
 
+    //animations for opening and closing the sidebar
     public void animate(boolean isOtherVisible, RightSideBar rsb, DropdownMenu d){   
         if(showSidebar.statusProperty().get() == Animation.Status.STOPPED && hideSidebar.statusProperty().get() == Animation.Status.STOPPED){
             if(isAnimating){

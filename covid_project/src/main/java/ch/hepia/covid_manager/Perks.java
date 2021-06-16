@@ -62,6 +62,7 @@ public class Perks{
         }
     }
 
+    //Reads the perks from the database asynchronously
     public static CompletableFuture<List<Perk>> getPerksFromDb(){
         return CompletableFuture.supplyAsync( () ->{
             List<Perk> res = new ArrayList<>();

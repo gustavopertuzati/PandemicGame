@@ -14,6 +14,9 @@ import javafx.event.EventHandler;
 
 import java.time.LocalDate;
 
+/* Class used to allow the player to save and / or
+ * exit the game
+ */
 public class DropdownMenu extends VBox {
 
     private Button save;
@@ -93,6 +96,8 @@ public class DropdownMenu extends VBox {
         this.getChildren().remove(this.items);
     }
 
+    // when we wanna show the cure menu, this will
+    // overview the button menu so we have to hide him
     public void manageDisplayFirstMenu(){
         if(this.statusDisplay){
             this.setVisible(false);
@@ -102,6 +107,8 @@ public class DropdownMenu extends VBox {
         this.statusDisplay = !this.statusDisplay;
     }
 
+    // then if the menu is hidden, we wanna show him
+    // by clicking on the other buttons
     public void manageDisplaySecondMenu(){
         if(!this.statusDisplay){
             this.setVisible(false);

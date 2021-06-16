@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import javafx.scene.shape.Circle;
+import javafx.scene.layout.Region;
+
 
 class AppTest {
 
@@ -57,38 +59,40 @@ class AppTest {
     void countryHistoryTest(){
 
 
-        Country c = new Country("Test", 0, 0,0,0,0,0,0,0,0,10000,"test",0);
+        Country c = new Country("switzerland", 0, 0,0,0,0,0,0,0,0,10000,"switzerland",0);
         c.updateCountryHistory();
         assert c.getCountryHistory() != null;
 
     }
 
     //Test vérifiant que le compte des cas est correct
+    //TODO
     @Test
     void casesCountTest(){
 
-        /*
-
-        Country c = new Country("Test", 0, 0,0,0,0,0,0,0,0,10000,"test",0);
+        /*Country c = new Country("Test", 0, 0,0,0,0,0,0,0,0,10000,"test",0);
         Circle c1[] = c.getCountryCircles();
-        c.elapseDay();      
 
-        Countries cs = new Countries
+        Countries cs = new Countries();
+        cs.addCountry(c);
 
-        CasesBar cb = new CasesBar();
+        CasesBar cb = new CasesBar(1,1,cs);
 
-        */
+        double tmp = (1/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0); 
+
+        assert cb.getSickBar().getPrefWidth() == tmp;
+        
+        c.elapseDay();
+        cb.update(c,1,1);
+
+        tmp = (1/(3.0 * c.totalPopulation() / 10000.0)) * (c.playerTotalCases() / 10000.0);
+        
+        assert cb.getSickBar().getPrefWidth() == tmp;*/
+
     }
 
-    //Test vérifiant que les cercles de récompense sont bien à l'intérieur de la carte    
+    //Test vérifiant que les cercles de récompense sont bien à l'intérieur de la carte  
+    //TODO  
     @Test
-    void rewardsInMapTest(){
-
-        /*
-
-
-
-        */
-
-    }
+    void rewardsInMapTest(){}
 }

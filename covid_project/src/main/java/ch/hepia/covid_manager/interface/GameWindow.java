@@ -66,6 +66,7 @@ public class GameWindow extends Stage{
         Perks perks = new Perks();
         perks.init();       
 
+
         if(!newGame){
             try{
                 dbc.loadVirus(new User(idPlayer, User.getUserNameById(idPlayer)), perks).get();
@@ -78,6 +79,8 @@ public class GameWindow extends Stage{
         Virus v = Virus.getInstance();
 
         Countries countries = new Countries();
+
+        //loading the countries async
         dbc.loadCountries(new User(idPlayer, User.getUserNameById(idPlayer)), newGame).thenAccept(c ->{
             c.listOfCountries().forEach(i -> {
                 countries.addCountry(i);
@@ -86,8 +89,8 @@ public class GameWindow extends Stage{
 
         LinkedHashMap buttonsPerksmap = perks.buttonsPerksMap();
         
-        APICountryManager test = new APICountryManager("https://api.covid19api.com");
         Image worldImage = new Image(this.getClass().getClassLoader().getResourceAsStream("images/final_map.png"));
+        //The final game window size
         int newWidth = 1420;
         int newHeight = (int)(worldImage.getHeight() * newWidth / worldImage.getWidth());        
 
@@ -156,14 +159,17 @@ public class GameWindow extends Stage{
         Button virusBtn = btBar.buttonVirus();
         RightSideBar sbVirus = new RightSideBar(newWidth/3, newWidth-(newWidth/3), g);
 
+        //The bottom right button
         virusBtn.setOnAction(e -> {
             sbVirus.animate(sbCure.isAnimating(), sbCure, optionBox);
             cvm.refreshDisplay();
         });
 
+        //The bottom left button
         cureBtn.setOnAction(e ->{
             sbCure.animate(sbVirus.isAnimating(),sbVirus, optionBox);
             ccm.refreshDisplay();
+            //Close the menu button so it doesn't overlap
             optionBox.removeItems();
             optionBox.manageDisplayFirstMenu();
         });
@@ -177,12 +183,19 @@ public class GameWindow extends Stage{
         Scene finalScene = new Scene(root, newWidth-1, newHeight+50);
         
         this.setScene(finalScene);
+
+
+        //Lock the window size
         this.maximizedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue)
                 this.setMaximized(false);
         });        
 
+
+        //How many real life seconds elapse for each day
         int speed = 1;
+
+        //Timer events
         Timeline tl = new Timeline(new KeyFrame(Duration.seconds(speed), e ->{
                 ld = ld.plusDays(1);
                 elapseDayForGame(countries, btBar, ld, newWidth, newHeight, v, box, cb);
@@ -190,6 +203,7 @@ public class GameWindow extends Stage{
         tl.setCycleCount(Timeline.INDEFINITE);
         tl.play();
 
+        //adding the bottom bar as a virus' listener
         v.addListener(btBar);
         Cure.getInstance().addListener(btBar);
 
@@ -197,6 +211,8 @@ public class GameWindow extends Stage{
         this.show();
     }
 
+
+    //Makes country stats evolve, updates the date, updates the history, and gives a point reward if needed
     public void elapseDayForGame(Countries c, BottomBar b, LocalDate ld, int w, int h, Virus v, Group box, CasesBar cb){
         b.updateDate(ld);
         c.elapseDayForAllCountries();
@@ -210,6 +226,8 @@ public class GameWindow extends Stage{
         }
     }
 
+
+    //Makes circles appear and disappear depending on zoom level
     public void adjustCircles(Map<Country, Circle[]> map, double zoomWidth, Group container){
         for(Country c : map.keySet()){
             if(zoomWidth/400 < 1/(0.1*c.size())){
@@ -222,7 +240,6 @@ public class GameWindow extends Stage{
             }
         }
     }
-
 
     public static LocalDate getDate(){
         return ld;

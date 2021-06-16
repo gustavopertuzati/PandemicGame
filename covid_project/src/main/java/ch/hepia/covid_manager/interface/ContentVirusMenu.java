@@ -20,6 +20,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
 
+/* Class used to add the content that will be displayed
+ * in the cure side bar menu
+ */
 class ContentVirusMenu extends Group{
 
     private LinkedHashMap<Button, Perk> map;
@@ -71,8 +74,8 @@ class ContentVirusMenu extends Group{
         this.getChildren().add(this.currentMenu);
     }
 
+    // lines that link every buttons
     private void generateLines(){
-        // changer les valeurs ici -> rendre dynamique
         for(int i = 0; i < 4; i+=1){
             double x1 = (20 + 1*120);
             double x2 = (20 + 2*120);
@@ -95,7 +98,6 @@ class ContentVirusMenu extends Group{
     public void updateLines(){
         this.getChildren().removeAll(this.lines);
         int offset = 0;
-        //Index des boutons sur la page
         for(int i = 0 ; i < 8 ; i+=2){
             this.colorLines(this.lines.get(i), this.lines.get(i+1), (this.status-1)*12 + i + offset);
             offset +=1;
@@ -123,7 +125,6 @@ class ContentVirusMenu extends Group{
         if(Virus.getInstance().hasPerk(this.map.get(buttons.get(i+2)))){
             l2.setStroke(Color.GREEN);
         }
-        //Perk le plus a gauche est débloqué
     }
 
     private void updateButtonStates(){
@@ -137,14 +138,12 @@ class ContentVirusMenu extends Group{
                     this.refreshDisplay();
                     this.infos.setText("New perk purchased!");
                 });
-            //On n'a pas assez de points
             }else{
                 b.setStyle("-fx-background-color: grey;-fx-font-size: 1.5em;-fx-border-color: black;-fx-border-width:3px;");
                 b.setOnAction(e -> {
                     this.infos.setText("Not enough points!");
                 });
             }
-            //On a déjà le perk
             if(Virus.getInstance().hasPerk(this.map.get(b))){
                 b.setStyle("-fx-border-color: green; -fx-border-width: 3px;-fx-font-size: 1.5em");
                 b.setOnAction(e -> {
@@ -152,7 +151,6 @@ class ContentVirusMenu extends Group{
                 });
             }
             int index = buttons.indexOf(b);
-            //Ce n'est pas un des boutons de gauche
             if(index % 3 != 0){
                 if(!Virus.getInstance().hasPerk( map.get(buttons.get(index - 1)) ) ){
                     b.setStyle("-fx-background-color: grey;-fx-font-size: 1.5em;-fx-border-color: black;-fx-border-width:3px;");

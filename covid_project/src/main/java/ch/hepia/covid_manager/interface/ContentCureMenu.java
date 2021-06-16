@@ -98,6 +98,8 @@ class ContentCureMenu extends Group{
         return b;
     }
 
+    // generate the header that contains the three 
+    // buttons and set their actions on click
     private HBox generateMenuHeader(){
         this.cases = generateMenuButtons("Cases", 1);
         this.cases.setOnAction(e -> {
@@ -133,6 +135,8 @@ class ContentCureMenu extends Group{
         return new HBox(this.cases, this.deaths, this.cured, this.recovered);
     }
 
+    // update the chart depending on the button we clicked on
+    // takes the complete history of the world and display its content
     private void updateChart(){
         this.chart.getData().clear();    
         if(this.status == 1){
@@ -166,6 +170,8 @@ class ContentCureMenu extends Group{
         }
     }
 
+    // labels to show the current progress of the player 
+    // by the values of virus' fields
     private VBox initBottomSection(){
         Label lblTitle = new Label("Virus infos:");
         lblTitle.setTextFill(Color.WHITE);
@@ -196,6 +202,8 @@ class ContentCureMenu extends Group{
         this.lblResistance.setText("resistance: " + Virus.getInstance().resistance());
     }
 
+    // change the color of the button so the player
+    // know on wich button he clicked
     private void emphasisButton(Button b){
         b.setTextFill(Color.web("0x808080"));
         b.setStyle("-fx-border-color: #808080;-fx-border-width: 3;-fx-background-color: transparent;-fx-font-size: 1.5em;-fx-border-radius: 5px;");
