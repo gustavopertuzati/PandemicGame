@@ -34,7 +34,6 @@ CREATE TABLE IF NOT EXISTS `covid`.`Perk` (
     ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-/* valeurs par défaut à changer */
 CREATE TABLE IF NOT EXISTS `covid`.`Virus` (
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `infectivity` FLOAT NOT NULL DEFAULT 0.15,
